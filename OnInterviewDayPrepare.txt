@@ -1,0 +1,10 @@
+CSRF:
+Bypass CSRF by removing "State" parameter from URL:
+
+to know more:
+Good one - to know how we can hack oAuth 2
+https://www.youtube.com/watch?v=0T8WG2liEC0
+
+OAuth--
+- i have tested application with SSO - which was using Oauth 2 - Clien Credentials grant(OAuth2 flow 4)-- with Facebook and Google
+- i have also tested API with OAuth2 - where OAuth was used only for Authorization - which was using (OAuth2 flow 3 - Client Credentials Flow)

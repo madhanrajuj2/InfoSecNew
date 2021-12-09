@@ -1,0 +1,1474 @@
+Video:
+-------------------
+https://www.youtube.com/watch?v=BBKPr76TSLI
+nmap -p 80,443,21 10.0.2.4/dvwa/login.php
+
+To know about firewall used:
+nmap -p 80,443 --script http-waf-detect stuxnoid.org
+
+Finger print:
+nmap -p 80,443 --script http-waf-findgerprint stuxnoid.org
+
+nmap -p 80,443 --script http-waf-findgerprint stuxnoid.org --script-args http-waf-fingerprint-intensive=1 stuxnoid.org
+nmap -p 80,443 --script http-waf-findgerprint stuxnoid.org --script-args http-waf-fingerprint-intensive=1 hackison.com
+
+nmap -p 80,443 --script dns-brute stuxnoid.org
+it will list all the subdomains hosted hosted
+
+nmap -p 80,443 --script http-errors stuxnoid.org
+it will list http status code
+
+nmap --top-ports 50 stuxnoid.org -sV
+--to get service running on specified host
+
+Video: -- Good one
+---------------------
+https://www.youtube.com/watch?v=aCC1O9hSzWo 
+
+info on downloading nmap script for vul and find vul on host 
+
+need to copy scripts under /usr/share/nmap/scripts
+vulner.txt
+nmap --script nmap-vulners -sV 10.0.2.8  > /root/Desktop/105_Vulner.txt
+---- -sV to get service versions running 
+
+for interview:
+- i have automated the execution of nmap with "--script nmap-vulners" option 
+ - where i will clone the latest repo of nmap script and run below command 
+ - daily i will go through these log for new CVE(commone vulnerability and exposures)
+ - if i get any thing new other than the one reported; i will try to replicate the same on our system
+
+nmap --script nmap-vulners -sV 10.0.2.8  > /root/Desktop/105_Vulner.txt
+
+---------------------
+import sys
+import os
+import nmap3
+
+path  = "/path/to/store/your/cloned/project" 
+clone = "git clone gitolite@<server_ip>:/your/project/name.git <target_path>" 
+#clone = "git clone <repo_url> <target_path>"
+
+os.system("sshpass -p your_password ssh user_name@your_localhost")
+#os.chdir(path) # Specifying the path where the cloned project needs to be copied
+os.system(clone) # Cloning
+nmap=namp3.Nmap()
+results= nmap.namp_vulners_script("domain", args="-sV")
+
+current_date_and_time = datetime.datetime.now()
+extension = ".txt"
+file_name = current_date_and_time + extension
+f= open("file_name","w+")
+for line in results:
+	f.write(line)
+f.close()
+-------------------------------------
+Video:
+-------------------------------------------
+https://www.youtube.com/watch?v=Bj0iqql0Bhw
+good video to understand security testing
+
+to resume add:
+OWASP ZAP, Java Script, Perform SAST using automated tool
+
+
+SAST: using SonarQube:
+--------------------------
+https://www.sonarqube.org/features/multi-languages/python/
+
+For interview:
+For current project - i am responsible for pulling Security Report from SonarQube and present it to management - i will do a code review for vulnarabilities reported
+
+
+
+Bug Bounty Tutorial:
+==============================
+Video:
+https://www.youtube.com/watch?v=Bj0iqql0Bhw
+----------------------------------------------
+- basic tools required for testing security
+- OWASP ZAP tool explained
+- Sqlmap -h
+- dmitry - tool to get info on subdomain, email address, ports scanning
+- maltego - tool for information gathering 
+  -- gether info through social media website, #PH etc
+- xssec - to find XXS vul
+- w3af - for auditing webapplications finds top OWASP 10 vul, finds vul in servers, brutforce login pages, it maps websites, directory structure
+- nikto - used to check server misconfiguration like outdated versions of applications, hidden pages, info like webservers it's version, subdomains and alerts about vulnerable versions also, if firewall is running
+  >nikto -h example.com -p 443
+
+- if we have info on Application thats fine; or else we can run "nikto" tool to get info on the application
+
+
+Burp suite:
+-----------------
+Video
+------
+Good one
+https://www.youtube.com/watch?v=8cfb46-2osk
+
+website to test vul online
+testphp.vulnweb.com
+
+Bug Bounty:
+==================
+Video: (uday datrak)
+1..
+intro: - trick to remember vulnerabilities
+https://www.youtube.com/watch?v=Ilx8rLIUvig&list=PL_bkTzUc1Bud7RtGPqYjvaP5zBfldtR23&index=4
+
+2..
+https://www.youtube.com/watch?v=xHE3-BEzNik&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=4
+good one:
+
+AutoComplete vul:
+---------------
+https://www.youtube.com/watch?v=y1es5ZdGX14&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=16
+
+Issue Documentaion in word or Jira:
+Auto complete is Enabled
+
+Description:
+The test team observed that auto complete is enabled for input field in the application
+
+Risk:
+In the event that the 'Autocomplete' feature is set to 'ON', any user accessing the application on shared system on which the application was previously accessed before will be prompted with the information previously provided.
+
+Recommendation:
+It is recommanded that Autocomplete attribute be truned off for all sensitive input fields in the application
+
+Screen shots:
+
+Concurrent Login Vul:
+---------------------------
+video:
+https://www.youtube.com/watch?v=8BVvK_bsO-0&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=17
+
+-Just login into both the browsers at same time, if both the logins are still active then its an issue
+-login in as same user using differenct BW, if the previous login was not logged out then its security issue
+ --check whether your previous login in firfox was logged out automatically or not.
+  -to do taht just refresh on firefox page
+--
+after pressing F5(refresh), it is still logged in 
+then its an issue
+
+Concurrent logins - Low level issue
+
+Description: The test team observed that it was possible to have multiple login session using same credenials
+
+Risk:
+if the previous user session is not disabled, a malicious user can access and perform actionson the applicaiton without the user being altered
+
+Recommendation:
+it is recommended that multiple concurrent sessions should not be allowed.
+
+Remember Me Feature Vulnerability: -- Low level issue
+-----------------------------------
+https://www.youtube.com/watch?v=oE493DSMNvE&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=18
+
+"Remember me" feature security -- Low level issue
+
+- You need to register a user using Signup feature or registration page
+and than login into the website with a valid username and PW
+
+at the time you are successfully getting logged in, the browser will ask you to save the PW,
+if you see that then it is a security issue
+
+- suppose if any user goes to netcafe or internet sharing center and login and  save the PW in BW
+then hacker can see those PW in the BW and misuse it
+
+Remember Me Feature Reveals Sensitive Information
+Description: 
+The test team observed that the application has remember me feature on the login page.
+the application stores UN and PW in browser.
+
+Risk: 
+A local attacker can see all the PW stored in the bw and can access victim account
+
+Recommendation:
+It is recommended to remove this feature
+
+Note:
+-you cannot see the remember me feature for credentials in banking applications.
+
+No Anti-Automation
+-----------------------
+https://www.youtube.com/watch?v=iV9g9_GdYts&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=19
+
+No Anti-Automation
+-this has to checked on external pages like
+registration page, Comments page, login page
+these three are important
+let try to check on registration page
+No anti Automation:
+-we will try to submit the registration form with different data for more than 10 times and 
+we have see that any captcha is displayed on the page to protect from to many requests in short time
+we try to submit the form 10 times in just 2-3 min's
+
+after trying for 10 times and then
+website should force you to enter captcha here
+to protect from too many malicious requests
+if it is not showing Captcha even after 10 times - it's  a security issue
+
+Report:
+Description, impact, remediation for this security issue
+
+No Anti Automation  - Low severity issue
+
+Description: 
+The test team observed that no anti automation mechanism like captcha available in the application
+to differentiate b/w robots and human
+
+Impact:
+This vulnerability can be exploited by the attacker to automate the requests and slow down the server.
+
+Recommendation:
+the publically available forms should be protected with captcha.
+
+If the registration page is vulnerable to no Anti automation then you can add one more point like
+
+Note:
+An attacker can flood the DB with junk data
+an attacker can insert millions of junk records within the DB using registration feature
+
+Weak Password Policy:
+--------------------------
+https://www.youtube.com/watch?v=uYUv_G4_4D8&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=20
+
+Weak PW Policy: - Medium Level issue
+
+Goto signup page and Register with weak pw
+we will check this issue in 3 levels to check the security measurements within the application
+Level 1:
+: choose PW as "password" to register, if you can successfully register then it is a security issue
+- it is security issue because it accepts poor password like 'password' without any caps or special chars or digits
+- if you cannot register using level 1 approach, if the site is protected agaist level 1 now move to level 2
+Level 2:
+passworD //D is caps but no special char and no digits
+-if you cannot register its a security issue
+-suppose if website did not allow to register using level 2, now move to level 3
+Level 3:
+use password as "Pas@123" lower case, upper case, digits and special chars
+but total length is less than 8 chars,
+if wbsite accepts this pw then it is a security issue
+
+Tip:
+- if the web app doesn't have the singup page than what will you do ??
+clien will provide un and pw just by looking at pw you can say whether it is an issue or not no need to test
+
+UN: admin
+PW: admin
+// it is a security issue
+
+Weak PW Policy - Medium level issue
+
+Description:
+The test team observed that the application accepts weak passwords like 'password'
+
+Impact:
+Weak PW makes the application users vulnerable to the brute force attack, which leads to compromise of accounts with weak pw
+
+Recommendation:
+It is recommended to use strong pw policy.
+PW should be atleast 8 character with a combination of Uppercase, Lowercase, numeric and special chars
+
+Tip 2:
+In which pages you can check this issue
+1. Registration page
+2. Login page
+3. chage PW page
+4. Pw reset page
+sometimes, registration page will be implemented with strong pw policy, but not change PW,
+if you see at any one page out of 4 page which i talked then report as a security issue
+
+No Account Lockout:
+---------------------
+https://www.youtube.com/watch?v=i7zt_Mo7AVs&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=21
+
+No Account Lockout: Medium level security issue
+To check this first you need to create a user in the website for that you need to register in a wesite using signup page
+give any UN and PW
+
+- to check this issue you need to enter wrong PW for more than 5 times for the same UN
+and see whether you can successfully login after that with correct PW
+ - after 5 time if we are able to login than it's a security issue
+
+Description, impact, remediation to report the issue to client or company
+
+No Account Lockout:
+
+Description:
+The test team observed that the application did not lockout the user even after 5-10 failed login attempts.
+Impact:
+An attacker can use automated tools with dictionary of words to guess the pw for the particular user.
+Recommendation:
+Account should be locked out after 5-10 failed login attempts and the user should be altered for lockout with the IP address for failed login attempts
+Screen shot: not applicable
+
+Tips: make a video and keep it with you as evidence using camstudio free software
+- if the application does not have registration page to create a user, you can use the credentials given to you for security testing
+- you should check this security issue at the end; because you may lock the account for application access
+
+Insecure Password Storage:
+----------------------------
+https://www.youtube.com/watch?v=JRg27XNQIvI&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=22
+
+Insecure Password Storage- PlainText: - High Level issue
+- lets say user forgot his pw and unable to login
+then for that purpose most websites like FB, gmail povides a feature to reset the pw without logging into the app
+- Generally if we click forgot pw link, it will ask for either UN or email address and then it sends the password to email
+or the link to reset the PW (which asks for new pw)
+-after selecting forgot PW and giving email id - we should be getting something to reset my PW to my email
+sometime, we need to wait for 2 mins, check spam
+- via Email - i got the plain text PW "Secured@123"
+
+- The PW can be stored in three ways within the db
+1. Direct PW storage (Storing as it is)
+2. Hashing (Your PW is not stored directly, it will be converted to some other random text, which cannot be decrypted )
+- this is the most secured way
+
+Hashing ex:
+MD5 hash - weak hashing
+- if your application is using hasing - than pw will be converted to some random text like "adklkfslkdlklskf"
+SHA1, Base64
+
+* hasing is one way and it can not be reversed
+- that means your MD5 hash cannot be converted back to plan text
+
+Insecure Password Storage:- Plan text - high level issue
+
+Description:
+The test team observed that the application emails the actual user pw to his email address in plan text
+
+Impact:
+This will allow the hacker to read all the PW in plain text, if the DB gets compromised
+
+Recommendation:
+Store the PW in the DB using secure hasing algorithms. do not use weak hasing algorithms like mD5, SHA1.
+
+No Two Factor Authentication:
+------------------------------
+https://www.youtube.com/watch?v=D3_365NmYk8&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=24
+
+No Two Factor Authentication - Medium Level Issue
+- to check first need to create an account
+  -at the time of creating an account, you should look for a option to enable two factor
+   authentication like i search for now
+- i will goto singup page and crate an account
+  but i dont see any two factor authentication feature here
+  two factor authentication means -
+ ** after entering you username and password, it should send you an second level verification code, either to your phone by SMS
+or verification code to your email address
+
+ I successfully registered; But at the time of registration it did not show any tow factor verification feature
+ now i shoud loin into the applicaiton and go to all page like
+ profile edit page
+ account settings and search for enabling two factor authentication
+ unfortunately, i dont see any profile edit page or account settings page to enable two factor settings
+ that means it is a security issue now and you should report
+ when two factor authentication is enabled
+ everytime when you login into your website using UN and PW
+ it will send you a verification code to you your phone 
+ For ex: Gmail has two factor authentication feature
+ if you have gmail account, please enable them now,  just search in google for enable two
+ factor auth to secure your email
+ even if you pw is stolen by hacker, he cannot login into the app
+  because verification code will be sent to your phone
+  even if you are tricked by hacker using phishing page and then your pw is stolen
+  still hacker cannot login 
+ becuase verification code will be sent to your phone
+ these two points are very important to remember
+ 
+Decumentaion
+
+Description:
+The test team observed that the application doesnt have the feature to enable two factore authentication
+
+Impact:
+If the attacker steals the password using phishing/keylogger, then attacker can login into 
+the application remotely
+
+Recommendation:
+Enable two factor autentication, use google auth feature. it is a free feature
+
+Screenshot:
+Not Applicable (because you cannot see that two factor authentication feature)
+
+this is important for all the corporate and financial website to protect the employee logins 
+from multiple attacks using keyloggers, phishing, malwares, spywares, system level attacks
+
+Vulnerable Change Password page:
+------------------------------------
+https://www.youtube.com/watch?v=GMyReoPsFbQ&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=25
+
+
+Vulnerable Change Password page: Medium level issue
+to check this first you need to create an account
+now we have successfully crated the account, for same people
+i mean some people may not able to login into the applicaiton immediately after signup
+because they will be getting activation link
+so you need to check your email to activate the link to login, otherwise you cannot login
+now lets see whether we can login or not
+now the issue name is "Vulnerable change password page"
+
+this means, it has to be something with changepassword page itself
+if you see the change pw page is not asking for old pw
+lets say if you have logged into a webapplication in the internet shareing center or cybercafe
+and if you forgot to logout, then an attacker can goto bw history and opens the page like this
+see, since you havent logged out as soon attacker opens the website, he can see internal pages and he goes to change pw page and he changes your pw
+this is one scenario, there are 2-3 other scenario are there
+second scenario: 
+attacher will send you one link, as soon you click on that link your pw will be changed
+dont worry about it, i will teach it in the next lessons,
+Description, impact, remediation (also called as recommendation)
+
+Vulnerable Change Password Page:
+Description:
+The test team observed that the application does not ask for the user to provide the current password when he is changing his pw,
+it is asking only for 'new pw' and 'confirm new pw'
+
+Impact:
+This could allow the attackers to change the pw of other users if the system left unattained by the victim.
+
+Recommendation;
+It is recommended that current pw should be verified at the server side befor changing the pw.
+
+Screenshot:
+
+User Enumeration:
+-----------------
+https://www.youtube.com/watch?v=mKKDqZLkdWg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=26
+
+User Enumeration - Medium level issue
+first signup with un and pw
+you will get activation link then activation it
+you should activate it
+now you shuold search for forgot pw page
+remember somewebsites asks for UN as a part of forgot pw
+and most of website, ask for email, you can see that in gmail, facebook
+on forgot pw page, to check this issue
+we have to first enter valid UN and see the response
+and then enter invalid UN and see the response
+i entered valid UN which i have created and it is saying as PW sent to email
+now i keep this as it is
+i try to enter invalid or wrong UN
+user not found, this means this User does not exist on server
+based on two different erros, we can say that attacker can guess all UN on the server
+now we will take screen shot of both the windown
+you need to maintain both the screen shots as an avidence
+always keep a back of daily findings in you office email but not in personal email
+incase if your system gets corrupted, you will be having backup
+now important Question
+do you need to check only on forgot PW page?
+no
+where all can you check
+Registration page - yes you can find user enumration here on this page based on the response from server. it says as user email already registered
+forgot pass page - yes you can find user enumration here on this page based on the response from server. you just see now
+login page - yes you can find user enumration here on this page based on the response from server. sometimes you see error message as 'user not found' incorrect PW. you should identify this issue on the login page using correct UN and Wrong PW and see the response
+then using incorrect UN and wrong PW and see the response
+internal pages - yes you can find user enumration here on this page based on the response from server. I will cover this later, 
+
+now very important thing
+how you can find all UN on the server
+lets say you have got some website for security testing like 
+company name, i cannot mention company name here
+let say xxxxxxx
+you need to search for xxxxxxx in linkedin to find out all the employees of that company
+and use forstname.lastname@companyl.com to make emails and search for those emails in login page,
+only if you want to take this issue to critical level like redteam hacking project
+now thats like
+some PW leak DB contains all the emails of most of the companies
+***Vigilante.pw ** https://vigilante.pw
+**weleakinfo**
+this is a paid service
+you dont have to pay, your company will buy it
+what i am trying to say is wbsites like this, there are many free portals
+but they will be dead in few days by FBI
+you will see intereting thing when you enter your email address
+do not enter others email address, it will be serious crime
+this is to know all your hacked pw just by entering your email address
+hacker will serach for your email to see all your hacked pw and try against the website to login in as you
+
+reporting
+
+User Enumaration:
+Description: 
+The test team observed that it is possible to identify the valid UN on the server.
+the application shows different reponse when user neters a 'valid UN with incorrect pw' and 'invalid UN with any PW'
+
+impact:
+An attacker can find all the valid emails on the server or through social media portals
+and bruteforce for victim pw.
+
+Recommendation:
+Show generic message in the response as 'Incorrect UN or PW'
+
+Screen shot:
+
+Scondly as i said befor, for external penetration testing or read team assessment, this UN enumeration, itself is the first step. i mean not for bruteforcing or not even phishing
+checking for leaked pw for the UN is PW leak DB
+company will give approval for that, you need to have approval before going to deeper level
+otherwise you will end up in jail for 10 years and you cant even update on facebook or twitter
+sorry guys. I have to be harsh  and straight forward on this because i dont want
+you to be in trouble but you need to explain thest points to dev to make him understand
+the severity of low level issue like auto ***complete and user enumaration**
+
+Directory Indexing:
+-----------------------
+https://www.youtube.com/watch?v=kNk0wTGgkx8&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=27
+
+covered 11 security issues
+
+Directory Indexing - 
+also called as Directory Disclosure,
+
+Very important things to remember for directory indexing are 
+1. You should check this issue in unautheticated pages (ie before logging into the application) like login, registration, forgot pw, home page
+2. you should also check after logging into the application
+
+directory indexing means seeing the contents of the folder
+lets check it
+3rd import point 
+- most websites protect the main directory but not sub directories in 70% of the situation
+what I mean to say is
+http://local host/abb/hhh
+you know that abb is a folder (directory)
+and hhh is the sub folder
+sometime if you open 
+http://local host/abb
+you may not see the content of folder
+but if you open
+http://local host/abb/hhh
+you will see all the content
+you have to check in all the sub folders
+folders contain super information like
+Log files, backup files, code back up files, DB file, compressed files
+so much of unexpected information which gives lot of information
+you must focus on this on critical priority for external penetration testing projects
+now lets start checking for this
+now i am looking at wesite called
+http://localhost/datrak/
+and I know that /datrak/ is the folder on the server, which is in /www/ folder
+now i want to know all the folders in it without looking into the folder contents directly
+i mean not by opening c drive
+just by looking at HTML
+to do that right click view-source on all the pages and extract the urls containing
+folder names
+nothing on home page, i mean no new folder name found
+cant see on reg page too
+can see on this to
+now you need to login and check in internal pages too
+
+lets see if i can see contents of this folder
+http://localhost/datrak/
+now lets check in other website
+
+http://localhost/dvwa/dvwa/css/login.css
+
+now we need to check in main folder
+http://localhost/dvwa/
+
+its sub folder
+http://localhost/dvwa/dvwa/
+and its sub folder
+http://localhost/dvwa/dvwa/css/1
+it is a security issue
+becuase now you can browser each folder and see all the contents
+you can report this as issue even if the folder doesnt contain any sensitive information
+becuase you cant guess of million of folders on the server as it is a time consuming process,
+if the hacker checks for millions of folders on the server, he might see
+sensitive information in the folders
+you have to say exactly the same when reporting the issue
+bug bounty may not accept but all financial companies or IT companies accept the issue
+remember one thumb rule,  tis all depends on how you talk while expressing the issue
+now lets see contents of the folder
+
+just search for .log files .zip files
+but remember you must open each file and see the contents
+sometime .js files contains the emails, passwords
+and other internal paths
+now lets write description, impact, recommendation
+
+Directory Indexing (Medium if no sensitive info found, high if any sensitive info found)
+
+Description:
+The test team observed that the attacker can see the contents of the directory on the server.
+the following path discloses all the contents of the directory
+http://localhost/dvwa/dvwa/
+
+note: recommendation should be implemented throughout the application
+
+Imact:
+An attacker can guess for all the directories and may steal the sensitive information on the server.
+some web application stores log files, db recoreds, employee records within the web www directory
+
+Recommendation:
+Directory Indexing should be disable on the server
+
+Screen shot:
+
+Note: Guys you shuld stop once you find it one page when you want to find the critical security
+issues on the server.
+just search for all the folders
+i will tell you an quick tip to find for directories quickly using automated tools in the later
+session. 
+
+Third Party Domain Vulnerability:
+--------------------------------
+https://www.youtube.com/watch?v=0irvbWclJfg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=28
+
+if website is refering third party domain(loading script or any page) - report as low level issue
+if website is refering third party domain and website is dead - report it as critical issue
+
+Password field is set to text: - low/medium level issue
+--------------------------------
+https://www.youtube.com/watch?v=D8rUXMrp5Lc&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=29
+
+check in login page, password reset page, registration page
+
+robots.txt information. disclosure - Hight/low/medium
+-----------------------------------
+https://www.youtube.com/watch?v=j1NAY8ap_hc&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=30
+
+robots.txt -- is a text file webmasters create to instruct web robots (typically search engine robots) how to crowl pages on their website.
+
+if we want to say google not to crowl any folder or page we can mention that under robots.txt
+
+User-agent: *
+Disallow: /mobile/
+Disallow: /buzz/*.xml$
+
+example: http://localhost/datrak/robots.txt
+
+o/p:
+disallow: /log/
+
+it says third party engines not to crowl /log/ folder
+
+1. if you see any folder name on executing "http://localhost/datrak/robots.txt" -- report as low level issue
+2. if you see any folder like log file report it as medium level issue
+3. if you can acces the folder specified then report it as high level issue
+http://localhost/datrak/logs/
+
+if website given for testing is
+
+localhost
+test; localhost/robots.txt
+
+localhost/datrak/robots.txt
+hello.localhost
+hello.localhost/robots.txt
+localhost/robots.txt
+
+Recommendation:
+1.dont disclose any sensitive info via robots.txt
+
+
+Impact:
+attacker can brout force subfolder and files; he can access athe files directly
+
+Weak Input Validation:
+--------------------
+https://www.youtube.com/watch?v=fMZ9mITaTdk&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=31
+
+Weak Input Validation - 
+if application accepts special char in input fields
+ex: UN: !@#$%^&*()_+<>{}[]
+
+this will lead to 
+- SQL injection
+- Command Injection
+- XXE
+- Cross site scripting
+ - stored and reflected
+
+application should not accept following chars
+<>'";;!
+
+Recommondation:
+make sure input form fields are validated for the type, range, format and lenght
+
+On Cora search for Disadvantage of automated tool for security testing:
+--------------------------------------------------------------------------
+use name Uday Datrak
+
+Video 33:
+Burp Suite Installation:
+------------------------------
+https://www.youtube.com/watch?v=SOVgc8816TI&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=33
+
+download from PortSwigger.net - Community Edition
+
+use port: 7878
+
+to install Burp CA Certificate
+
+http://burp/
+
+To capture the Localhost request:
+open: "about:config" in url and search for "hijack"
+
+set it to true:
+network.proxy.allow_hijacking_localhost -- set it to "True"
+
+Video34:
+Information Disclosure Through Comments:
+-------------------------------------
+https://www.youtube.com/watch?v=RE5-QPQvnxQ&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=34
+
+Information Disclosure Through Comments --- this issue can be medium or level based on the information found
+
+lets check this issue
+in order to check this issue  - you need to check view-source of all the page
+remember each and every page
+befor login and after login
+lets check now
+then first you need to check from homepage also called as main page
+now lets see view-source
+view the page source
+check for HTML comments -<!--hi-->
+- check what is disclosed
+ex:
+email address disclosed -with this 
+attacker can send phishing page to the developer and steal his credentials
+to login into the app
+attacker can brute force this account to guess the pw
+attacker can do multiple attacks against that email, I told you 2 thats enough
+secondly
+<!--config.xml--> - file in exposed
+as soon you look at this what is coming into your mind
+is it a 
+text?
+folder?
+file - yes it is a file because it has extension
+
+remember
+<!--  --> //this is a comment
+try to open this file
+
+now i will try to open this file on the server, how can i do that, where to search for that file?
+first, we need to check it in the same directory(directory also called as folder)
+In which directory we are in now
+http://localhost/datrak/  //we are in datrak folder
+now we simply add file to that folder after /
+http://localhost/datrak/config.xml
+xml file which we loaded might got error and unable to show contents properly 
+but when we right clicked on it and choosen view-source
+then it showed UN and PW
+
+lets say when you tried this path 
+http://localhost/datrak/config.xml
+and if it didnt show any contents then what will you do?
+you need to search in all the directories like below
+http://localhost/config.xml
+
+now we need to check for other pages to identify other sensitive information
+but before that please take screenshot
+The comments are bottom
+
+Description, Impact and recommendation
+
+Description:
+The test team observed that the application reveals the sensitive information in the page source. the comments reveals the email ID and sensitive file on the server
+
+Impact:
+The Information disclosed through comments can be used by the attacker to perform phishing/bruteforcing attacks against the victims email id and attacker was able to 
+see the UN and PS in xml file.
+
+you need to make points accordingly in impact
+
+Recommendation: Remove the HTML comments from the code and use backend comments.
+
+remember we checked all view-source on unauthenticated pages,  that means 
+we did not login
+we also need to login and check in internal pages
+that is home work guys
+
+Video 35:
+Sensitive Information in get Request:
+------------------------------------------
+https://www.youtube.com/watch?v=5Ll1gUMEXcc&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=35
+
+UN and PW sent in URL
+
+http://localhoust/index.php?username=uday&pass=hello --- this is a security issue
+
+http://localhoust/index.php?email=ram@gmail.com
+
+if UN and PW send in URL - highlevel
+
+Email and PNo. -- medium level issue
+
+** if get method is used to send UN and PW -- that is a security issue -- critical issue (client side)
+** what is the issue here - once you logout and some user uses the same system - he can view the UN and PW on the BW
+ from bw history
+
+Server side:
+- on the server side all the UN and PW is stored on the log file if GET method is used
+
+any ways we have access the log file
+- command injection, code injection, malicies file upload, local file inclusion
+ - once he gets the access to log file he can see all the UN and PW
+
+- apart from login page - check this issue on signup page and forgot pw page
+
+Description:
+Test team observed that sensitive info UN and PW sent as a part of GET request
+
+Impact:
+1.if attacker get access to the log file he can get to see all the UN and PW
+2.UN and PW sent over the GET request - UN and PW show the BW url or stored in the History
+3. UN and PW sent as a part of GET request - can be stored in the Internet service provider - if service provider are hacked - it will disclose all UN and PW info
+
+Remediation:
+
+Video 36:
+Sensitive information sent in Clear Text:
+----------------------------------------
+https://www.youtube.com/watch?v=5xYPANNR6B0&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=36
+
+Sensitive information sent in Clear Text - 
+if application is running on Http
+if data is sent over Https - data will be sent as encrypted
+ -- it is important to check all the data is sent over HTTPS
+
+Where?
+Login page http:// -- issue, sensitive info sent over http
+registration http:// ---issue, sensitive info sent over http
+
+Description:
+Test team observed that sensitive info like UN and PW sent as clear text over http protocal
+
+Impact:
+attacker can sniff the trafic and login as user
+
+Recommendation:
+it is recommended to use HTTPS protocal to send sensitive info (Ex; UN & PW)
+
+Video 37:
+Understanding Session IDs:
+---------------------------------
+https://www.youtube.com/watch?v=8f0frgnzZ4g&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=37
+
+Session 
+
+Video 38:
+Cross Site Request Forgery(CSRF)
+------------------------------------
+https://www.youtube.com/watch?v=p6T7VtRs0qg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=38
+
+What is CSRF - 
+is an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated
+
+Website Users - Pages - Parameters
+
+Why CSRF can happen
+Where CSRF can happen and where cannot
+
+Login - Why well? -- will not do it on Login in page
+
+Protection:
+1. Implement unique random token in the HTTP form fields and validate same on the server side
+2 
+
+Differenct way to perform CSRF:
+1. Send a URL with UN and PW - GET request or make a form with method set to GET
+2. Sending a form for login - POST request
+
+1. To protect agaist CSRF - use Unique Token
+2. We should not reuse TOkens - and every request should have unique tokens
+3. Check for blank CSRF token are handled correctly
+4. check by if attacker uses his CSRF Token; see how application responds
+
+check all the form page are using CSRF tokens; else report it as security issue
+
+we need to execute CSRF on:
+1. Change PW page
+2. Money transfor page
+3. file upload page
+4. delete files or page
+5. sending message
+6. posting comments
+
+video 40:
+SessionID not changed on Logon:
+------------------------------------
+https://www.youtube.com/watch?v=59duxUwVQsk&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=40
+
+here we will check SessionID befor logon and after logon
+
+as soon as the user logs in to the application; it has to set the new sessionID
+
+Impact:
+hacker can steal the sessionID and login to the application
+
+video 41:
+Weak Session Length
+----------------------
+https://www.youtube.com/watch?v=jDhS1ritJV4&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=41
+
+Weak Session Length - 
+to check this issue, first we loin into the application and take the session id
+and check its lenght
+
+lets say i dont hve account, then I register and then i signin
+
+after sending correct UN and PW
+there will be some internal page which contains your information like welcome.php
+showing you name
+so this is the valid session ID Cookie: PHPSESSID=djkjskjdkjsk494949
+
+to cross check
+send the request and click go
+it should show your personal details like email or UN or name
+now we confirmed that it is a valid session
+now lets check its length by copying to notepad
+
+i can see that sessionID is 27 char, according to internation security standars it should be
+atleast 32 characters
+so it is a security issue
+
+Screen should show sessionID and your internal details to prove that
+yes you can acces this internal page using weak sessionID length
+
+Video 42:
+Reusability of your work:
+----------------------------
+
+Video 43:
+Weak Session Expiry:
+----------------------
+https://www.youtube.com/watch?v=vtydCjRnb6s&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=43
+
+- application has to logout after few minuts like (5- 15 min's) - if not its a security issue
+- application has to force logout after defined idle time or usage
+
+2. close the browser and relaunch and see if it's logged in or logged out
+
+Video 44:
+Weak Session Randomness:
+--------------------------
+https://www.youtube.com/watch?v=jjgq3pgiWRI&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=44
+
+- we can login in to the application and intercept the request in Burp
+  - and send that request to Sequencer to repeate same action with Auto Analyze check box selected
+  - click on Analyze Now button - gives the result whether the session id generated is good or bad
+- if more request are generated it will result in DOS and server may crash
+- some time server will be configured to generate 10000 session ID after this server has to restart
+
+-Impact:
+if Sessions IDs are reused - attacker can bypass Authentication 
+
+Video 45:
+Session ID can be Preset:
+----------------------------------
+https://www.youtube.com/watch?v=TfcGK-MY-Cg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=45
+- if application accepts preset session ID - its a security issue
+
+- Server not validating Session ID sent
+- Server should not accept User generated Session ID
+
+Video 46:
+Login As AnyOne and EveryOne:
+----------------------------------
+https://www.youtube.com/watch?v=ypRtZnJEt2Q&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=46
+
+What Happens when someone steals
+1. Application code; we can get to see DB PW - and get access to DB
+2. Database
+3. Session ID
+
+Note:
+- if PW is hashed
+ - we can use Hash Analyzer and based on the algo used we can decript it 
+  ex: Decrypt MD5
+
+Video 47:
+Version Disclosure in Headers & Response: - Low level issue
+---------------------------------------------
+https://www.youtube.com/watch?v=5iofTXOQz7c&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=47
+
+
+1. checked on the BURP
+Version Disclosure in HTTP response - like server version (Ex: Apache/2.4 PHP 7.3)
+
+- if attacker get to know the version running he can search for the Exploits and can hack in to the system
+
+fix:
+- on the server we need to set "Server signature" equals to OFF
+
+2. when we search for the non existing page; application may return the version info 
+Ex: Apache/2/4 (wind64) PHP/7/3/12 server at localhost Port 80
+
+Dev should fix it on 
+1. HTTP headers
+2. on the pages - non existing page
+
+Video 48:
+Default Configuration files:
+-----------------------------------
+https://www.youtube.com/watch?v=SfG1eDOK4f8&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=48
+
+By Fingerprinting the application we can get to know the info on what all S/w application is using
+
+Default Configuration files-
+- where attacker can access default config files under WWW folder of the webserver and get info of S/w version, installation folder
+
+**go through the video of "How your Website, DB, server and network gets hacked using ONE Line of Vulnerable Code"
+
+"SecList" git repo which will give complete list of config files to exploit
+
+-we can just download the required Config file like - PHP, MYSQL and use BURP - Intruder feature and use this file and check for 200 status code - which means that file config we have found
+
+Video 49:
+A Little abt Default Configuration:
+--------------------------------------
+https://www.youtube.com/watch?v=LSGzdDUZNyQ&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=49
+
+Default Configuration file - 
+default PW:
+root 
+Pass: blank
+
+Video 50:
+Reflected XSS Understanding:
+----------------------------------
+https://www.youtube.com/watch?v=HNxrcy9U55k&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=50
+- Cross-Site scripting is a type of web application security vulnerability typically found in Web application
+ - XSS attacks enable attackers to inject client-side script into web pages viewed by other users
+ Types of XSS:
+1. Reflected cross site scripting (XSS) is also called as non persistent xss
+2. Stored cross site scripting (XSS) also called as persistent xss
+3. DOM based XSS
+4. Refer Cross site scripting
+
+Reflected cross site scripting ---
+- <script>alert("hi");</script>
+-------------------------------
+1. Input validation
+2. output encoding - here script tags will be converted to HTML entities
+   in php we have a special function called - htmlspecialchars($ram);
+ex: <script>alert("hi");</script>
+    &lt;script&get;alert(123);&lt;/script&get;
+
+Best way to avoid Reflected Cross site scripting is - by using
+ - Input validation
+ - Output encoding
+
+How many ways weak XSS protection implementation is done
+1. Blacklist -> <script>
+<Script> //bypass technique
+
+Video 51:
+Cross Site Scripting Bypass:
+----------------------------------
+https://www.youtube.com/watch?v=8BN4vvFkYfI&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=51
+1. Blacklist -> <script>
+<Script > //bypass technique
+<script SRC=http://xss.rocks/xss.js></script> //bypass
+<script>alert(document.cookie);</script>
+
+How many ways we can bypass xss > 1000+ ways 10,000 ways
+1. weak black listing
+2. no output encoding
+3. Weak data sanitization: data removal, <scr<script>ipt>alert(document.cookie);</scr<script>ipt>
+
+apart from <script> tag we can also perform xss using below commands:
+onmouse
+onerror
+<iframe
+<href
+<img src=JaVaScript:alert('xss')>
+
+Search for "xss bypass" and get the list of XXSfilterbypass.lst on github
+
+Automated XSS using BURP
+
+On HTML header if content type is set to "JSON" - script wont execute
+
+Content-Type: text/html
+
+Video 52: -- No use no info X
+Playing with XSS Payload:
+----------------------------
+zap proxy - to find XSS vulnarability
+
+Video 52: -- not required
+Zap Proxy setup
+---------------------
+https://www.youtube.com/watch?v=AN9wXvpIMgg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=53
+
+Video 53:
+Finding XSS using ZAP Easily:
+-------------------------------------
+https://www.youtube.com/watch?v=Vyk-_OKCCFU&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=54
+
+- we can also search for XSS on URL also; not only on Input fields and feedback forms
+
+http://localhost/xss/search.html?<script>alert(123);</script>
+
+- Hidden form fields cross site scripting
+
+Video 54:
+Cross site Scripting - God Father Approach
+-----------------------------------------------
+https://www.youtube.com/watch?v=95gadl7g_Fg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=55
+
+Pages to test:
+-----------------
+Registration page
+Login page
+file upload page
+search page
+Profile View page
+Change pass page
+Profile edit page
+Wall post page
+Pic upload page
+send message page
+Non Existent page
+Non Existent record
+
+Approch to test:
+Step 1: Identify reflection points for correct input field values
+Step 2: Identify reflection points For wrong input field values
+Step 3; Send one payload only per request
+Step 4: Search in google for payload for each field type like email
+Step 5: last run automated tools with permission for test env only(4-5 tools, i will tell you in the end)
+
+Stored Cross Site scripting: --
+
+Video 56:
+Cookie HTTP only Not Set
+--------------------------------
+https://www.youtube.com/watch?v=Aw7gPha2ykc&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=56
+
+-we need to test this only on Webapp which has (Login feature)
+- Application has to set HTTPOnly flag
+-this will avoid Cross Site scripting - where code like "<script>alert(document.cookie);</script>" - wont be executed
+
+Video 57:
+Cookie Secure Attribute Not Set:
+-------------------------------------------
+https://www.youtube.com/watch?v=FJGiVeuilvs&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=57
+
+Cookie Secure Attribute Not Set-
+we need to test this only on Webapp which has (Login feature)
+This security only for HTTPS websites bt not for HTTP websites
+
+Ex; https//
+
+by using "Secure" word we are saying that "SessionID" should be sent over HTTPS:
+Ex: Set-Cookie: PHPSESSID=jdkjsieukwjkej3939kk; path=/; Secure
+
+Video 58:
+Cookie is Not Encrypted
+--------------------------------
+https://www.youtube.com/watch?v=A3ksm40WdKQ&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=58
+
+Cookie related issue should be tested only if application has Login feature
+-as we will have SessionID set to the User
+
+Cookie is Not Encrypted-
+
+Application sets JWT(Json Web Token) token(Base64) - which will have UN, Email etc info
+-Cookie should not contain any sensitive info
+
+Video 59:
+Cookie Path Not Set:
+---------------------------------
+https://www.youtube.com/watch?v=Ing3pIr0lUE&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=59
+
+Cookie Path Not Set:
+
+we should not test this security for Web app like:
+www.facebook.com //
+
+but we can test on
+www.facebook.com/hello/
+http://localhost/datrak/
+http://localhost/xvwa/
+
+if we want to make web app "datrak" only use the session ID created then we need to set Path="/datrak"
+http://localhost/datrak/ - "path /datrak"
+
+We will have many Websites hosted on the same server if path is not set in the Cookie; other application can use the same SessionID
+
+Video 60:
+Cookie Sub-Domain not set:
+-------------------------------
+https://www.youtube.com/watch?v=rLKn8-Q9RvM&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=60
+
+Cookie Sub-Domain not set:
+Rule to check this issue:
+1. Cookie related issue should be tested only if application has Login feature
+2. need to check on Subdomain
+
+Command to find the Subdomain via Google
+
+site:facebook.com -site:www.facebook.com
+
+Ex: Set-Cookie: PHPSESSION=dkjksjfkeioie903909309000; Path=/; Domain=developer.facebook.com
+
+above cookie is valid only for "developer.facebook.com"
+
+not valid for :
+hello.facebook.com
+
+Security ISSUe:
+ex:
+Ex: Set-Cookie: PHPSESSION=dkjksjfkeioie903909309000; Path=/; Domain=*.facebook.com
+*.facebook.com --- "*" all the subdomains can use the same session id
+
+Video 61:
+Unvalidated redirectes and Forwards:
+-------------------------------------------
+https://www.youtube.com/watch?v=rFKoHlJ_SG0&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=61
+
+Search for URL redirections bypass payloads
+
+check for Parameter which has Redirection option
+https://www.abc.com?url=http://www.new.com
+
+?url parameter is not validated; here attacker can modify the parameter as required
+
+Video 62:
+Cross Frame Scripting: or Click Jacking
+-----------------------------
+https://www.youtube.com/watch?v=lekPwYe8lFM&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=62
+
+- We need to check this for both Authenticated and Un-authenticated pages of the Application
+
+- External page - Login page and Registration page
+-Internal page - profile editpage, change PW page, comments page
+
+To fix this issue Dev has to set in response below flag:
+X-Frame-Options: SameOrigin
+
+X-Frame-Options: SameOrigin -- has to be set under all the pages
+
+Attacker will embed our application in Iframe and make victime use it - like login page - and will steal the required info from the backend
+
+
+Note:
+**CSRF - Session Ridging attack
+
+Video 63:
+Click Jacking POC:
+--------------------------
+https://www.youtube.com/watch?v=qLmWM2BTi-s&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=63
+
+here attacker can create a page to do some action like, 
+ex: 
+-click this link to enrole
+-click this link to knowmore how
+but at the back end he may perform some other action like cookie stealing or perform some action like making them like the your post
+Attacker will embed our application in Iframe and make victime use it
+
+Video 64:
+HTML Injection - low level issue
+------------------------
+https://www.youtube.com/watch?v=TFaXty3Zl9c&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=64
+
+here we inject the HTML code - if application process the HTML code - we can say application is vulnerable for HTML Injection
+
+- we need to check this on application where data is reflected back
+ex: <h1>hacked</h1>
+
+Video 65:
+Polygot XSS poc: same as XSS
+----------------------
+https://www.youtube.com/watch?v=vq_8wsLEKss&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=65
+
+- Mechanism to use combination of elements from different languages
+
+Ex:
+//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert()//>\x3e
+
+Video 66:
+Command Injection:
+------------------------------
+https://www.youtube.com/watch?v=uOS1jLf4gHs&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=66
+
+Command:
+dir
+ls
+
+CMD to create a user - ""net user hacker1 hacker /add""
+
+on Application input field(username) - net+user+hacker1+hacker+/add
+
+Video 68:
+Local File Inclusion: or Directory Traversal
+---------------------------
+http://localhost/datrak/lfi.php?file=abc/../hello.html
+
+here attacker can read log files; DB files
+if application displays hello.html -- which means its not validating parameters given for file attribute
+
+search for payload:
+LFI payloads site:github.com
+
+Repo for payloads
+https://github.com/swisskyrepo/payloadsAllTheThings
+
+Video 70:
+Information Disclosure through error messages:
+---------------------------------------------------
+https://www.youtube.com/watch?v=yhibPiy63ro&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=70
+
+- if application displays info along with error message like - server info, file path
+
+- test this by giving invalid parameters
+ex:
+http://localhost/datrak?id=1
+test:
+http://localhost/datrak?id=-1
+
+Fix:
+by using proper exception handling
+
+Video 71:
+Domain Takeover:
+------------------------
+https://www.youtube.com/watch?v=yhibPiy63ro&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=70
+
+- test for all the links if its refering to other domain and check it's up and running
+ - if not attacker may create a same repleca and execute some script to steal session ID and sensitive info of user
+
+-how to check:
+ browse through the application and capture all the log in burp; and cross the log for different domain; copy that URL and see whether that URL is up and running(dead site)
+
+Video 72:
+Insecure Direct Object Reference:(idor)
+--------------------------------------
+https://www.youtube.com/watch?v=AAnyK_8jY-w&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=72
+
+can be performed on:
+files
+id
+string
+change pw
+profile
+profile edit page
+
+http://localhost/fix/IDOR/vuln/idor.php?uday=1
+http://localhost/fix/IDOR/vuln/idor.php?uday=uday
+http://localhost/fix/IDOR/vuln/idor.php?uday=uday@gmail.com
+----------id----------
+http://localhoust/1/
+http://localhoust/2
+http://localhoust/1/
+-----------file_names-------------
+http://localhoust/uday/
+http://localhoust/kumar
+------------------------
+GET,PUT,POST
+----------files------------
+http://localhost/slips/001.pdf
+http://localhost/kuram/001.pdf
+
+
+localhost/profile.php?uday=1
+
+one quick fix is when dealing with UserName - instead of referening user directly, we can go with SessionsID
+
+Video 72:
+Bug Bounty Payloads Explanation:
+------------------------------------
+https://www.youtube.com/watch?v=KNWzYvYr424&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=73
+
+Video 74:
+SQL INjection Basic:
+---------------------------
+https://www.youtube.com/watch?v=FLd-C7XzYOE&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=74
+
+Video 75: Not required:
+SQL INjection Automation:
+------------------------------
+https://www.youtube.com/watch?v=5MYdx1a_Ebw&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=75
+
+Video 76:
+SQL INjection Automation: explanation of "Damn Small SQLi Scanner"
+------------------------------
+https://www.youtube.com/watch?v=ZdLDi1g7PjE&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=76
+
+Video 77:
+SQL Injection Authentication bypass:
+-------------------------------------
+https://www.youtube.com/watch?v=oN4fPcmyNr4&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=77
+
+$q = "select * from users where username='admin' and password = 'hello'";
+
+admin' #
+$q = "select * from users where username='admin'#' and password = 'hello'";
+
+Video 78:
+Authenticated Unauthenticated and Cloudflare bypass:
+------------------------------------------------------
+https://www.youtube.com/watch?v=nqIzdwO96qQ&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=79
+
+Autheticated Security testing/authenticated penetration testing
+1 days for 4 dynamic pages
++1 more day(to check bruteforce, guessing files on the server, )
+-----------------------------
+Unauthenticated security testing/Unauthenticated penetration testing ; 2days
+
+- if password are not given we can brutforce for common logins
+
+duration of testing:
+depends on pages and features
+-------------------------------------
+Cloudflare, web application
+
+XSS and SQL injection - will be blocked by Cloudflare WAF
+-- all attack vectors will be blocked by Cloudflare
+
+TIP: CloudFlare Bypass XSS payload and need to check for it:
+
+to know where application is behind CloudFlare
+1. in cookie we can find - cf=
+
+- we can ask IT team to whitelist IP of test mechine IP
+
+Video 80: (Good) - Reporting 
+Security Testing Report Template, Report Format:
+---------------------------------------------------
+https://www.youtube.com/watch?v=gA627lXaOpk&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=80
+
+You can also search in youtube for penetration testing report format.
+
+Abc_Security_Testing_Report.doc
+
+Video 81: 
+Zap Tutorial in Depth:
+---------------------------
+https://www.youtube.com/watch?v=Yw0mziyWcKg&list=PL_bkTzUc1BufnQyGt6-9hSly2PqsDmd09&index=81
+
+
+
+Video on CORS:
+===============================================
+https://www.youtube.com/watch?v=v969_M6cWk0
+
+To Read on CORS - Working:
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+
+
+Alternative to Office s/w -- "WPS Office"
+
+To watch:
+How your Website, Database, server and network gets hacked using One Line of Vulnerable code
+
+note:Windows CMD: Command to search for string with in a file in windows
+c:\user\ZAP_2.9.0_cROSSPLATFORM\ZAP_2.9.0\lang>findstr "<alert>" "." >hi.txt
+
+Bug Bounty:
+------------------
+Good video to start
+https://www.youtube.com/watch?v=MVejdHcq9QQ
+
+NMAP info:
+--------------------
+Nmap Cheatsheet by Hacktify Cyber Security
+https://www.youtube.com/watch?v=EgHjtdcgzyM

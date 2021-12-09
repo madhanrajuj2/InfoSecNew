@@ -1,0 +1,188 @@
+https://www.youtube.com/watch?v=hY-Neb0vt2s
+
+- nmap -sV <ip> -oN initial_scan.txt
+ ---basic scan which looks at the common 1000 open ports
+
+silent scan:
+nmap -sS <ip> -oN stealthire_scan.txt
+ --- -sS --called SYN scan --- it won't complete TCP/IP 3 way handshake
+
+to run scan on all ports:
+nmap -sV -p-<ip> -oN all_ports.txt
+
+UDP scan:
+nmap -sU <IP> -oN udp_scan.txt
+
+it's a powerful tool where you can find vulnarability on runnig services
+nmap -sC <ip> -oN script.txt
+nmap -sC -p 80 <ip> -oN script_80.txt
+
+on Kali we have script
+cd /usr/share/nmap/scripts/
+nmap.org --- we can download scripts
+
+2........
+https://www.youtube.com/watch?v=W0KRYkZppIw
+sudo nmap -sV -p21-8080 --script vulners 192.168.1.217
+
+starting from port 21 to 8080 scans all the ports using script "vulners"
+
+The Common Vulnerability Scoring System (CVSS) is an open framework for communicating the characteristics and severity of software vulnerabilities.
+Rating	CVSS Score
+Low	0.1 - 3.9
+Medium	4.0 - 6.9
+High	7.0 - 8.9
+Critical 9.0 - 10.0
+
+>nmap -sV --script=vulners --script-args mincvss=7.0 -v 192.168.1.240
+---to list vulnerabilitys which have mim cvss score of 7.0
+
+3....
+https://www.youtube.com/watch?v=nJwZ2f__9rk
+
+namp -v -A scanme.nmap.org
+- lists all open ports
+- do service scan and show services running
+- by default nmap uses "SYN" scan
+
+nmap scanme.nmap.org
+-- list all open ports
+
+nmap -sV scanme.nmap.org
+--service scan
+
+nmap 192.168.80.130
+--it lists all the open ports on the system
+
+nmap 192.168.80.1-100
+--range of ip's to scan for open ports
+
+nmap 192.168.80.1 192.168.80.2 192.168.80.130
+--scanning 3 systems
+
+nmap -p 80,443,21 192.168.80.130 
+--scan for specific ports
+
+nmap -p 1-100 192.168.80.130 
+--scan for given range of ports
+
+nmap -p- 192.168.80.130 
+--to scan for all available ports 65535 ports
+
+nmap -sn 192.168.80.130 
+--ping sweep - to check whether system is live
+
+nmap -sn 192.168.80.1-254
+--to ping sweep enter subnet
+
+nmap 192.168.80.0/24
+--scan complete subnet
+
+ping agnostick scan
+nmap -Pn 192.168.80.130 
+---to avoid ping sweep command to avoid firewall blocking ip- if blocked we can not check what is running on the system; if we are pinging
+
+Scan the UDP services:
+sudo nmap -sU 192.168.80.130
+
+sudo nmap -sX -T2 192.168.80.130
+-T2 ---polite scan
+
+aggressive scan - fast than -T2
+sudo nmap -sX -T4 192.168.80.130
+
+Paranoid scan - faster
+sudo nmap -sX -T5 192.168.80.130
+
+OS detection:
+sudo nmap -O 192.168.80.130
+
+sudo nmap -sV --version-intensity 5 192.168.80.130
+--to aggressive service detection
+
+sudo nmap -sV --version-intensity 0 192.168.80.130
+--light banner grabbing; intensity value reduced
+
+sudo nmap -O 192.168.80.130 -v
+sudo nmap -O 192.168.80.130 -vv
+
+host discovery, it gives which system is up and runnning
+nmap -sP 192.168.80.1-5
+
+find port state:
+nmap --reason 192.168.80.130
+
+scan only the open ports:
+nmap --open 192.168.80.130
+
+Trace net to a specific device
+nmap --packet-trace 192.168.80.130
+
+Run a command on a host that is portected by a firewall
+sudo nmap -sA 192.168.80.2
+
+Banner grabbing: - gives more info on webserver running
+sudo nmap -sS -P 8 -A 192.168.80.130
+
+sudo nmap -sT 192.168.80.130
+sudo nmap -sT 192.168.80.130 -- "Syn scan"
+
+UDP scan:
+sudo nmap -sU -p 123,161,162 192.168.80.130
+123 - ntp
+161 - snmp
+162 - snmptrap
+
+put o/p to a specific file format:
+namp -oN nmap.txt 192.168.80.130
+
+xml file format:
+nmap -oX nmap.xml 192.168.80.130
+
+nmap -oO nmap.txt 192.168.80.130
+
+nmap -p21-25 192.168.80.130 --max-retries 0
+
+nmap -p21-25 192.168.80.130 --host-timeout 10ms
+
+nmap scripting engine:
+-- uses Luva - 
+
+--to update the scripts:
+sudo nmap --script-updatedb
+
+ls -l /usr/share/nmap/
+
+sudo nmap --script-help http-headers scanme.nmap.org
+
+sudo nmap 192.168.80.130 --script "http.*"
+--running all the http scripts
+
+sudo nmap --script=http-title 192.168.80.130
+--run nmap with scripts "http-title" script
+sudo nmap --script=http-title scanme.nmap.org
+
+--to list the Http headers
+sudo nmap --script=http-headers 192.168.80.130
+
+--command to enumarate and list open ports and application running
+sudo nmap --script=http-enum 192.168.80.130
+
+4... **
+https://www.youtube.com/watch?v=4t4kBkMsDbQ
+nmap -sP 10.7.1.0/24 -- to ping 254 hosts
+
+CEH Certified Ethical Hacker All-In-one exam Guide (Chapter 2 Reconnaissance)
+http://index-of.es/Varios-2/All%20In%20One%20CEH%20Certified%20Ethical%20Hacker%20Exam%20Guide.pdf
+
+check for open ports
+sudo nmap -sT -p 80,443 10.7.1.0/24
+-sT -- TCp connect () -- this type of scan will be cought by IDS(intrsion detection system)
+
+sudo nmap -sS -p 80,443 10.7.1.0/24
+-sS - stealthy
+---it won't complete 3 way handshake
+
+sudo nmap -sS -D 10.7.1.20 10.7.1.30 -- to hide ourself
+
+sudo nmap --scripts vuln 10.7.1.226 --- to list all the known vulnerabilities

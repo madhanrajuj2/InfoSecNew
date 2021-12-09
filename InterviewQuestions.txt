@@ -1,0 +1,526 @@
+1.       How do you test normal pen test
+
+2.       What is the mitigation for XSS
+
+3.       What is the mitigation for SQL injection and CSRF
+
+4.       What is cross origin/same origin
+
+5.       How do you test web services
+
+6.       How do you select roles in web inspect and have you found any vulnerabilities from that
+
+7.       Which are the new additions in OWASP – RC2
+
+8.       Explain SSL handshake between client and server
+
+9.       What is hashing
+
+10.   What is the difference between hashing and encryption..
+
+11.   What is formula injection
+
+12.   How do you test a login page
+
+13.   What is XSS
+
+14.   What is client side request forgery
+
+15.   What are the different authentication controls (ways to authenticate)
+
+16.   Explain about your project
+
+17.   What is certificate management
+
+18.   How do you implement SSL to make HTTP into HTTPS
+
+19.   What is XXE (xml cross site scripting)
+
+20.   How do you groom a new candidate
+
+21.   Do you test for PCI compliance (also asked one more compliance)
+
+22.   In HP web inspect do you have any (intrusion) setting to check vulnerability
+
+23.   Which are the paid tools you have
+
+24.   Do you know nmap and How do you use it
+
+25.   What are the recent web application vulnerabilities you have come across
+
+26.   What is invoking shell code
+
+27.   What do you do in day to day activities
+
+28.   What types of sql injection attacks are there
+
+29.   What is the difference between XXE n ..
+
+30.   Mitigation for sql injection
+
+31.   What is the solution for XSS   ( Ans COS)
+
+32.   What is CSRF attack
+
+33.   What is the mitigation for CSRF
+
+34.   What are the types of CSRF tokens  ( ans : 1 session based token, 2 - ?)
+
+35.   5 Vulnerabilities found in infrastructure scanning
+
+36.   Any issue related to ssl
+
+37.   What is the recommended ssl version
+
+38.   Diff between FTP and TFTP
+
+39.   What is 443 port
+
+40.   What version of SSL is recommended
+
+41.   What version of TLS is recommended
+
+42.   Have you found any sql injection and xss related issues
+
+43.   Do you check for any local file storages
+
+44.   Which protocols are used in thick clients while communicating with remote servers
+
+45.   Have you performed DOM BASED XSS
+
+46.   What are the mitigations for XSS
+
+47.   Do you know HTTP only cockie
+
+48.   What are the different types fo cockies (persistent and not persistent)
+
+49.   Do you know COS 
+
+50.   What is click jacking how can we protect this
+
+51.   Have you performed any banking app to check business logic
+
+52.   Can you perform source code review
+
+53.   Have you done any mobile testing
+
+54.   What is most interesting part in whole of your career
+
+55.   Brief about your areas of expertise
+
+56.   What exactly you do in manual penetration testing
+
+57.   Do u do infra scanning, once u find a missing patch for a host, how do u check that on that host and you will not be accessible to that host
+
+58.   How does ping work/do
+
+59.   Which protocol ping uses
+
+60.   Which port ICMP works on
+
+61.   I give u a dynamic page that page doesn’t have any input field, so how do u test this page.
+
+62.   What if database doesn’t give any error, (no tools given, how do u test)
+
+63.   Have u done directory traversal attack
+
+64.   In a linux server, where is the index file.
+
+65.   What is the command to list the processes in
+
+66.   What is XSS and CSRF attack
+
+67.   How do u take over a CSRF session
+
+68.   When u are in a site and click a link on that site, it opens a new window/tab  - what/how exactly it works – why it is opening in a different tab
+
+69.   Are you good ….
+
+70.   What is a stealth scan in NMAP
+
+71.   Do u know three way handshake, what happens while closing the communication (connection termination)
+
+72.   Have u ve done vulnerability scan on websites
+
+73.   What kind of applications you have tested, like thick client or thin client
+
+74.   How do u test thick client applications
+
+75.   Which tools have u worked on recently
+
+76.   What is ARP poisoning
+
+77.   Which port does NETBIOS works on
+
+78.   What is blind sql injection
+
+79.   What is gracious ARP
+
+80.   What are the different types of ICMP packets
+
+81.   What is traceroute
+
+82.   NSlookup
+
+83.   How client identifies duplicate IP
+
+84.   What is syn packet
+
+85.   A web server is not accessible but we are abl;e to ping n everything else is fine. How do u trouble shoot it
+
+86.   Why did u use Ixia tool
+
+87.   Can we dycrypt using wireshark
+
+88.   What is the port used by https
+
+89.   What do u mean by closed port
+
+90.   What is vollen scan
+
+91.   What is filtered port
+
+92.   How do you test firmware security
+
+93.   What is XM scan in nmap
+
+-----------
+
+94. Search API(searching User in DB) - what all Validation you will do
+1.we can check for Broken Authentication for all endpoint(Need to get Http Status - 401 if invalid user/PW)
+2.Broken access control (Need to get HTTP status code - 403 - Forbidden - authenticated user is not permitted to view the content of the folder or file)
+3.Sensitive data exposure - Don't use any sensitive data(credentials, PW, Security tokens, or API keys)in the url, but use standard Authorization header
+4.Incorrect error handling
+5.Insufficient Logging & Monitoring
+6.injection attack(user input has to be validated to avoid common vulnerabilities - XSS, Injection)
+7.Return the proper status code according to the operation completed. (e.g. 200 OK, 400 Bad Request, 401 Unauthorized,403 forbidden, 405 Method Not Allowed(get, post, put, delete),302 redirect etc.).
+8. Directory Traversal
+9.Insecure Direct Object References (IDOR)
+
+--API testing Checklist
+To read: https://www.youtube.com/watch?v=bNCZzfBMkcc
+1. Secure Calls with HTTPS
+2. Avoid using Basic Auth(use Advance Auth like JWT, Oauth 1,2)
+3. Auth Token should have Expiry
+3. Input Validation Test (Sanitise the data from APIs before putting to DB)
+4. User privilege escalation test: For example, access\refesh token of one user shouldn't be accepted by another user.
+6. Validate user input to avoid common Vulnerabilities
+7. use Throttling: limit requests (Throttling) to avoid DDOS/brute-force attacks
+8. Detect insecure API calls with Sniffers
+9. Use HSTS header
+10.Validate content-type on request Accept headers
+11. Don't use any sensitive data(credentials, PW, Security tokens, or API keys)in the url, but use standard Authorization header.
+
+***
+https://github.com/shieldfy/API-Security-Checklist
+
+5-common-api-vulnerabilities-and-how-to-fix-them
+https://nordicapis.com/5-common-api-vulnerabilities-and-how-to-fix-them/
+
+95. which Authentication you suggest- Auth 1 and Auth 2
+OAuth2 - simple to implement it just needs authorization token to make a API call
+
+Difference to read:
+https://www.synopsys.com/blogs/software-security/oauth-2-0-vs-oauth-1-0/
+
+https://www.oauth.com/oauth2-servers/differences-between-oauth-1-2/authentication-and-signatures/
+https://learning.postman.com/docs/sending-requests/authorization/
+
+Read this for Oauth2 workflow info -*** good to understand oAuth2.0
+https://www.youtube.com/watch?v=2JlL_PvysGk
+4 parameters are passed in URL:
+1. Client_id
+2. Redirect_URL
+3. Scope
+4. response_type
+
+ Good one - to know how we can hack oAuth 2
+ https://www.youtube.com/watch?v=0T8WG2liEC0
+ 4 type of oAuth flows:
+ 1.Authorization code grant(Most common one) -- here application requests for Authorization code and exchanges it for an access token which gives access to the user account details
+ 2.Implicit grant(Most common one) - instead of receiving Auth code; application receives Authorization token
+ 3.Resource Owner Credentials grant
+ 4.Client Credentials grant
+
+ 4 main entities involved in OAuth
+  1. User -- Resource Owner
+  2. Application
+  3. Authorization server  - Verifies the identity of the user
+  4. Resource server - which hosts an protects user details
+
+Abstract Protocal flow:
+
+------------     ----1.Authorization Request--->               User
+Appliction       <---2.Authorization Grant----           (Resource Owner) 
+(client)
+                 ---3.Authorization Grant----->          Authorization Server
+                 <--4.Access Token----------------
+                                                        
+                                                            
+	         --5.Access Token------------->		Resource Server
+                 <---6.Protected Resource------ 
+------------
+
+
+ Some bugs in oAuth2.0
+ 1. reusing Authorization token
+  - Authorization token won't expire and it can be reused
+  - this can lead to account takeover
+ 2. Redirect URL not validated - here attacker can change the redirect URL and make user click Oauth request link and get Oauth code; he can use this code to login to the application ex: http://photoprint:3000/callback?code=4277
+ while testing for this bug if external domain is not allowed we can try below things:
+  1.can change redirect_url to subdomain
+  2.can to the page which has xss bug
+  3.Page with an open redirect
+
+ Bypassing CSRF by removing State parameter
+  -application is not validating state paramter
+  -if CSRF check is implemented; then we can try by removing State parameter and we bypassed CSRF check
+ 
+ To understand differnece b/w "Authorization Code Grand" and "Implicit Code Grant" --- Good One
+ https://www.youtube.com/watch?v=gVqrf2uUdQ0
+ 4.52 --
+
+ To understand Oauth2.0 and OpenID connect: -- Good one and simple
+ https://www.youtube.com/watch?v=rTzlF-U9Y6Y
+ 15.45 -- OpenID connect flow explained diagram
+
+ ***good one to understand call flow via Postman with demo
+ To understand how app is registered and work flow of getting Authorization code:
+ https://www.youtube.com/watch?v=XpEyRVEOFuU
+ (watch from 37:40 -- end)
+
+ Read this to understand what Auth method to use:
+ https://blog.restcase.com/4-most-used-rest-api-authentication-methods/
+ 
+ OAuth: OAuth 2.0
+ https://www.youtube.com/watch?v=t4-416mg6iU
+ https://www.youtube.com/watch?v=3pZ3Nh8tgTE
+ OAuth Flow 1:
+  - Authorization Code Flow
+ OAuth Flow 2:
+ - Implicit flow
+ OAuth Flow 3:
+ - Client Credentials Flow
+   -- When the client is well trusted (Confidential clients)
+   -- Good in scenario where - When authorizing micro services
+ OAuth Flow 4:
+ - Client Credentials grant -- 
+   - implementation where login with Google or facebook
+   - https://www.youtube.com/watch?v=CWiwpvpCrro ---- got get more info of OAuth Flow 4 - implementing Authentication using Facebook/Github
+     - Implementaion of OAuth2 - Flow 4 using Facebook and Github login
+
+ JWT:
+ 1..https://www.youtube.com/watch?v=soGRyl9ztjI
+ 2..https://www.youtube.com/watch?v=_XbXkVdoG_0&t=900s --- explanation of JWT and disadvantages
+ disadvantages of JWT:
+ 1.JWT can be interpreted by attacker- pass info via HTTPS and OAuth
+ 2.if session id is compromized user can just logout -- but in case of JWT we don't have logout
+   -- So to handle this scenario server miantains -- Invalid JWT list
+ 3...................................
+ ***** -- Good one to understand how it's implemented in code
+ Implementaion of JWT: created a new Authentication API endpoint
+ Examine every incoming request for valid JWT and Authorize
+ https://www.youtube.com/watch?v=X80nJ5T7YpE&t=44s
+
+
+96. API authentication error code - 401 and 403
+HTTP Error 401 - Unauthorized
+HTTP status 403 - Forbidden
+Sometimes user authentication was provided, but the authenticated user is not permitted to view the content of the folder or file.
+To know about different Authentication:
+https://www.youtube.com/watch?v=xEgALJ4al1I
+
+97. Tools available on Kali linux
+
+98. fhow you will detect whethere Web Application is using firewall
+ - Ans - using WAFWOOF tool - information gathoring tool
+ex: wafwoof https://example.com
+
+99. HTTP error codes:
+https://www.easyname.com/en/support/hosting/158-what-do-the-http-status-codes-such-as-403-404-500-mean
+
+100. Difference b/w SQL injection and Blind SQL injection
+https://www.slideshare.net/PrashantPhatak/difference-between-sql-injection-and-blind-sql-injection
+
+101. how you will detect whethere Web Application is using firewall
+ - Ans - using WAFWOOF tool - information gathoring tool
+ex: wafwoof https://example.com
+
+102.tools you know on Kali
+Tool:
+- wafwoof -  information gathoring tool
+- dirbuster - to get the directory structure
+- hash-identifier -- to know the hash algorithm used
+- *OWASP ZAP tool explained
+- *Sqlmap -h
+- *dmitry - tool to get info on subdomain, email address, ports scanning
+- xssec - to find XXS vul
+- *w3af - for auditing webapplications finds top OWASP 10 vul, finds vul in servers, brutforce login pages, it maps websites, directory structure
+- *nikto - used to check server misconfiguration like outdated versions of applications, hidden pages, info like webservers it's version, subdomains and alerts about vulnerable versions also, if firewall is running
+  >nikto -h example.com -p 443
+
+- if we have info on Application thats fine; or else we can run "nikto" tool to get info on the application
+
+103. what is Active and Passive scanning
+Active - Send request and wait for response
+Passive - listens on all the channels for Becons
+
+104. what is SSRF and how to mitigate it
+Read it -
+https://www.neuralegion.com/blog/ssrf-server-side-request-forgery/
+API Penetration Test | XXE & SSRF | 05
+https://www.youtube.com/watch?v=55YDyk17Hi0
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE test[<!ELEMENT test ANY>
+<!ENTITY xxe SYSTEM "file:///etc/password">]>
+<test>&xxe;</test>
+
+
+To Read:
+----------------
+First:
+API security testing:
+https://www.youtube.com/watch?v=bNCZzfBMkcc
+https://github.com/shieldfy/API-Security-Checklist
+https://owasp.org/www-project-api-security/
+
+2..
+Using Burp for API security testing:
+1
+API Penetration Test + Burp + Postman
+https://www.youtube.com/watch?v=hUY8SeF54TE
+2.SQL injection
+https://www.youtube.com/watch?v=4tmvQ5a4200
+3..Sensitive Data Exposure
+https://www.youtube.com/watch?v=B144CJ7jNHo
+4. general info on API testing
+https://www.youtube.com/watch?v=ZFxghU9zanA
+
+
+HTTP Security Headers:
+===============================
+https://www.youtube.com/watch?v=M4-qjxejQNU
+1. Content Security Policy (CSP)
+2. HTTP Strict Transport Security (HSTS)
+
+Content Security Policy (CSP)
+- Helps detect and mitigate attacks such as XSS and Injection
+- To enable: configure response header Content-Security-Policy
+Ex:
+Content-Security-Policy: script-src 'self'
+https://www.cybersecuritytv.com
+
+--here we are saying we are trusting own domain and https://www.cybersecuritytv.com
+
+CSP - Threat Mitigation:
+--------------
+- Cross Site Scripting
+  - Browser trust content received from server
+  - System admin can control the source
+  - Browser will only execute scripts from allowed domains
+- MITM
+  - Restrict protocal such as HTTP; (which protocal trafic we can trust)
+  - Consider adding Secure & HSTS
+  - Redirect HTTP to HTTPS
+
+HSTS: - HTTP Strict Transport Security
+------------
+- Restricts web browsers to access web servers over HTTP
+- To enable: configure response header Strict-Transport-Security
+ex:
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+CSP - Threat Mitigation:
+--------------
+-MiTM
+ - Protocal downgrade attacks
+ - Cookie Hijacking
+
+HTTP Security Headers - Part 2:
+============================
+https://www.youtube.com/watch?v=1jC1PoQCQLo
+
+X-Frame-Options
+X-Content-Type-Options
+
+X-Frame-Options - 
+---------------------------
+ - Prevents clickjacking --- this is were hacker can trick user to click the button other than what they think it is
+                              -- attacker can use a iframe and put it on top of page and make it transparent so user don't know what is in the backend and put some attractive text or news on the front end and make user click on it
+				 - using this attacker can steal the credentials or get permission to run malware
+-X-Frame-Options:
+ -DENY  ---with this application can't be loaded in iframed
+ -SAMEORIGIN  ---iframe can be loaded if it's from same origin
+ -allow-from:DOMAIN ---if we multipal site this will all those sites to load using iframe
+
+X-Content-Type-Options
+--------------------------------
+ - Prevents MIME sniffing (Multipurpose Internet Mail Extensions (MIME))
+  - MIME Types
+   - Text/plain, text/html, json or xml
+   - Browser gussess the MIME type (converts jpg to php)
+
+ - Risk: Transform non-executable MIME types into executable
+
+ - X-Content-Type-Options: nosniff
+
+- with this options we can force the bw to use the content types provided by the application
+
+ ---if applican does not define MIME type - or browser thinks MIME type provide is not correct let me change it
+	this becomes a big problem 
+	for ex: safare bw see that file extention in the url and see that this extention is not sutable for json content type which is in the application response type
+		and then it changes to PHP which may result in code execution
+
+HTTP Security Headers - Part 3:
+================================
+https://www.youtube.com/watch?v=YfPc5juwFqU
+Referrer Policy
+Cache Control
+
+Referer Policy
+----
+Referrer-Policy:no-referrer
+Options:
+-(default) no-referrer-when-downgrade (HTTP-HTTP HTTPS-HTTPS)
+-Origin (https://www.example.com?token=123 = https://www.example.com)
+-origin-when-cross-origin (https://www.example.com?token=123 = https://www.example.com for cross origin)
+-same-origin ((https://www.example.com?token=123 = https://www.example.com for same origin))
+-strict-origin (same origin as well as same protocal)
+- strict-origin-when-cross-origin
+-unsafe-url 
+
+Cache Control:
+----------
+we should check to see we have "Cache-Control:max-age=36000" set
+
+Cache-control risks
+--------
+- Sensitive data being cached
+- Cache-control: no-store --- it won't store any data locally, we can use this header for response which has sensitive data
+- Pragma: no-cache
+
+Serialization and DeSerialization using Rest API:
+https://www.youtube.com/watch?v=muDFyUPOOZo&t=1074s
+
+Good doc on "3 Types of SSRF Attacks and How to Prevent Them"
+https://www.neuralegion.com/blog/ssrf-server-side-request-forgery/
+
+Good One:
+API Penetration Test | XXE & SSRF | 05
+https://www.youtube.com/watch?v=55YDyk17Hi0
+
+API Penetration Test | Exploit Sensitive Data Exposure | 03
+https://www.youtube.com/watch?v=B144CJ7jNHo
+
+API Penetration Test | Insecure Direct Object Reference | 04
+https://www.youtube.com/watch?v=cV7Ao5DGKAU
+
+Insecure Deserialization | OWASPT Top 10
+https://www.youtube.com/watch?v=4fD7LGQPjBU
+
+Different Testing tutorials
+https://www.youtube.com/watch?v=VIofwKpTOK8
+
+Threat Modeling: to Read:
+https://www.synopsys.com/glossary/what-is-threat-modeling.html
+https://www.youtube.com/watch?v=oi_CfBe_umU

